@@ -1,0 +1,12 @@
+{
+  "id": "invoice-default",
+  "title": "Invoice — Default",
+  "type": "invoice",
+  "layout": "classic",
+  "accentColor": "#0ea5e9",
+  "demoWatermark": false,
+  "sections": {
+    "showLogo": true,
+    "showTax": true
+  }
+}
