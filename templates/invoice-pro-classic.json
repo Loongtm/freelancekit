@@ -1,0 +1,10 @@
+{
+  "id": "invoice-pro-classic",
+  "title": "Invoice — Pro Classic (Demo)",
+  "type": "invoice",
+  "layout": "classic",
+  "accentColor": "#2563eb",
+  "isPro": true,
+  "demoWatermark": "DEMO",
+  "note": "This is a demo of the Pro Classic invoice. Purchase to remove watermark and unlock options."
+}
