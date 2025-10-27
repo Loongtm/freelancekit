@@ -1,0 +1,10 @@
+{
+  "id": "invoice-pro-modern",
+  "title": "Invoice — Pro Modern (Demo)",
+  "type": "invoice",
+  "layout": "modern",
+  "accentColor": "#22d3ee",
+  "isPro": true,
+  "demoWatermark": "DEMO",
+  "note": "This is a demo of the Pro Modern invoice. Purchase to remove watermark and unlock options."
+}
