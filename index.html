@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>FreelanceKit — Invoice • Quote • Contract</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="description" content="One-stop PWA for freelancers: quotes, invoices, contracts. Offline-first, multi-currency, multi-language, export PDF." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <noscript>This app needs JavaScript. Enable JS to continue.</noscript>
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="FreelanceKit" class="logo" />
+      <div class="brand-text">
+        <strong>FreelanceKit</strong>
+        <span class="tagline" data-i18n="tagline">Quotes • Invoices • Contracts</span>
+      </div>
+      <span id="offlineBadge" class="badge offline" hidden data-i18n="offline">Offline</span>
+    </div>
+
+    <nav class="toolbar">
+      <select id="documentType">
+        <option value="invoice" selected>Invoice</option>
+        <option value="quote">Quote</option>
+        <option value="contract">Contract</option>
+      </select>
+
+      <select id="templateSelect" title="Template">
+        <!-- App loads templates dynamically -->
+      </select>
+
+      <select id="langSelect" title="Language">
+        <option value="en" selected>English</option>
+        <option value="zh">简体中文</option>
+      </select>
+
+      <select id="currencySelect" title="Currency">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>GBP</option>
+        <option>CNY</option>
+        <option>JPY</option>
+        <option>MYR</option>
+        <option>INR</option>
+        <option>AUD</option>
+        <option>CAD</option>
+      </select>
+
+      <button id="installBtn" class="secondary" hidden data-i18n="install">Install App</button>
+
+      <a id="getProBtn" class="primary" href="https://your-gumroad-or-kofi-link.example" target="_blank" rel="noopener">
+        ⭐ Get Pro Templates
+      </a>
+      <a class="secondary" href="https://github.com/yourname/freelancekit" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <section class="pane form-pane">
+      <div class="section">
+        <h2 data-i18n="yourDetails">Your Details</h2>
+        <div class="grid two">
+          <label>
+            <span data-i18n="yourName">Name/Company</span>
+            <input id="yourName" placeholder="Acme Studio" />
+          </label>
+          <label>
+            <span data-i18n="yourTaxId">Tax ID</span>
+            <input id="yourTaxId" placeholder="VAT/GST/ABN" />
+          </label>
+          <label class="full">
+            <span data-i18n="yourAddress">Address</span>
+            <textarea id="yourAddress" rows="2" placeholder="Street, City, Country"></textarea>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="yourEmail" type="email" placeholder="you@studio.com" />
+          </label>
+          <label>
+            <span data-i18n="yourPhone">Phone</span>
+            <input id="yourPhone" placeholder="+1 555 1234" />
+          </label>
+          <label class="full">
+            <span data-i18n="yourLogo">Logo</span>
+            <input id="yourLogo" type="file" accept="image/*" />
+          </label>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 data-i18n="clientDetails">Client Details</h2>
+        <div class="grid two">
+          <label>
+            <span data-i18n="clientName">Name/Company</span>
+            <input id="clientName" placeholder="Client Inc." />
+          </label>
+          <label>
+            <span data-i18n="clientTaxId">Tax ID</span>
+            <input id="clientTaxId" placeholder="VAT/GST" />
+          </label>
+          <label class="full">
+            <span data-i18n="clientAddress">Address</span>
+            <textarea id="clientAddress" rows="2" placeholder="Street, City, Country"></textarea>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="clientEmail" type="email" placeholder="billing@client.com" />
+          </label>
+          <label>
+            <span data-i18n="clientPhone">Phone</span>
+            <input id="clientPhone" placeholder="+1 555 6789" />
+          </label>
+        </div>
+      </div>
+
+      <div class="section" id="docMeta">
+        <h2 data-i18n="docDetails">Document</h2>
+        <div class="grid three">
+          <label>
+            <span data-i18n="docNumber">Number</span>
+            <input id="docNumber" placeholder="INV-2025-001" />
+          </label>
+          <label>
+            <span data-i18n="issueDate">Issue Date</span>
+            <input id="issueDate" type="date" />
+          </label>
+          <label data-doc-type="invoice quote">
+            <span data-i18n="dueDate">Due Date</span>
+            <input id="dueDate" type="date" />
+          </label>
+        </div>
+      </div>
+
+      <div class="section" id="itemsSection">
+        <h2 data-i18n="lineItems">Line Items</h2>
+        <div class="items-head">
+          <span data-i18n="qty">Qty</span>
+          <span data-i18n="description">Description</span>
+          <span data-i18n="unitPrice">Unit Price</span>
+          <span data-i18n="tax">Tax %</span>
+          <span data-i18n="amount">Amount</span>
+          <span></span>
+        </div>
+        <div id="items"></div>
+        <button id="addItemBtn" class="secondary small">+ <span data-i18n="addItem">Add item</span></button>
+      </div>
+
+      <div class="section">
+        <div class="grid two">
+          <label>
+            <span data-i18n="notes">Notes</span>
+            <textarea id="notes" rows="3" placeholder="Thank you!"></textarea>
+          </label>
+          <label data-doc-type="invoice quote">
+            <span data-i18n="paymentTerms">Payment Terms</span>
+            <textarea id="paymentTerms" rows="3" placeholder="Net 14 / Net 30, Late fee %, Bank details..."></textarea>
+          </label>
+        </div>
+      </div>
+
+      <div class="section actions">
+        <button id="saveLocalBtn" class="secondary" data-i18n="save">Save</button>
+        <button id="loadLocalBtn" class="secondary" data-i18n="load">Load</button>
+        <button id="exportJsonBtn" class="secondary" data-i18n="exportJson">Export JSON</button>
+        <label class="file-btn">
+          <input id="importJsonInput" type="file" accept="application/json" hidden />
+          <span data-i18n="importJson">Import JSON</span>
+        </label>
+
+        <label class="file-btn pro" title="Pro feature">
+          <input id="importCsvClients" type="file" accept=".csv,text/csv" hidden />
+          <span>Import Clients CSV (Pro)</span>
+        </label>
+
+        <div class="spacer"></div>
+
+        <button id="previewBtn" class="secondary" data-i18n="preview">Preview</button>
+        <button id="exportPdfBtn" class="primary">Export PDF</button>
+      </div>
+
+      <div class="section probar">
+        <span class="muted">Pro features: Batch invoicing, Timesheet → Invoice, CSV import, watermark-free Pro templates.</span>
+        <div class="pro-cta">
+          <a class="primary" href="https://your-gumroad-or-kofi-link.example" target="_blank" rel="noopener">Unlock Pro →</a>
+          <button id="enterKeyBtn" class="secondary">Enter Key</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="pane preview-pane">
+      <div id="preview" class="template template-classic printable">
+        <!-- App will render preview here -->
+      </div>
+      <div class="template-note">
+        <span class="muted">Template:</span> <span id="templateName">Default</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <a href="pages/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Privacy</a>
+    <a href="pages/terms.html" target="_blank" rel="noopener" data-i18n="terms">Terms</a>
+    <span class="made-with">Made with ❤️ FreelanceKit</span>
+  </footer>
+
+  <script src="pdf.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Register SW
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
