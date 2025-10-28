@@ -2,140 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>FreelanceKit Pro — Templates & Features</title>
+  <title>FreelanceKit — Invoice • Quote • Contract</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Unlock watermark‑free templates and productivity features for FreelanceKit. One‑time purchase on Ko‑fi." />
-  <link rel="canonical" href="https://freelancekit-loongtm.netlify.app/pages/pro.html" />
+  <meta name="description" content="One‑stop PWA for freelancers: quotes, invoices, contracts. Offline‑first, multi‑currency, multi‑language, export PDF." />
+  <link rel="canonical" href="https://freelancekit-loongtm.netlify.app/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://freelancekit-loongtm.netlify.app/pages/pro.html" />
-  <meta property="og:title" content="FreelanceKit Pro — Templates & Features" />
-  <meta property="og:description" content="Watermark‑free invoices/quotes/contracts, CSV import, white‑label and more." />
+  <meta property="og:url" content="https://freelancekit-loongtm.netlify.app/" />
+  <meta property="og:title" content="FreelanceKit — Quotes • Invoices • Contracts" />
+  <meta property="og:description" content="Offline‑first PWA for freelancers worldwide. Multi‑currency, multi‑language, PDF export." />
   <meta property="og:image" content="https://freelancekit-loongtm.netlify.app/assets/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="FreelanceKit Pro — Templates & Features" />
-  <meta name="twitter:description" content="Watermark‑free templates and Pro features for freelancers worldwide." />
+  <meta name="twitter:title" content="FreelanceKit — Quotes • Invoices • Contracts" />
+  <meta name="twitter:description" content="Offline‑first PWA for freelancers worldwide. Multi‑currency, multi‑language, PDF export." />
   <meta name="twitter:image" content="https://freelancekit-loongtm.netlify.app/assets/og.png" />
 
-  <!-- Icons/PWA -->
+  <!-- PWA -->
   <meta name="theme-color" content="#0ea5e9" />
-  <link rel="manifest" href="../manifest.json" />
-  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml" />
-  <link rel="icon" href="../assets/icon-512.png" sizes="512x512" type="image/png" />
-  <link rel="apple-touch-icon" href="../assets/icon-512.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/icon-512.png" sizes="512x512" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png" />
 
-  <style>
-    :root{
-      --ink:#0f172a; --bg:#ffffff; --muted:#64748b; --line:#e5e7eb;
-      --accent:#0ea5e9; --accent2:#22d3ee; --badge:#f8fafc;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;background:#fff;color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial}
-    a{color:var(--accent);text-decoration:none}
-    header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
-    header .crumbs a{color:var(--muted)}
-    main{max-width:980px;margin:0 auto;padding:28px 18px}
-    h1{margin:0 0 6px;font-size:28px}
-    h2{margin:0 0 8px;font-size:20px}
-    .muted{color:var(--muted)}
-    .hero{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--badge)}
-    .cta{display:inline-flex;gap:10px;align-items:center;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#081423;border:none;border-radius:10px;padding:12px 16px;font-weight:800}
-    .grid{display:grid;gap:16px;grid-template-columns:1fr 1fr;margin-top:16px}
-    .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
-    .list{margin:8px 0 0 0;padding-left:18px}
-    .note{font-size:13px;color:var(--muted);margin-top:8px}
-    .kofi{display:flex;gap:10px;align-items:center;margin-top:10px}
-    .kofi img{height:22px}
-    .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef6ff;color:#055; font-size:12px;border:1px solid #cfe8ff}
-    footer{padding:24px 18px;border-top:1px solid var(--line);text-align:center;color:var(--muted)}
-    @media (max-width:840px){ .grid{grid-template-columns:1fr} }
-    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"SoftwareApplication",
+    "name":"FreelanceKit",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Web",
+    "url":"https://freelancekit-loongtm.netlify.app/",
+    "image":"https://freelancekit-loongtm.netlify.app/assets/icon-512.png",
+    "description":"Offline-first PWA for freelancers: quotes, invoices, contracts. Multi-currency, multi-language, PDF export.",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}
+  }
+  </script>
 </head>
 <body>
-  <header>
-    <div class="crumbs"><a href="../index.html">← Back to App</a></div>
-    <strong>FreelanceKit Pro</strong>
+  <noscript>This app needs JavaScript. Enable JS to continue.</noscript>
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="FreelanceKit" class="logo" />
+      <div class="brand-text">
+        <strong>FreelanceKit</strong>
+        <span class="tagline" data-i18n="tagline">Quotes • Invoices • Contracts</span>
+      </div>
+      <span id="offlineBadge" class="badge offline" hidden data-i18n="offline">Offline</span>
+    </div>
+
+    <nav class="toolbar">
+      <select id="documentType">
+        <option value="invoice" selected>Invoice</option>
+        <option value="quote">Quote</option>
+        <option value="contract">Contract</option>
+      </select>
+
+      <select id="templateSelect" title="Template"></select>
+
+      <!-- Import Template (offline JSON) -->
+      <label class="secondary small file-btn" title="Import Template JSON">
+        <input id="importTplInput" type="file" accept=".json,application/json" hidden />
+        <span>Import Template</span>
+      </label>
+
+      <select id="langSelect" title="Language">
+        <option value="en" selected>English</option>
+        <option value="zh">简体中文</option>
+      </select>
+
+      <select id="currencySelect" title="Currency">
+        <option>USD</option><option>EUR</option><option>GBP</option>
+        <option>CNY</option><option>JPY</option><option>MYR</option>
+        <option>INR</option><option>AUD</option><option>CAD</option>
+      </select>
+
+      <button id="installBtn" class="secondary" hidden data-i18n="install">Install App</button>
+
+      <!-- Get Pro (link to Pro page) -->
+      <a id="getProBtn" class="primary" href="pages/pro.html" target="_blank" rel="noopener">
+        ⭐ Get Pro Templates
+      </a>
+
+      <a class="secondary" href="https://github.com/Loongtm/freelancekit" target="_blank" rel="noopener">GitHub</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="hero">
-      <div>
-        <h1>Unlock Pro Templates & Features</h1>
-        <div class="muted">Watermark‑free templates, CSV import, white‑label, and more. 一次性购买，离线可用。</div>
-        <div style="margin-top:10px;">
-          <span class="pill">One‑time • RM 79</span>
-          <span class="pill">No account • Offline</span>
+  <main class="app-main">
+    <section class="pane form-pane">
+      <div class="section">
+        <h2 data-i18n="yourDetails">Your Details</h2>
+        <div class="grid two">
+          <label>
+            <span data-i18n="yourName">Name/Company</span>
+            <input id="yourName" placeholder="Acme Studio" />
+          </label>
+          <label>
+            <span data-i18n="yourTaxId">Tax ID</span>
+            <input id="yourTaxId" placeholder="VAT/GST/ABN" />
+          </label>
+          <label class="full">
+            <span data-i18n="yourAddress">Address</span>
+            <textarea id="yourAddress" rows="2" placeholder="Street, City, Country"></textarea>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="yourEmail" type="email" placeholder="you@studio.com" />
+          </label>
+          <label>
+            <span data-i18n="yourPhone">Phone</span>
+            <input id="yourPhone" placeholder="+1 555 1234" />
+          </label>
+          <label class="full">
+            <span data-i18n="yourLogo">Logo</span>
+            <input id="yourLogo" type="file" accept="image/*" />
+          </label>
         </div>
       </div>
-      <a class="cta" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Buy on Ko‑fi →</a>
+
+      <div class="section">
+        <h2 data-i18n="clientDetails">Client Details</h2>
+        <div class="grid two">
+          <label>
+            <span data-i18n="clientName">Name/Company</span>
+            <input id="clientName" placeholder="Client Inc." />
+          </label>
+          <label>
+            <span data-i18n="clientTaxId">Tax ID</span>
+            <input id="clientTaxId" placeholder="VAT/GST" />
+          </label>
+          <label class="full">
+            <span data-i18n="clientAddress">Address</span>
+            <textarea id="clientAddress" rows="2" placeholder="Street, City, Country"></textarea>
+          </label>
+          <label>
+            <span>Email</span>
+            <input id="clientEmail" type="email" placeholder="billing@client.com" />
+          </label>
+          <label>
+            <span data-i18n="clientPhone">Phone</span>
+            <input id="clientPhone" placeholder="+1 555 6789" />
+          </label>
+        </div>
+      </div>
+
+      <div class="section" id="docMeta">
+        <h2 data-i18n="docDetails">Document</h2>
+        <div class="grid three">
+          <label>
+            <span data-i18n="docNumber">Number</span>
+            <input id="docNumber" placeholder="INV-2025-001" />
+          </label>
+          <label>
+            <span data-i18n="issueDate">Issue Date</span>
+            <input id="issueDate" type="date" />
+          </label>
+          <label data-doc-type="invoice quote">
+            <span data-i18n="dueDate">Due Date</span>
+            <input id="dueDate" type="date" />
+          </label>
+        </div>
+      </div>
+
+      <div class="section" id="itemsSection">
+        <h2 data-i18n="lineItems">Line Items</h2>
+        <div class="items-head">
+          <span data-i18n="qty">Qty</span>
+          <span data-i18n="description">Description</span>
+          <span data-i18n="unitPrice">Unit Price</span>
+          <span data-i18n="tax">Tax %</span>
+          <span data-i18n="amount">Amount</span>
+          <span></span>
+        </div>
+        <div id="items"></div>
+        <button id="addItemBtn" class="secondary small">+ <span data-i18n="addItem">Add item</span></button>
+      </div>
+
+      <div class="section">
+        <div class="grid two">
+          <label>
+            <span data-i18n="notes">Notes</span>
+            <textarea id="notes" rows="3" placeholder="Thank you!"></textarea>
+          </label>
+          <label data-doc-type="invoice quote">
+            <span data-i18n="paymentTerms">Payment Terms</span>
+            <textarea id="paymentTerms" rows="3" placeholder="Net 14 / Net 30, Late fee %, Bank details..."></textarea>
+          </label>
+        </div>
+      </div>
+
+      <div class="section actions">
+        <button id="saveLocalBtn" class="secondary" data-i18n="save">Save</button>
+        <button id="loadLocalBtn" class="secondary" data-i18n="load">Load</button>
+        <button id="exportJsonBtn" class="secondary" data-i18n="exportJson">Export JSON</button>
+        <label class="file-btn">
+          <input id="importJsonInput" type="file" accept="application/json" hidden />
+          <span data-i18n="importJson">Import JSON</span>
+        </label>
+
+        <label class="file-btn pro" title="Pro feature">
+          <input id="importCsvClients" type="file" accept=".csv,text/csv" hidden />
+          <span>Import Clients CSV (Pro)</span>
+        </label>
+
+        <div class="spacer"></div>
+
+        <button id="previewBtn" class="secondary" data-i18n="preview">Preview</button>
+        <button id="exportPdfBtn" class="primary">Export PDF</button>
+      </div>
+
+      <div class="section probar">
+        <span class="muted">Pro features: Batch invoicing, Timesheet → Invoice, CSV import, watermark‑free Pro templates.</span>
+        <div class="pro-cta">
+          <!-- Pro page link (bottom CTA) -->
+          <a class="primary" href="pages/pro.html" target="_blank" rel="noopener">Unlock Pro →</a>
+          <button id="enterKeyBtn" class="secondary">Enter Key</button>
+        </div>
+      </div>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <h2>Included templates</h2>
-        <ul class="list">
-          <li>Invoice — Classic (no watermark)</li>
-          <li>Invoice — Modern (no watermark)</li>
-          <li>Quote — Classic</li>
-          <li>Contract — Modern</li>
-          <li>Extra color/layout variants</li>
-        </ul>
-        <p class="note">Preview Pro templates in the app (marked DEMO). Purchasing removes watermark.</p>
+    <section class="pane preview-pane">
+      <div id="preview" class="template template-classic printable">
+        <!-- App renders here -->
       </div>
-
-      <div class="card">
-        <h2>Pro features</h2>
-        <ul class="list">
-          <li>Clients/Projects CSV import</li>
-          <li>White‑label mode（隐藏页脚标识）</li>
-          <li>Batch invoicing & Timesheet → Invoice（路线图）</li>
-        </ul>
-        <p class="note">All features work fully offline inside the PWA.</p>
-      </div>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Price & license</h2>
-        <ul class="list">
-          <li>One‑time: <strong>RM 79</strong>（Ko‑fi 支付，支持多货币）</li>
-          <li>个人/商业使用许可；不允许二次分发模板</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>How to unlock</h2>
-        <ol class="list">
-          <li>在 Ko‑fi 购买 → 你将收到 <strong>Pro key</strong>（邮件或私信）。</li>
-          <li>回到应用底部 Pro 栏 → 点击 <code>Enter Key</code>。</li>
-          <li>粘贴 Pro key → 本地解锁（去除水印、启用功能）。</li>
-          <li>需要在其他设备解锁？重复以上步骤即可。</li>
-        </ol>
-        <p class="note">无需账号/服务器，数据仅保存在你的浏览器本地。</p>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>FAQ</h2>
-      <ul class="list">
-        <li><strong>离线可用？</strong> 是。PWA 全离线运行。</li>
-        <li><strong>更新怎么获得？</strong> 仓库/站点更新后，刷新即可获取（Service Worker 自动管理）。</li>
-        <li><strong>发票税率？</strong> 按百分比通用税率（VAT/GST 可手填）。</li>
-        <li><strong>支持与发票模板定制？</strong> 在 GitHub 提 Issue 或通过 Ko‑fi 联系。</li>
-      </ul>
-      <div class="kofi">
-        <a class="cta" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Buy on Ko‑fi →</a>
-        <a href="https://github.com/Loongtm/freelancekit/issues/new" target="_blank" rel="noopener">Open a support issue</a>
+      <div class="template-note">
+        <span class="muted">Template:</span> <span id="templateName">Default</span>
       </div>
     </section>
   </main>
 
-  <footer>© FreelanceKit • <a href="../pages/privacy.html">Privacy</a> • <a href="../pages/terms.html">Terms</a></footer>
+  <footer class="app-footer">
+    <a href="pages/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Privacy</a>
+    <a href="pages/terms.html" target="_blank" rel="noopener" data-i18n="terms">Terms</a>
+    <span class="made-with">Made with ❤️ FreelanceKit</span>
+  </footer>
+
+  <script src="pdf.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
 </body>
 </html>
