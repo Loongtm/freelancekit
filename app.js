@@ -73,13 +73,11 @@ const App = {
     App.renderPreview();
   },
   init(){
-    // UI wiring
     const now = new Date();
     $('#issueDate').valueAsDate = now;
     const due = new Date(now); due.setDate(due.getDate()+14);
     $('#dueDate').valueAsDate = due;
 
-    // Document type switch
     $('#documentType').addEventListener('change', (e)=>{
       App.state.docType = e.target.value;
       App.syncDocTypeVisibility();
@@ -87,13 +85,10 @@ const App = {
       App.renderPreview();
     });
 
-    // Currency / Lang
     $('#currencySelect').addEventListener('change', e => { App.state.currency = e.target.value; App.renderPreview(); });
     $('#langSelect').addEventListener('change', e => App.setLang(e.target.value));
 
-    // Items
     $('#addItemBtn').addEventListener('click', App.addItem);
-    // Actions
     $('#previewBtn').addEventListener('click', App.renderPreview);
     $('#exportPdfBtn').addEventListener('click', () => exportToPDF($('#preview'), App.filename()));
     $('#saveLocalBtn').addEventListener('click', App.saveLocal);
@@ -102,7 +97,6 @@ const App = {
     $('#importJsonInput').addEventListener('change', App.importJSON);
     $('#importCsvClients').addEventListener('change', App.importClientsCSV);
 
-    // Enter Key (dummy local unlock)
     $('#enterKeyBtn').addEventListener('click', ()=>{
       const key = prompt('Enter your Pro key (local unlock)');
       if (!key) return;
@@ -112,24 +106,18 @@ const App = {
       App.toggleProUI();
     });
 
-    // Files
     $('#yourLogo').addEventListener('change', App.loadLogo);
 
-    // Inputs sync
     ['yourName','yourTaxId','yourAddress','yourEmail','yourPhone',
      'clientName','clientTaxId','clientAddress','clientEmail','clientPhone',
      'docNumber','issueDate','dueDate','notes','paymentTerms'].forEach(id=>{
       $('#'+id).addEventListener('input', App.onFieldChange);
     });
 
-    // Install prompt
     App.setupInstall();
-
-    // Templates
     App.populateTemplateSelect();
     App.loadTemplateById(App.state.templateId);
 
-    // Offline indicator
     function updateOffline(){
       $('#offlineBadge').hidden = navigator.onLine;
     }
@@ -137,10 +125,7 @@ const App = {
     window.addEventListener('offline', updateOffline);
     updateOffline();
 
-    // Load last state if any
     App.loadLocal(true);
-
-    // i18n
     App.setLang('en');
   },
   syncDocTypeVisibility(){
@@ -259,7 +244,6 @@ const App = {
       const tpl = await res.json();
       App.state.templateMeta = tpl;
       $('#templateName').textContent = tpl.title || meta.name;
-      // If pro demo, show watermark unless unlocked
       const isPro = !!tpl.isPro;
       App.state.isProTemplateDemo = isPro && !App.state.pro && tpl.demoWatermark;
       App.applyTemplate(tpl);
@@ -283,7 +267,6 @@ const App = {
       contract:(s.lang==='zh'?'合同':'Contract')
     }[s.docType];
 
-    // Basic sections
     const yourBlock = `
       <div class="box">
         <div class="label">${s.lang==='zh'?'开票方':'From'}</div>
@@ -398,7 +381,6 @@ const App = {
     try{
       const s = JSON.parse(raw);
       Object.assign(App.state, s);
-      // Fill inputs
       $('#yourName').value = s.your?.name || '';
       $('#yourTaxId').value = s.your?.taxId || '';
       $('#yourAddress').value = s.your?.address || '';
@@ -419,10 +401,8 @@ const App = {
       $('#langSelect').value = s.lang || 'en';
       App.setLang($('#langSelect').value);
 
-      // Items
       $('#items').innerHTML = '';
       (s.items || []).forEach(()=> App.addItem());
-      // Fill row values
       $$('#items .item-row').forEach((row, idx)=>{
         const it = s.items[idx];
         if (!it) return;
@@ -433,10 +413,8 @@ const App = {
         const ev = new Event('input'); $('.qty', row).dispatchEvent(ev);
       });
 
-      // Logo
       if (s.logoDataUrl) App.state.logoDataUrl = s.logoDataUrl;
 
-      // Template
       App.populateTemplateSelect();
       $('#templateSelect').value = s.templateId || 'invoice-default';
       App.loadTemplateById($('#templateSelect').value);
@@ -477,7 +455,6 @@ const App = {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
-      // Simple CSV: name,email,phone,address,taxId
       const lines = reader.result.split(/\r?\n/).filter(Boolean);
       const header = lines.shift();
       const cols = header.split(',').map(s=>s.trim().toLowerCase());
@@ -492,7 +469,6 @@ const App = {
           taxId: cells[idx('taxid')] || cells[idx('tax_id')] || ''
         };
       });
-      // Fill first one
       if (list[0]){
         $('#clientName').value = list[0].name;
         $('#clientEmail').value = list[0].email;
@@ -509,7 +485,6 @@ const App = {
     e.target.value = '';
   },
   toggleProUI(){
-    // Mark pro-only controls
     if (App.state.pro){
       $$('.file-btn.pro').forEach(el => el.style.opacity = 1);
       $('#getProBtn').textContent = 'Pro Active ✅';
@@ -547,7 +522,6 @@ function escapeHtml(s=''){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'
 function nl2br(s=''){ return s.replace(/\n/g,'<br/>'); }
 function fmt(n){ return (isFinite(n)? Number(n).toLocaleString(): '0'); }
 function parseCsvLine(line){
-  // naive CSV parsing with quotes
   const out=[]; let cur=''; let inQ=false;
   for (let i=0;i<line.length;i++){
     const c=line[i];
@@ -559,7 +533,6 @@ function parseCsvLine(line){
 }
 
 function renderContractDefault(s){
-  // Very simple contract body; real Pro templates should provide detailed clauses.
   const partyA = escapeHtml(s.your.name||'[Your Company]');
   const partyB = escapeHtml(s.client.name||'[Client]');
   return `
@@ -576,5 +549,4 @@ function renderContractDefault(s){
   `;
 }
 
-// Kickoff
 window.addEventListener('DOMContentLoaded', App.init);

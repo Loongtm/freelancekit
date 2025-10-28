@@ -1,19 +1,16 @@
 [build]
   publish = "."
 
-# 站点使用 ETag 校验新鲜度
 [[headers]]
   for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Service Worker 永远不缓存（确保更新及时）
 [[headers]]
   for = "/sw.js"
   [headers.values]
     Cache-Control = "no-cache"
 
-# SPA 回退：所有路径回到 index.html（避免 404）
 [[redirects]]
   from = "/*"
   to = "/index.html"

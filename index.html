@@ -31,9 +31,7 @@
         <option value="contract">Contract</option>
       </select>
 
-      <select id="templateSelect" title="Template">
-        <!-- App loads templates dynamically -->
-      </select>
+      <select id="templateSelect" title="Template"></select>
 
       <select id="langSelect" title="Language">
         <option value="en" selected>English</option>
@@ -54,10 +52,10 @@
 
       <button id="installBtn" class="secondary" hidden data-i18n="install">Install App</button>
 
-      <a id="getProBtn" class="primary" href="https://your-gumroad-or-kofi-link.example" target="_blank" rel="noopener">
+      <a id="getProBtn" class="primary" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">
         ⭐ Get Pro Templates
       </a>
-      <a class="secondary" href="https://github.com/yourname/freelancekit" target="_blank" rel="noopener">GitHub</a>
+      <a class="secondary" href="https://github.com/Loongtm/freelancekit" target="_blank" rel="noopener">GitHub</a>
     </nav>
   </header>
 
@@ -187,16 +185,14 @@
       <div class="section probar">
         <span class="muted">Pro features: Batch invoicing, Timesheet → Invoice, CSV import, watermark-free Pro templates.</span>
         <div class="pro-cta">
-          <a class="primary" href="https://your-gumroad-or-kofi-link.example" target="_blank" rel="noopener">Unlock Pro →</a>
+          <a class="primary" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro →</a>
           <button id="enterKeyBtn" class="secondary">Enter Key</button>
         </div>
       </div>
     </section>
 
     <section class="pane preview-pane">
-      <div id="preview" class="template template-classic printable">
-        <!-- App will render preview here -->
-      </div>
+      <div id="preview" class="template template-classic printable"></div>
       <div class="template-note">
         <span class="muted">Template:</span> <span id="templateName">Default</span>
       </div>
@@ -212,7 +208,6 @@
   <script src="pdf.js"></script>
   <script src="app.js"></script>
   <script>
-    // Register SW
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js');

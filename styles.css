@@ -116,7 +116,7 @@ input,textarea,select{
 .template-modern .title{font-weight:800;letter-spacing:1px}
 .template-modern .box{border-color:#dbeafe;background:#f8fafc}
 
-/* Print: show only printable */
+/* Print */
 @media print{
   body{background:#fff}
   .app-header,.form-pane,.app-footer,.template-note{display:none !important}
