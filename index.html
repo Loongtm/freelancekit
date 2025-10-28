@@ -18,7 +18,7 @@
     <h1 class="app-title">FreelanceKit</h1>
     <div class="header-actions">
       <button id="installPWA" class="btn ghost" aria-label="Install as app">Install</button>
-      <a id="buyPro" class="btn primary lock" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro</a>
+      <a id="buyPro" class="btn primary lock" href="#" rel="noopener">Unlock Pro</a>
     </div>
   </header>
 
@@ -138,12 +138,31 @@
 
   <!-- Floating action bar -->
   <nav class="fab" aria-label="Primary actions">
-    <button id="previewPDF" class="btn primary">Preview / Print (Ctrl+P)</button>
+    <button id="previewPDF" class="btn primary">Preview (Ctrl+P)</button>
     <button id="exportPDF" class="btn">Export PDF</button>
   </nav>
 
   <!-- Toasts -->
   <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <!-- Pro 说明弹窗 -->
+  <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle">
+    <div class="dialog">
+      <h3 id="proTitle">FreelanceKit Pro</h3>
+      <p>即将提供/逐步开放的能力：</p>
+      <ul>
+        <li>无水印模板包（发票/报价/合同，多样配色）</li>
+        <li>Clients/Projects CSV 导入</li>
+        <li>批量开票、Timesheet → Invoice</li>
+        <li>White-label（可隐藏品牌标识）</li>
+      </ul>
+      <p>现在可以先支持作者或预购：</p>
+      <p><a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">https://ko-fi.com/loongtm</a></p>
+      <div class="actions">
+        <button id="proClose" class="btn primary">Got it</button>
+      </div>
+    </div>
+  </div>
 
   <footer class="container footer">
     <small class="muted">Made with FreelanceKit • <a href="/pages/privacy.html">Privacy</a> • <a href="/pages/terms.html">Terms</a></small>

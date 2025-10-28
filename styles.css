@@ -1,5 +1,5 @@
 :root{
-  --bg:#0b1020; --panel:#0f172a; --panel-2:#111827; --muted:#94a3b8;
+  --bg:#0b1020; --panel:#0f172a; --panel-2:#111827; --muted:#9fb0c8;
   --text:#e5e7eb; --primary:#6366f1; --danger:#ef4444; --ok:#22c55e;
   --ring: rgba(99,102,241,.35);
 }
@@ -15,7 +15,7 @@ a:hover{text-decoration:underline}
 .header{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
 .app-title{margin:0; font-size:22px; letter-spacing:.3px}
 .header-actions{display:flex; gap:8px}
-.content{display:flex; flex-direction:column; gap:16px; padding-bottom:120px}
+.content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px} /* 留更多空间给浮条 */
 .card{
   background:linear-gradient(180deg,rgba(17,24,39,.6),rgba(17,24,39,.35));
   border:1px solid rgba(255,255,255,.06);
@@ -46,9 +46,9 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 .toolbar-inline{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
 .btn{
   appearance:none; border:1px solid rgba(148,163,184,.25); background:rgba(2,6,23,.6);
-  color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer
+  color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer; text-decoration:none
 }
-.btn:hover{border-color:#cbd5e1}
+.btn:hover{border-color:#cbd5e1; text-decoration:none}
 .btn.primary{background:linear-gradient(180deg,#4f46e5,#4338ca); border-color:transparent}
 .btn.primary:hover{filter:brightness(1.06)}
 .btn.ghost{background:transparent}
@@ -60,7 +60,11 @@ input[aria-invalid="true"]{border-color:var(--danger)}
   position:fixed; inset:auto 0 16px 0; display:flex; gap:10px; justify-content:center; z-index:20;
   padding:8px; background:linear-gradient(180deg,rgba(2,6,23,.2),rgba(2,6,23,.6)); backdrop-filter: blur(10px)
 }
-.footer{padding:24px 0 60px; text-align:center}
+.footer{
+  padding:24px 0 80px; text-align:center; position:relative; z-index:1;
+}
+.footer .muted{color:#cfe1ff}           /* 提高可见度 */
+.footer a{color:#e0e7ff; text-decoration:underline} /* 链接更亮 */
 
 .status-bar{
   position:sticky; top:0; z-index:50; text-align:center; padding:6px 10px;
@@ -76,3 +80,14 @@ input[aria-invalid="true"]{border-color:var(--danger)}
   background:#111827; border:1px solid rgba(148,163,184,.25); color:#e5e7eb;
   padding:10px 12px; border-radius:10px; min-width:220px; box-shadow:0 10px 30px -12px black
 }
+
+/* 简易弹窗 */
+.dialog-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:60;
+}
+.dialog{
+  width:min(560px,92vw); background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.8)
+}
+.dialog h3{margin:0 0 8px}
+.dialog .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}

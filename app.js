@@ -1,4 +1,4 @@
-/* FreelanceKit app — P0 UX upgrade (Cloudflare Pages ready) */
+/* FreelanceKit app — refine preview/export + footer + Pro dialog */
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -19,7 +19,7 @@
   const netState = byId('net-state');
   const pwaState = byId('pwa-state');
   const installBtn = byId('installPWA');
-  const buyPro = byId('buyPro');
+  const buyProBtn = byId('buyPro');
 
   const setNetState = () => {
     if (netState) netState.textContent = navigator.onLine ? 'Online' : 'Offline';
@@ -45,12 +45,27 @@
       toast('Install prompt shown');
     });
   }
-  if (buyPro) buyPro.title = 'Unlock Pro templates & features';
+
+  // Pro dialog
+  const proDlg = byId('proDlg');
+  const proClose = byId('proClose');
+  if (buyProBtn) buyProBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (proDlg) proDlg.style.display = 'flex';
+  });
+  if (proClose) proClose.addEventListener('click', () => { if (proDlg) proDlg.style.display = 'none'; });
 
   // --- Form elements ---
   const yourName = byId('yourName');
   const yourEmail = byId('yourEmail');
+  const yourAddress = byId('yourAddress');
+  const yourPhone = byId('yourPhone');
+
   const clientName = byId('clientName');
+  const clientEmail = byId('clientEmail');
+  const clientAddress = byId('clientAddress');
+  const clientRef = byId('clientRef');
+
   const docType = byId('docType');
   const docNo = byId('docNo');
   const docDate = byId('docDate');
@@ -220,12 +235,9 @@
     }));
     return {
       meta: { version: 1 },
-      your: { name: yourName?.value, email: yourEmail?.value, address: byId('yourAddress')?.value || '', phone: byId('yourPhone')?.value || '' },
-      client: { name: clientName?.value, email: byId('clientEmail')?.value || '', address: byId('clientAddress')?.value || '', ref: byId('clientRef')?.value || '' },
-      doc: {
-        type: docType?.value, no: docNo?.value, date: docDate?.value,
-        currency: currency?.value, taxRate: taxRate?.value
-      },
+      your: { name: yourName?.value, email: yourEmail?.value, address: yourAddress?.value || '', phone: yourPhone?.value || '' },
+      client: { name: clientName?.value, email: clientEmail?.value || '', address: clientAddress?.value || '', ref: clientRef?.value || '' },
+      doc: { type: docType?.value, no: docNo?.value, date: docDate?.value, currency: currency?.value, taxRate: taxRate?.value },
       rows,
       notes: byId('notes')?.value || '',
       terms: byId('terms')?.value || ''
@@ -236,13 +248,13 @@
     try {
       yourName && (yourName.value = data.your?.name || '');
       yourEmail && (yourEmail.value = data.your?.email || '');
-      byId('yourAddress') && (byId('yourAddress').value = data.your?.address || '');
-      byId('yourPhone') && (byId('yourPhone').value = data.your?.phone || '');
+      yourAddress && (yourAddress.value = data.your?.address || '');
+      yourPhone && (yourPhone.value = data.your?.phone || '');
 
       clientName && (clientName.value = data.client?.name || '');
-      byId('clientEmail') && (byId('clientEmail').value = data.client?.email || '');
-      byId('clientAddress') && (byId('clientAddress').value = data.client?.address || '');
-      byId('clientRef') && (byId('clientRef').value = data.client?.ref || '');
+      clientEmail && (clientEmail.value = data.client?.email || '');
+      clientAddress && (clientAddress.value = data.client?.address || '');
+      clientRef && (clientRef.value = data.client?.ref || '');
 
       docType && (docType.value = data.doc?.type || 'invoice');
       docNo && (docNo.value = data.doc?.no || '');
@@ -259,9 +271,7 @@
       updateTotals();
       toast('Data loaded');
       dirty = false;
-    } catch (e) {
-      console.error(e); toast('Invalid JSON structure');
-    }
+    } catch (e) { console.error(e); toast('Invalid JSON structure'); }
   };
 
   if (saveJsonBtn) saveJsonBtn.addEventListener('click', () => {
@@ -279,73 +289,99 @@
     const inp = document.createElement('input');
     inp.type = 'file'; inp.accept = 'application/json';
     inp.onchange = async () => {
-      const file = inp.files?.[0];
-      if (!file) return;
+      const file = inp.files?.[0]; if (!file) return;
       const text = await file.text();
-      try {
-        const data = JSON.parse(text);
-        if (!data || typeof data !== 'object') throw new Error('Invalid JSON');
-        hydrate(data);
-      } catch {
-        toast('Invalid JSON file');
-      }
+      try { const data = JSON.parse(text); hydrate(data); }
+      catch { toast('Invalid JSON file'); }
     };
     inp.click();
   });
 
-  if (importCSVBtn) {
-    importCSVBtn.addEventListener('click', () => {
-      toast('Clients CSV import is a Pro feature');
-    });
-  }
+  if (importCSVBtn) importCSVBtn.addEventListener('click', () => toast('Clients CSV import is a Pro feature'));
 
-  // --- Preview & Export (native print) ---
-  const openPrintWindow = () => {
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) { toast('Popup blocked'); return; }
+  // --- Print preview + export ---
+  const buildPrintHTML = (autoPrint=false) => {
+    const data = serialize();
     const rowsHtml = $$('.item-row').map(row => {
       const d = $('.item-desc', row)?.value || '';
       const q = $('.item-qty', row)?.value || '';
       const p = $('.item-price', row)?.value || '';
       const t = $('.item-tax', row)?.value || '';
       const amt = $('.item-amount', row)?.textContent || '';
-      return `<tr><td>${d}</td><td>${q}</td><td>${p}</td><td>${t}</td><td>${amt}</td></tr>`;
+      return `<tr><td>${d}</td><td style="text-align:right">${q}</td><td style="text-align:right">${p}</td><td style="text-align:right">${t}</td><td style="text-align:right">${amt}</td></tr>`;
     }).join('');
-    const html = `
+    const script = autoPrint ? `<script>window.addEventListener('load',()=>window.print(),{once:true})<\/script>` : '';
+    return `
 <!doctype html><html><head><meta charset="utf-8">
-<title>Print — ${docType?.value || ''} ${docNo?.value || ''}</title>
+<title>${(data.doc?.type || 'Document').toUpperCase()} ${data.doc?.no || ''}</title>
 <style>
-  body{font:14px/1.5 system-ui; padding:24px; color:#111}
+  :root{--ink:#111;--muted:#666}
+  body{font:14px/1.6 system-ui,Segoe UI,Roboto,Arial;padding:28px;color:var(--ink)}
   h1{font-size:20px;margin:0 0 8px}
-  table{width:100%; border-collapse:collapse}
+  .muted{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 16px}
+  table{width:100%; border-collapse:collapse; margin-top:10px}
   th,td{border:1px solid #ddd; padding:6px}
+  th{background:#f3f4f6;text-align:left}
   tfoot td{font-weight:bold}
+  .totals td{font-weight:bold}
 </style>
 </head><body>
-  <h1>${(docType?.value || 'Document').toUpperCase()} ${docNo?.value || ''}</h1>
-  <p><strong>Date:</strong> ${docDate?.value || ''} • <strong>Currency:</strong> ${currency?.value || 'MYR'}</p>
+  <h1>${(data.doc?.type || 'Document').toUpperCase()} ${data.doc?.no || ''}</h1>
+  <div class="grid">
+    <div>
+      <div class="muted">From</div>
+      <div>${data.your?.name || ''}</div>
+      <div>${data.your?.email || ''}</div>
+      <div>${data.your?.address || ''}</div>
+      <div>${data.your?.phone || ''}</div>
+    </div>
+    <div>
+      <div class="muted">Bill To</div>
+      <div>${data.client?.name || ''}</div>
+      <div>${data.client?.email || ''}</div>
+      <div>${data.client?.address || ''}</div>
+      <div>Ref: ${data.client?.ref || '-'}</div>
+      <div>Date: ${data.doc?.date || ''} • Currency: ${data.doc?.currency || ''}</div>
+    </div>
+  </div>
+
   <table>
-    <thead><tr><th>Description</th><th>Qty</th><th>Unit</th><th>Tax%</th><th>Amount</th></tr></thead>
+    <thead><tr><th>Description</th><th style="text-align:right">Qty</th><th style="text-align:right">Unit</th><th style="text-align:right">Tax%</th><th style="text-align:right">Amount</th></tr></thead>
     <tbody>${rowsHtml}</tbody>
     <tfoot>
-      <tr><td colspan="4">Subtotal</td><td>${subtotalEl?.textContent || ''}</td></tr>
-      <tr><td colspan="4">Tax</td><td>${taxAmountEl?.textContent || ''}</td></tr>
-      <tr><td colspan="4">Total</td><td>${grandTotalEl?.textContent || ''}</td></tr>
+      <tr><td colspan="4" style="text-align:right">Subtotal</td><td style="text-align:right">${byId('subtotal')?.textContent || ''}</td></tr>
+      <tr><td colspan="4" style="text-align:right">Tax</td><td style="text-align:right">${byId('taxAmount')?.textContent || ''}</td></tr>
+      <tr><td colspan="4" style="text-align:right">Total</td><td style="text-align:right">${byId('grandTotal')?.textContent || ''}</td></tr>
     </tfoot>
   </table>
-  <script>window.addEventListener('load', ()=>window.print(), {once:true})</script>
+
+  <p><strong>Notes</strong><br>${data.notes || '-'}</p>
+  <p><strong>Terms</strong><br>${data.terms || '-'}</p>
+  ${script}
 </body></html>`;
-    w.document.write(html);
+  };
+
+  const openPreview = () => {
+    const w = window.open('', '_blank', 'noopener,noreferrer');
+    if (!w) { toast('Popup blocked'); return; }
+    w.document.write(buildPrintHTML(false));
+    w.document.close();
+  };
+  const openExport = () => {
+    const w = window.open('', '_blank', 'noopener,noreferrer');
+    if (!w) { toast('Popup blocked'); return; }
+    w.document.write(buildPrintHTML(true));
     w.document.close();
   };
 
   if (previewBtn) previewBtn.addEventListener('click', () => {
     if (!validateCore()) { toast('Fix highlighted fields'); return; }
-    openPrintWindow();
+    openPreview();
   });
   if (exportBtn) exportBtn.addEventListener('click', () => {
     if (!validateCore()) { toast('Fix highlighted fields'); return; }
-    openPrintWindow();
+    openExport();
     toast('Use system dialog to save as PDF');
   });
 
