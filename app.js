@@ -1,4 +1,4 @@
-/* FreelanceKit Core */
+/* FreelanceKit Core — UX upgrades: validation, toast, undo, shortcuts */
 const $ = (s, el=document) => el.querySelector(s);
 const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
 
@@ -18,6 +18,7 @@ const App = {
     paymentTerms: '',
     templateMeta: null
   },
+  lastRemoved: null,
   i18n: {
     en: {
       tagline: "Quotes • Invoices • Contracts",
@@ -60,7 +61,6 @@ const App = {
       const key = el.getAttribute('data-i18n');
       if (dict[key]) el.textContent = dict[key];
     });
-    // Placeholders
     if (lang === 'zh') {
       $('#yourName').placeholder = '某某工作室';
       $('#clientName').placeholder = '某某公司';
@@ -89,20 +89,30 @@ const App = {
     $('#langSelect').addEventListener('change', e => App.setLang(e.target.value));
 
     $('#addItemBtn').addEventListener('click', App.addItem);
-    $('#previewBtn').addEventListener('click', App.renderPreview);
-    $('#exportPdfBtn').addEventListener('click', () => exportToPDF($('#preview'), App.filename()));
+    $('#previewBtn').addEventListener('click', ()=>{
+      App.renderPreview();
+      $('.preview-pane').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    $('#exportPdfBtn').addEventListener('click', () => {
+      const issues = App.validate();
+      if (issues.length){
+        if (!confirm('Please check:\n- ' + issues.join('\n- ') + '\n\nContinue to export?')) return;
+      }
+      exportToPDF($('#preview'), App.filename());
+    });
+
     $('#saveLocalBtn').addEventListener('click', App.saveLocal);
     $('#loadLocalBtn').addEventListener('click', App.loadLocal);
     $('#exportJsonBtn').addEventListener('click', App.exportJSON);
     $('#importJsonInput').addEventListener('change', App.importJSON);
     $('#importCsvClients').addEventListener('change', App.importClientsCSV);
-
     $('#enterKeyBtn').addEventListener('click', ()=>{
       const key = prompt('Enter your Pro key (local unlock)');
       if (!key) return;
       localStorage.setItem('fk.proKey', key);
       App.state.pro = true;
-      alert('Pro unlocked locally. Thank you!');
+      showToast('Pro unlocked locally. Thank you!');
       App.toggleProUI();
     });
 
@@ -115,6 +125,12 @@ const App = {
     });
 
     App.setupInstall();
+
+    // User templates (offline import)
+    const importTplBtn = $('#importTplInput');
+    if (importTplBtn) importTplBtn.addEventListener('change', App.importTemplateJSON);
+    App.loadUserTemplates();
+
     App.populateTemplateSelect();
     App.loadTemplateById(App.state.templateId);
 
@@ -127,6 +143,13 @@ const App = {
 
     App.loadLocal(true);
     App.setLang('en');
+
+    // Shortcuts: Ctrl/Cmd+S save, Ctrl/Cmd+P export PDF, Ctrl/Cmd+I add item
+    window.addEventListener('keydown', (e)=>{
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); App.saveLocal(); showToast('Saved locally'); }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='p'){ e.preventDefault(); const issues = App.validate(); if (!issues.length || confirm('Issues:\n- '+issues.join('\n- ')+'\nContinue?')) exportToPDF($('#preview'), App.filename()); }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==='i'){ e.preventDefault(); App.addItem(); showToast('Item added'); }
+    });
   },
   syncDocTypeVisibility(){
     const type = App.state.docType;
@@ -167,6 +190,7 @@ const App = {
     };
     App.state.notes = $('#notes').value;
     App.state.paymentTerms = $('#paymentTerms').value;
+    App.captureItems();
     App.renderPreview();
   },
   addItem(){
@@ -180,7 +204,7 @@ const App = {
       <input class="unit" type="number" min="0" step="0.01" placeholder="100" />
       <input class="tax" type="number" min="0" step="0.01" placeholder="0" />
       <input class="amount" type="text" readonly />
-      <button class="remove">✕</button>
+      <button class="remove" title="Remove">✕</button>
     `;
     $('#items').appendChild(el);
 
@@ -195,12 +219,38 @@ const App = {
       App.renderPreview();
     };
     $$('.qty, .unit, .tax, .desc', el).forEach(inp => inp.addEventListener('input', update));
+
     $('.remove', el).addEventListener('click', ()=>{
+      const idx = $$('#items .item-row').indexOf ? $$('#items .item-row').indexOf(el) : Array.from($('#items').children).indexOf(el);
+      const snap = {
+        data: {
+          qty: parseFloat($('.qty', el).value)||0,
+          desc: $('.desc', el).value||'',
+          unit: parseFloat($('.unit', el).value)||0,
+          tax: parseFloat($('.tax', el).value)||0
+        },
+        pos: idx
+      };
       el.remove();
       App.captureItems();
       App.renderPreview();
+      App.lastRemoved = snap;
+      showToast('Item removed', 'Undo', ()=>{
+        const row = App.addItem();
+        // Move it back to the original position
+        if (snap.pos >= 0 && snap.pos < $('#items').children.length-1){
+          $('#items').insertBefore(row, $('#items').children[snap.pos]);
+        }
+        $('.qty', row).value = snap.data.qty;
+        $('.desc', row).value = snap.data.desc;
+        $('.unit', row).value = snap.data.unit;
+        $('.tax', row).value = snap.data.tax;
+        $('.qty', row).dispatchEvent(new Event('input'));
+      });
     });
+
     update();
+    return el;
   },
   captureItems(){
     App.state.items = $$('#items .item-row').map(row => ({
@@ -228,7 +278,7 @@ const App = {
     App.templatesIndex.forEach(t => {
       const opt = document.createElement('option');
       opt.value = t.id;
-      opt.textContent = t.name + (t.pro ? ' 🔒' : '');
+      opt.textContent = t.name + (t.pro ? ' 🔒' : '') + (t.user ? ' (Imported)' : '');
       sel.appendChild(opt);
     });
     sel.addEventListener('change', (e)=>{
@@ -240,6 +290,14 @@ const App = {
     const meta = App.templatesIndex.find(t => t.id === id);
     if (!meta) return;
     try {
+      if (meta.user && meta.inlineTpl){
+        const tpl = meta.inlineTpl;
+        App.state.templateMeta = tpl;
+        $('#templateName').textContent = tpl.title || meta.name;
+        App.state.isProTemplateDemo = false;
+        App.applyTemplate(tpl);
+        return;
+      }
       const res = await fetch(meta.path);
       const tpl = await res.json();
       App.state.templateMeta = tpl;
@@ -276,7 +334,6 @@ const App = {
         ${s.your.email? `<div>${escapeHtml(s.your.email)}</div>`:''}
         ${s.your.phone? `<div>${escapeHtml(s.your.phone)}</div>`:''}
       </div>`;
-
     const clientBlock = `
       <div class="box">
         <div class="label">${s.lang==='zh'?'收件方':'Bill To'}</div>
@@ -286,7 +343,6 @@ const App = {
         ${s.client.email? `<div>${escapeHtml(s.client.email)}</div>`:''}
         ${s.client.phone? `<div>${escapeHtml(s.client.phone)}</div>`:''}
       </div>`;
-
     const logo = s.logoDataUrl ? `<img src="${s.logoDataUrl}" alt="logo" style="height:48px;max-width:220px;border-radius:6px" />` : '';
 
     const itemsTable = (s.docType === 'contract') ? '' : `
@@ -316,237 +372,4 @@ const App = {
         </tbody>
         <tfoot>
           <tr><td colspan="4" style="text-align:right">${s.lang==='zh'?'小计':'Subtotal'}</td><td>${App.currencyFmt(t.sub)}</td></tr>
-          <tr><td colspan="4" style="text-align:right">${s.lang==='zh'?'税额':'Tax'}</td><td>${App.currencyFmt(t.tax)}</td></tr>
-          <tr><td colspan="4" style="text-align:right">${s.lang==='zh'?'总计':'Total'}</td><td>${App.currencyFmt(t.total)}</td></tr>
-        </tfoot>
-      </table>`;
-
-    const termsNotes = `
-      ${s.notes? `<div class="notes"><strong>${s.lang==='zh'?'备注':'Notes'}:</strong><br>${nl2br(escapeHtml(s.notes))}</div>`:''}
-      ${(s.paymentTerms && s.docType!=='contract')? `<div class="notes"><strong>${s.lang==='zh'?'付款条款':'Payment Terms'}:</strong><br>${nl2br(escapeHtml(s.paymentTerms))}</div>`:''}
-    `;
-
-    const contractBody = (s.docType==='contract')
-      ? `<div class="box">
-           <div class="label">${s.lang==='zh'?'合同内容':'Contract'}</div>
-           ${renderContractDefault(s)}
-         </div>`
-      : '';
-
-    const idblock = `
-      <div class="idblock">
-        <div>${s.lang==='zh'?'编号':'Number'}: <strong>${escapeHtml(s.meta.number||'')}</strong></div>
-        <div>${s.lang==='zh'?'开具日期':'Issue'}: ${escapeHtml(s.meta.issueDate||'')}</div>
-        ${s.docType!=='contract'? `<div>${s.lang==='zh'?'到期日':'Due'}: ${escapeHtml(s.meta.dueDate||'')}</div>`:''}
-        <div>${s.lang==='zh'?'货币':'Currency'}: ${s.currency}</div>
-      </div>`;
-
-    $('#preview').innerHTML = `
-      ${App.state.isProTemplateDemo ? `<div class="watermark">DEMO</div>`:''}
-      <div class="header">
-        <div>
-          <div class="title"><span class="accent">${typeTitle}</span></div>
-        </div>
-        <div>${logo || ''}</div>
-        ${idblock}
-      </div>
-
-      <div class="two-col">
-        ${yourBlock}
-        ${clientBlock}
-      </div>
-
-      ${itemsTable}
-      ${contractBody}
-      ${termsNotes}
-    `;
-  },
-  filename(){
-    const s = App.state;
-    const safe = (s.client.name||'client').replace(/[^\w\-]+/g,'_');
-    return `${s.docType}-${safe}-${s.meta.number||'draft'}.pdf`;
-  },
-  saveLocal(){
-    App.captureItems();
-    const data = JSON.stringify(App.state);
-    localStorage.setItem('fk.state', data);
-    alert('Saved locally.');
-  },
-  loadLocal(silent=false){
-    const raw = localStorage.getItem('fk.state');
-    const proKey = localStorage.getItem('fk.proKey');
-    if (proKey) App.state.pro = true;
-    App.toggleProUI();
-    if (!raw) return;
-    try{
-      const s = JSON.parse(raw);
-      Object.assign(App.state, s);
-      $('#yourName').value = s.your?.name || '';
-      $('#yourTaxId').value = s.your?.taxId || '';
-      $('#yourAddress').value = s.your?.address || '';
-      $('#yourEmail').value = s.your?.email || '';
-      $('#yourPhone').value = s.your?.phone || '';
-      $('#clientName').value = s.client?.name || '';
-      $('#clientTaxId').value = s.client?.taxId || '';
-      $('#clientAddress').value = s.client?.address || '';
-      $('#clientEmail').value = s.client?.email || '';
-      $('#clientPhone').value = s.client?.phone || '';
-      $('#docNumber').value = s.meta?.number || '';
-      $('#issueDate').value = s.meta?.issueDate || '';
-      $('#dueDate').value = s.meta?.dueDate || '';
-      $('#notes').value = s.notes || '';
-      $('#paymentTerms').value = s.paymentTerms || '';
-      $('#documentType').value = s.docType || 'invoice';
-      $('#currencySelect').value = s.currency || 'USD';
-      $('#langSelect').value = s.lang || 'en';
-      App.setLang($('#langSelect').value);
-
-      $('#items').innerHTML = '';
-      (s.items || []).forEach(()=> App.addItem());
-      $$('#items .item-row').forEach((row, idx)=>{
-        const it = s.items[idx];
-        if (!it) return;
-        $('.qty', row).value = it.qty ?? 0;
-        $('.desc', row).value = it.desc ?? '';
-        $('.unit', row).value = it.unit ?? 0;
-        $('.tax', row).value = it.tax ?? 0;
-        const ev = new Event('input'); $('.qty', row).dispatchEvent(ev);
-      });
-
-      if (s.logoDataUrl) App.state.logoDataUrl = s.logoDataUrl;
-
-      App.populateTemplateSelect();
-      $('#templateSelect').value = s.templateId || 'invoice-default';
-      App.loadTemplateById($('#templateSelect').value);
-
-      App.syncDocTypeVisibility();
-      App.renderPreview();
-      if (!silent) alert('Loaded.');
-    }catch(e){ console.warn('Load failed', e); }
-  },
-  exportJSON(){
-    App.captureItems();
-    const blob = new Blob([JSON.stringify(App.state, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `freelancekit-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  },
-  importJSON(e){
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const s = JSON.parse(reader.result);
-        localStorage.setItem('fk.state', JSON.stringify(s));
-        App.loadLocal();
-      } catch(err) {
-        alert('Invalid JSON.');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  },
-  importClientsCSV(e){
-    if (!App.state.pro){ alert('This is a Pro feature.'); e.target.value=''; return; }
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const lines = reader.result.split(/\r?\n/).filter(Boolean);
-      const header = lines.shift();
-      const cols = header.split(',').map(s=>s.trim().toLowerCase());
-      const idx = (k)=> cols.indexOf(k);
-      const list = lines.map(line=>{
-        const cells = parseCsvLine(line);
-        return {
-          name: cells[idx('name')] || '',
-          email: cells[idx('email')] || '',
-          phone: cells[idx('phone')] || '',
-          address: cells[idx('address')] || '',
-          taxId: cells[idx('taxid')] || cells[idx('tax_id')] || ''
-        };
-      });
-      if (list[0]){
-        $('#clientName').value = list[0].name;
-        $('#clientEmail').value = list[0].email;
-        $('#clientPhone').value = list[0].phone;
-        $('#clientAddress').value = list[0].address;
-        $('#clientTaxId').value = list[0].taxId;
-        App.onFieldChange();
-        alert(`Imported ${list.length} clients. First applied to form.`);
-      } else {
-        alert('No rows found.');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  },
-  toggleProUI(){
-    if (App.state.pro){
-      $$('.file-btn.pro').forEach(el => el.style.opacity = 1);
-      $('#getProBtn').textContent = 'Pro Active ✅';
-      $('#getProBtn').href = '#';
-    }
-  },
-  loadLogo(e){
-    const f = e.target.files[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      App.state.logoDataUrl = reader.result;
-      App.renderPreview();
-    };
-    reader.readAsDataURL(f);
-  },
-  setupInstall(){
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      $('#installBtn').hidden = false;
-      $('#installBtn').addEventListener('click', async ()=>{
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        $('#installBtn').hidden = true;
-      });
-    });
-  }
-};
-
-function escapeHtml(s=''){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-function nl2br(s=''){ return s.replace(/\n/g,'<br/>'); }
-function fmt(n){ return (isFinite(n)? Number(n).toLocaleString(): '0'); }
-function parseCsvLine(line){
-  const out=[]; let cur=''; let inQ=false;
-  for (let i=0;i<line.length;i++){
-    const c=line[i];
-    if (c==='"' ){ if (inQ && line[i+1]==='"'){cur+='"'; i++;} else { inQ=!inQ; } }
-    else if (c===',' && !inQ){ out.push(cur); cur=''; }
-    else { cur+=c; }
-  }
-  out.push(cur); return out.map(s=>s.trim());
-}
-
-function renderContractDefault(s){
-  const partyA = escapeHtml(s.your.name||'[Your Company]');
-  const partyB = escapeHtml(s.client.name||'[Client]');
-  return `
-    <p>This Agreement ("Agreement") is entered into between <strong>${partyA}</strong> ("Contractor") and <strong>${partyB}</strong> ("Client").</p>
-    <ol>
-      <li><strong>Scope.</strong> Contractor agrees to provide services as described in the attached Statement of Work.</li>
-      <li><strong>Fees.</strong> Client agrees to pay fees as invoiced. Taxes (VAT/GST) are client’s responsibility when applicable.</li>
-      <li><strong>Timeline.</strong> Work commences upon initial payment and required materials from Client.</li>
-      <li><strong>IP & License.</strong> Upon full payment, deliverables are licensed to Client as agreed.</li>
-      <li><strong>Confidentiality.</strong> Both parties agree to keep confidential information private.</li>
-      <li><strong>Termination.</strong> Either party may terminate with written notice. Fees due for work performed remain payable.</li>
-      <li><strong>Governing Law.</strong> This Agreement is governed by applicable law chosen by Contractor.</li>
-    </ol>
-  `;
-}
-
-window.addEventListener('DOMContentLoaded', App.init);
+          <tr><td colspan="4" 
