@@ -17,28 +17,36 @@
   <header class="container header">
     <h1 class="app-title">FreelanceKit</h1>
     <div class="header-actions">
+      <select id="langSwitcher" aria-label="Language">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
       <button id="installPWA" class="btn ghost" aria-label="Install as app">Install</button>
       <a id="buyPro" class="btn primary lock" href="#" rel="noopener">Unlock Pro</a>
     </div>
   </header>
 
   <main id="app" class="container content" aria-describedby="workflow">
-    <p id="workflow" class="muted">Workflow: Fill → Preview → Export/Save</p>
+    <p id="workflow" class="muted" data-i18n="workflow">Workflow: Fill → Preview → Export/Save</p>
 
     <!-- Your Details -->
     <section class="card" aria-labelledby="sec-your">
-      <h2 id="sec-your">Your Details</h2>
+      <h2 id="sec-your" data-i18n="yourDetails">Your Details</h2>
       <div class="grid-2">
-        <label>Business / Name
+        <label data-i18n-label="yourName">
+          <span>Business / Name</span>
           <input id="yourName" required placeholder="Acme Studio" autocomplete="organization" />
         </label>
-        <label>Email
+        <label data-i18n-label="yourEmail">
+          <span>Email</span>
           <input id="yourEmail" type="email" required placeholder="you@domain.com" autocomplete="email" />
         </label>
-        <label>Address
+        <label data-i18n-label="yourAddress">
+          <span>Address</span>
           <textarea id="yourAddress" placeholder="Street, City, Country"></textarea>
         </label>
-        <label>Phone
+        <label data-i18n-label="yourPhone">
+          <span>Phone</span>
           <input id="yourPhone" type="tel" placeholder="+60 12-345 6789" autocomplete="tel" />
         </label>
       </div>
@@ -46,18 +54,22 @@
 
     <!-- Client Details -->
     <section class="card" aria-labelledby="sec-client">
-      <h2 id="sec-client">Client Details</h2>
+      <h2 id="sec-client" data-i18n="clientDetails">Client Details</h2>
       <div class="grid-2">
-        <label>Client Name
+        <label data-i18n-label="clientName">
+          <span>Client Name</span>
           <input id="clientName" required placeholder="Client Co. Ltd." />
         </label>
-        <label>Client Email
+        <label data-i18n-label="clientEmail">
+          <span>Client Email</span>
           <input id="clientEmail" type="email" placeholder="ap@client.com" />
         </label>
-        <label>Client Address
+        <label data-i18n-label="clientAddress">
+          <span>Client Address</span>
           <textarea id="clientAddress" placeholder="Street, City, Country"></textarea>
         </label>
-        <label>PO / Reference
+        <label data-i18n-label="clientRef">
+          <span>PO / Reference</span>
           <input id="clientRef" placeholder="PO-2025-0012" />
         </label>
       </div>
@@ -65,58 +77,70 @@
 
     <!-- Document -->
     <section class="card" aria-labelledby="sec-doc">
-      <h2 id="sec-doc">Document</h2>
+      <h2 id="sec-doc" data-i18n="document">Document</h2>
       <div class="grid-3">
-        <label>Type
+        <label data-i18n-label="type">
+          <span>Type</span>
           <select id="docType" required>
-            <option value="invoice">Invoice</option>
-            <option value="quote">Quote</option>
-            <option value="contract">Contract</option>
+            <option value="invoice" data-i18n="invoice">Invoice</option>
+            <option value="quote" data-i18n="quote">Quote</option>
+            <option value="contract" data-i18n="contract">Contract</option>
           </select>
         </label>
-        <label>Document No.
+        <label data-i18n-label="docNo">
+          <span>Document No.</span>
           <input id="docNo" required pattern="[A-Za-z0-9-_]{1,32}" placeholder="INV-2025-0001" />
         </label>
-        <label>Date
+        <label data-i18n-label="date">
+          <span>Date</span>
           <input id="docDate" type="date" required />
         </label>
-        <label>Currency
+        <label data-i18n-label="currency">
+          <span>Currency</span>
           <select id="currency" required>
             <option>MYR</option><option>USD</option><option>EUR</option><option>SGD</option><option>CNY</option>
           </select>
         </label>
-        <label>Tax %
+        <label data-i18n-label="tax">
+          <span>Tax %</span>
           <input id="taxRate" inputmode="decimal" pattern="^([0-9]|[1-9][0-9]|100)(\\.[0-9]{1,2})?$" placeholder="0–100" />
         </label>
       </div>
       <div class="toolbar-inline">
-        <button id="loadJson" class="btn">Load JSON</button>
-        <button id="saveJson" class="btn">Save JSON</button>
-        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only">Import Clients CSV (Pro)</button>
+        <button id="loadJson" class="btn" data-i18n="loadJson">Load JSON</button>
+        <button id="saveJson" class="btn" data-i18n="saveJson">Save JSON</button>
+        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only" data-i18n="importCSV">Import Clients CSV (Pro)</button>
       </div>
     </section>
 
     <!-- Line Items -->
     <section class="card" aria-labelledby="sec-items">
-      <h2 id="sec-items">Line Items</h2>
+      <h2 id="sec-items" data-i18n="lineItems">Line Items</h2>
       <div class="items-head">
-        <span>Description</span><span>Qty</span><span>Unit Price</span><span>Tax %</span><span>Amount</span><span></span>
+        <span data-i18n="desc">Description</span>
+        <span data-i18n="qty">Qty</span>
+        <span data-i18n="unitPrice">Unit Price</span>
+        <span data-i18n="taxShort">Tax %</span>
+        <span data-i18n="amount">Amount</span>
+        <span></span>
       </div>
       <div id="lineItems" class="items-list" role="table" aria-label="Line items"></div>
       <div class="toolbar-inline">
-        <button id="addItem" class="btn primary">Add Item</button>
-        <button id="clearItems" class="btn danger ghost">Clear All</button>
+        <button id="addItem" class="btn primary" data-i18n="addItem">Add Item</button>
+        <button id="clearItems" class="btn danger ghost" data-i18n="clearAll">Clear All</button>
       </div>
     </section>
 
     <!-- Notes / Terms -->
     <section class="card" aria-labelledby="sec-notes">
-      <h2 id="sec-notes">Notes & Terms</h2>
+      <h2 id="sec-notes" data-i18n="notesTerms">Notes & Terms</h2>
       <div class="grid-2">
-        <label>Notes
+        <label data-i18n-label="notes">
+          <span>Notes</span>
           <textarea id="notes" placeholder="Optional notes to the client"></textarea>
         </label>
-        <label>Terms
+        <label data-i18n-label="terms">
+          <span>Terms</span>
           <textarea id="terms" placeholder="Payment due in 14 days. Late fees may apply."></textarea>
         </label>
       </div>
@@ -125,41 +149,40 @@
     <!-- Totals (sticky) -->
     <section id="totals" class="card sticky" aria-live="polite">
       <div class="totals-row">
-        <div>Subtotal</div><div id="subtotal">—</div>
+        <div data-i18n="subtotal">Subtotal</div><div id="subtotal">—</div>
       </div>
       <div class="totals-row">
-        <div>Tax</div><div id="taxAmount">—</div>
+        <div data-i18n="tax">Tax</div><div id="taxAmount">—</div>
       </div>
       <div class="totals-row total">
-        <div>Total</div><div id="grandTotal">—</div>
+        <div data-i18n="total">Total</div><div id="grandTotal">—</div>
       </div>
     </section>
   </main>
 
   <!-- Floating action bar -->
   <nav class="fab" aria-label="Primary actions">
-    <button id="previewPDF" class="btn primary">Preview (Ctrl+P)</button>
-    <button id="exportPDF" class="btn">Export PDF</button>
+    <button id="previewPDF" class="btn primary" data-i18n="preview">Preview (Ctrl+P)</button>
+    <button id="exportPDF" class="btn" data-i18n="export">Export PDF</button>
   </nav>
 
   <!-- Toasts -->
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
   <!-- Pro 说明弹窗 -->
-  <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle">
+  <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle" aria-hidden="true">
     <div class="dialog">
       <h3 id="proTitle">FreelanceKit Pro</h3>
-      <p>即将提供/逐步开放的能力：</p>
+      <p data-i18n="proIntro">Upcoming / rolling out:</p>
       <ul>
-        <li>无水印模板包（发票/报价/合同，多样配色）</li>
-        <li>Clients/Projects CSV 导入</li>
-        <li>批量开票、Timesheet → Invoice</li>
-        <li>White-label（可隐藏品牌标识）</li>
+        <li data-i18n="proTpl">Template pack (no watermark)</li>
+        <li data-i18n="proCsv">Clients/Projects CSV import</li>
+        <li data-i18n="proBatch">Batch invoicing, Timesheet → Invoice</li>
+        <li data-i18n="proWL">White-label option</li>
       </ul>
-      <p>现在可以先支持作者或预购：</p>
       <p><a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">https://ko-fi.com/loongtm</a></p>
       <div class="actions">
-        <button id="proClose" class="btn primary">Got it</button>
+        <button id="proClose" class="btn primary" data-i18n="gotIt">Got it</button>
       </div>
     </div>
   </div>

@@ -15,7 +15,8 @@ a:hover{text-decoration:underline}
 .header{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
 .app-title{margin:0; font-size:22px; letter-spacing:.3px}
 .header-actions{display:flex; gap:8px}
-.content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px} /* 留更多空间给浮条 */
+.header select{padding:8px 10px; border-radius:10px; background:rgba(2,6,23,.6); color:var(--text); border:1px solid rgba(148,163,184,.25)}
+.content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px}
 .card{
   background:linear-gradient(180deg,rgba(17,24,39,.6),rgba(17,24,39,.35));
   border:1px solid rgba(255,255,255,.06);
@@ -63,8 +64,8 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 .footer{
   padding:24px 0 80px; text-align:center; position:relative; z-index:1;
 }
-.footer .muted{color:#cfe1ff}           /* 提高可见度 */
-.footer a{color:#e0e7ff; text-decoration:underline} /* 链接更亮 */
+.footer .muted{color:#cfe1ff}
+.footer a{color:#e0e7ff; text-decoration:underline}
 
 .status-bar{
   position:sticky; top:0; z-index:50; text-align:center; padding:6px 10px;
@@ -81,10 +82,12 @@ input[aria-invalid="true"]{border-color:var(--danger)}
   padding:10px 12px; border-radius:10px; min-width:220px; box-shadow:0 10px 30px -12px black
 }
 
-/* 简易弹窗 */
+/* Dialog */
+body.modal-open{overflow:hidden}
 .dialog-backdrop{
   position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:60;
 }
+.dialog-backdrop[aria-hidden="false"]{display:flex}
 .dialog{
   width:min(560px,92vw); background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px;
   box-shadow:0 20px 60px -20px rgba(0,0,0,.8)
