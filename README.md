@@ -1,4 +1,6 @@
 # FreelanceKit — Quotes • Invoices • Contracts (PWA)
+[![Demo](https://img.shields.io/badge/live_demo-open-brightgreen)](https://freelancekit-loongtm.netlify.app/)
+Live demo: https://freelancekit-loongtm.netlify.app/
 
 Offline-first, multi-currency, multi-language, export to PDF, templates system. Built for freelancers and small teams worldwide.
 
