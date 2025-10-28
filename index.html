@@ -2,257 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>FreelanceKit — Invoice • Quote • Contract</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="One‑stop PWA for freelancers: quotes, invoices, contracts. Offline‑first, multi‑currency, multi‑language, export PDF." />
-  <link rel="canonical" href="https://freelancekit-loongtm.netlify.app/" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://freelancekit-loongtm.netlify.app/" />
-  <meta property="og:title" content="FreelanceKit — Quotes • Invoices • Contracts" />
-  <meta property="og:description" content="Offline‑first PWA for freelancers worldwide. Multi‑currency, multi‑language, PDF export." />
-  <meta property="og:image" content="https://freelancekit-loongtm.netlify.app/assets/og.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="FreelanceKit — Quotes • Invoices • Contracts" />
-  <meta name="twitter:description" content="Offline‑first PWA for freelancers worldwide. Multi‑currency, multi‑language, PDF export." />
-  <meta name="twitter:image" content="https://freelancekit-loongtm.netlify.app/assets/og.png" />
-
-  <!-- PWA -->
-  <meta name="theme-color" content="#0ea5e9" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>FreelanceKit — Quotes • Invoices • Contracts</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="assets/icon.svg" type="image/svg+xml" />
-  <link rel="icon" href="assets/icon-512.png" sizes="512x512" type="image/png" />
-  <link rel="apple-touch-icon" href="assets/icon-512.png" />
-
+  <meta name="theme-color" content="#0f172a" />
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- JSON-LD -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"SoftwareApplication",
-    "name":"FreelanceKit",
-    "applicationCategory":"BusinessApplication",
-    "operatingSystem":"Web",
-    "url":"https://freelancekit-loongtm.netlify.app/",
-    "image":"https://freelancekit-loongtm.netlify.app/assets/icon-512.png",
-    "description":"Offline-first PWA for freelancers: quotes, invoices, contracts. Multi-currency, multi-language, PDF export.",
-    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}
-  }
-  </script>
 </head>
 <body>
-  <noscript>This app needs JavaScript. Enable JS to continue.</noscript>
+  <!-- App status bar -->
+  <div id="app-status" role="status" aria-live="polite" class="status-bar">
+    <span id="pwa-state">PWA ready</span> • <span id="net-state">Online</span>
+  </div>
 
-  <header class="app-header">
-    <div class="brand">
-      <img src="assets/logo.svg" alt="FreelanceKit" class="logo" />
-      <div class="brand-text">
-        <strong>FreelanceKit</strong>
-        <span class="tagline" data-i18n="tagline">Quotes • Invoices • Contracts</span>
-      </div>
-      <span id="offlineBadge" class="badge offline" hidden data-i18n="offline">Offline</span>
+  <header class="container header">
+    <h1 class="app-title">FreelanceKit</h1>
+    <div class="header-actions">
+      <button id="installPWA" class="btn ghost" aria-label="Install as app">Install</button>
+      <a id="buyPro" class="btn primary lock" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro</a>
     </div>
-
-    <nav class="toolbar">
-      <select id="documentType">
-        <option value="invoice" selected>Invoice</option>
-        <option value="quote">Quote</option>
-        <option value="contract">Contract</option>
-      </select>
-
-      <select id="templateSelect" title="Template"></select>
-
-      <!-- Import Template (offline JSON) -->
-      <label class="secondary small file-btn" title="Import Template JSON">
-        <input id="importTplInput" type="file" accept=".json,application/json" hidden />
-        <span>Import Template</span>
-      </label>
-
-      <select id="langSelect" title="Language">
-        <option value="en" selected>English</option>
-        <option value="zh">简体中文</option>
-      </select>
-
-      <select id="currencySelect" title="Currency">
-        <option>USD</option><option>EUR</option><option>GBP</option>
-        <option>CNY</option><option>JPY</option><option>MYR</option>
-        <option>INR</option><option>AUD</option><option>CAD</option>
-      </select>
-
-      <button id="installBtn" class="secondary" hidden data-i18n="install">Install App</button>
-
-      <!-- Get Pro (link to Pro page) -->
-      <a id="getProBtn" class="primary" href="pages/pro.html" target="_blank" rel="noopener">
-        ⭐ Get Pro Templates
-      </a>
-
-      <a class="secondary" href="https://github.com/Loongtm/freelancekit" target="_blank" rel="noopener">GitHub</a>
-    </nav>
   </header>
 
-  <main class="app-main">
-    <section class="pane form-pane">
-      <div class="section">
-        <h2 data-i18n="yourDetails">Your Details</h2>
-        <div class="grid two">
-          <label>
-            <span data-i18n="yourName">Name/Company</span>
-            <input id="yourName" placeholder="Acme Studio" />
-          </label>
-          <label>
-            <span data-i18n="yourTaxId">Tax ID</span>
-            <input id="yourTaxId" placeholder="VAT/GST/ABN" />
-          </label>
-          <label class="full">
-            <span data-i18n="yourAddress">Address</span>
-            <textarea id="yourAddress" rows="2" placeholder="Street, City, Country"></textarea>
-          </label>
-          <label>
-            <span>Email</span>
-            <input id="yourEmail" type="email" placeholder="you@studio.com" />
-          </label>
-          <label>
-            <span data-i18n="yourPhone">Phone</span>
-            <input id="yourPhone" placeholder="+1 555 1234" />
-          </label>
-          <label class="full">
-            <span data-i18n="yourLogo">Logo</span>
-            <input id="yourLogo" type="file" accept="image/*" />
-          </label>
-        </div>
-      </div>
+  <main id="app" class="container content" aria-describedby="workflow">
+    <p id="workflow" class="muted">Workflow: Fill → Preview → Export/Save</p>
 
-      <div class="section">
-        <h2 data-i18n="clientDetails">Client Details</h2>
-        <div class="grid two">
-          <label>
-            <span data-i18n="clientName">Name/Company</span>
-            <input id="clientName" placeholder="Client Inc." />
-          </label>
-          <label>
-            <span data-i18n="clientTaxId">Tax ID</span>
-            <input id="clientTaxId" placeholder="VAT/GST" />
-          </label>
-          <label class="full">
-            <span data-i18n="clientAddress">Address</span>
-            <textarea id="clientAddress" rows="2" placeholder="Street, City, Country"></textarea>
-          </label>
-          <label>
-            <span>Email</span>
-            <input id="clientEmail" type="email" placeholder="billing@client.com" />
-          </label>
-          <label>
-            <span data-i18n="clientPhone">Phone</span>
-            <input id="clientPhone" placeholder="+1 555 6789" />
-          </label>
-        </div>
-      </div>
-
-      <div class="section" id="docMeta">
-        <h2 data-i18n="docDetails">Document</h2>
-        <div class="grid three">
-          <label>
-            <span data-i18n="docNumber">Number</span>
-            <input id="docNumber" placeholder="INV-2025-001" />
-          </label>
-          <label>
-            <span data-i18n="issueDate">Issue Date</span>
-            <input id="issueDate" type="date" />
-          </label>
-          <label data-doc-type="invoice quote">
-            <span data-i18n="dueDate">Due Date</span>
-            <input id="dueDate" type="date" />
-          </label>
-        </div>
-      </div>
-
-      <div class="section" id="itemsSection">
-        <h2 data-i18n="lineItems">Line Items</h2>
-        <div class="items-head">
-          <span data-i18n="qty">Qty</span>
-          <span data-i18n="description">Description</span>
-          <span data-i18n="unitPrice">Unit Price</span>
-          <span data-i18n="tax">Tax %</span>
-          <span data-i18n="amount">Amount</span>
-          <span></span>
-        </div>
-        <div id="items"></div>
-        <button id="addItemBtn" class="secondary small">+ <span data-i18n="addItem">Add item</span></button>
-      </div>
-
-      <div class="section">
-        <div class="grid two">
-          <label>
-            <span data-i18n="notes">Notes</span>
-            <textarea id="notes" rows="3" placeholder="Thank you!"></textarea>
-          </label>
-          <label data-doc-type="invoice quote">
-            <span data-i18n="paymentTerms">Payment Terms</span>
-            <textarea id="paymentTerms" rows="3" placeholder="Net 14 / Net 30, Late fee %, Bank details..."></textarea>
-          </label>
-        </div>
-      </div>
-
-      <div class="section actions">
-        <button id="saveLocalBtn" class="secondary" data-i18n="save">Save</button>
-        <button id="loadLocalBtn" class="secondary" data-i18n="load">Load</button>
-        <button id="exportJsonBtn" class="secondary" data-i18n="exportJson">Export JSON</button>
-        <label class="file-btn">
-          <input id="importJsonInput" type="file" accept="application/json" hidden />
-          <span data-i18n="importJson">Import JSON</span>
+    <!-- Your Details -->
+    <section class="card" aria-labelledby="sec-your">
+      <h2 id="sec-your">Your Details</h2>
+      <div class="grid-2">
+        <label>Business / Name
+          <input id="yourName" required placeholder="Acme Studio" autocomplete="organization" />
         </label>
-
-        <label class="file-btn pro" title="Pro feature">
-          <input id="importCsvClients" type="file" accept=".csv,text/csv" hidden />
-          <span>Import Clients CSV (Pro)</span>
+        <label>Email
+          <input id="yourEmail" type="email" required placeholder="you@domain.com" autocomplete="email" />
         </label>
-
-        <div class="spacer"></div>
-
-        <button id="previewBtn" class="secondary" data-i18n="preview">Preview</button>
-        <button id="exportPdfBtn" class="primary">Export PDF</button>
-      </div>
-
-      <div class="section probar">
-        <span class="muted">Pro features: Batch invoicing, Timesheet → Invoice, CSV import, watermark‑free Pro templates.</span>
-        <div class="pro-cta">
-          <!-- Pro page link (bottom CTA) -->
-          <a class="primary" href="pages/pro.html" target="_blank" rel="noopener">Unlock Pro →</a>
-          <button id="enterKeyBtn" class="secondary">Enter Key</button>
-        </div>
+        <label>Address
+          <textarea id="yourAddress" placeholder="Street, City, Country"></textarea>
+        </label>
+        <label>Phone
+          <input id="yourPhone" type="tel" placeholder="+60 12-345 6789" autocomplete="tel" />
+        </label>
       </div>
     </section>
 
-    <section class="pane preview-pane">
-      <div id="preview" class="template template-classic printable">
-        <!-- App renders here -->
+    <!-- Client Details -->
+    <section class="card" aria-labelledby="sec-client">
+      <h2 id="sec-client">Client Details</h2>
+      <div class="grid-2">
+        <label>Client Name
+          <input id="clientName" required placeholder="Client Co. Ltd." />
+        </label>
+        <label>Client Email
+          <input id="clientEmail" type="email" placeholder="ap@client.com" />
+        </label>
+        <label>Client Address
+          <textarea id="clientAddress" placeholder="Street, City, Country"></textarea>
+        </label>
+        <label>PO / Reference
+          <input id="clientRef" placeholder="PO-2025-0012" />
+        </label>
       </div>
-      <div class="template-note">
-        <span class="muted">Template:</span> <span id="templateName">Default</span>
+    </section>
+
+    <!-- Document -->
+    <section class="card" aria-labelledby="sec-doc">
+      <h2 id="sec-doc">Document</h2>
+      <div class="grid-3">
+        <label>Type
+          <select id="docType" required>
+            <option value="invoice">Invoice</option>
+            <option value="quote">Quote</option>
+            <option value="contract">Contract</option>
+          </select>
+        </label>
+        <label>Document No.
+          <input id="docNo" required pattern="[A-Za-z0-9-_]{1,32}" placeholder="INV-2025-0001" />
+        </label>
+        <label>Date
+          <input id="docDate" type="date" required />
+        </label>
+        <label>Currency
+          <select id="currency" required>
+            <option>MYR</option><option>USD</option><option>EUR</option><option>SGD</option><option>CNY</option>
+          </select>
+        </label>
+        <label>Tax %
+          <input id="taxRate" inputmode="decimal" pattern="^([0-9]|[1-9][0-9]|100)(\\.[0-9]{1,2})?$" placeholder="0–100" />
+        </label>
+      </div>
+      <div class="toolbar-inline">
+        <button id="loadJson" class="btn">Load JSON</button>
+        <button id="saveJson" class="btn">Save JSON</button>
+        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only">Import Clients CSV (Pro)</button>
+      </div>
+    </section>
+
+    <!-- Line Items -->
+    <section class="card" aria-labelledby="sec-items">
+      <h2 id="sec-items">Line Items</h2>
+      <div class="items-head">
+        <span>Description</span><span>Qty</span><span>Unit Price</span><span>Tax %</span><span>Amount</span><span></span>
+      </div>
+      <div id="lineItems" class="items-list" role="table" aria-label="Line items"></div>
+      <div class="toolbar-inline">
+        <button id="addItem" class="btn primary">Add Item</button>
+        <button id="clearItems" class="btn danger ghost">Clear All</button>
+      </div>
+    </section>
+
+    <!-- Notes / Terms -->
+    <section class="card" aria-labelledby="sec-notes">
+      <h2 id="sec-notes">Notes & Terms</h2>
+      <div class="grid-2">
+        <label>Notes
+          <textarea id="notes" placeholder="Optional notes to the client"></textarea>
+        </label>
+        <label>Terms
+          <textarea id="terms" placeholder="Payment due in 14 days. Late fees may apply."></textarea>
+        </label>
+      </div>
+    </section>
+
+    <!-- Totals (sticky) -->
+    <section id="totals" class="card sticky" aria-live="polite">
+      <div class="totals-row">
+        <div>Subtotal</div><div id="subtotal">—</div>
+      </div>
+      <div class="totals-row">
+        <div>Tax</div><div id="taxAmount">—</div>
+      </div>
+      <div class="totals-row total">
+        <div>Total</div><div id="grandTotal">—</div>
       </div>
     </section>
   </main>
 
-  <footer class="app-footer">
-    <a href="pages/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Privacy</a>
-    <a href="pages/terms.html" target="_blank" rel="noopener" data-i18n="terms">Terms</a>
-    <span class="made-with">Made with ❤️ FreelanceKit</span>
+  <!-- Floating action bar -->
+  <nav class="fab" aria-label="Primary actions">
+    <button id="previewPDF" class="btn primary">Preview / Print (Ctrl+P)</button>
+    <button id="exportPDF" class="btn">Export PDF</button>
+  </nav>
+
+  <!-- Toasts -->
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <footer class="container footer">
+    <small class="muted">Made with FreelanceKit • <a href="/pages/privacy.html">Privacy</a> • <a href="/pages/terms.html">Terms</a></small>
   </footer>
 
-  <script src="pdf.js"></script>
-  <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js');
-      });
-    }
-  </script>
+  <script src="app.js" defer></script>
+  <script src="sw.js" defer></script>
 </body>
 </html>
