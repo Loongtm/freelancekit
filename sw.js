@@ -1,4 +1,4 @@
-const CACHE_NAME = 'freelancekit-v3';
+const CACHE_NAME = 'freelancekit-v4';
 const ASSETS = [
   './',
   'index.html',
@@ -10,13 +10,16 @@ const ASSETS = [
   'assets/icon.svg',
   'assets/icon-192.png',
   'assets/icon-512.png',
+  'assets/og.svg',
+  'assets/og.png',
   'templates/invoice-default.json',
   'templates/invoice-pro-classic.json',
   'templates/invoice-pro-modern.json',
   'templates/quote-default.json',
   'templates/contract-default.json',
   'pages/privacy.html',
-  'pages/terms.html'
+  'pages/terms.html',
+  'pages/pro.html'
 ];
 
 self.addEventListener('install', e => {
