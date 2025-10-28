@@ -1,4 +1,4 @@
-/* FreelanceKit app — refine preview/export + footer + Pro dialog */
+/* FreelanceKit app — refine preview/export (Blob URL), footer, Pro dialog */
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -299,7 +299,7 @@
 
   if (importCSVBtn) importCSVBtn.addEventListener('click', () => toast('Clients CSV import is a Pro feature'));
 
-  // --- Print preview + export ---
+  // --- Print preview + export (Blob URL,避免空白窗口问题) ---
   const buildPrintHTML = (autoPrint=false) => {
     const data = serialize();
     const rowsHtml = $$('.item-row').map(row => {
@@ -311,8 +311,7 @@
       return `<tr><td>${d}</td><td style="text-align:right">${q}</td><td style="text-align:right">${p}</td><td style="text-align:right">${t}</td><td style="text-align:right">${amt}</td></tr>`;
     }).join('');
     const script = autoPrint ? `<script>window.addEventListener('load',()=>window.print(),{once:true})<\/script>` : '';
-    return `
-<!doctype html><html><head><meta charset="utf-8">
+    return `<!doctype html><html><head><meta charset="utf-8">
 <title>${(data.doc?.type || 'Document').toUpperCase()} ${data.doc?.no || ''}</title>
 <style>
   :root{--ink:#111;--muted:#666}
@@ -324,7 +323,6 @@
   th,td{border:1px solid #ddd; padding:6px}
   th{background:#f3f4f6;text-align:left}
   tfoot td{font-weight:bold}
-  .totals td{font-weight:bold}
 </style>
 </head><body>
   <h1>${(data.doc?.type || 'Document').toUpperCase()} ${data.doc?.no || ''}</h1>
@@ -362,18 +360,21 @@
 </body></html>`;
   };
 
-  const openPreview = () => {
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) { toast('Popup blocked'); return; }
-    w.document.write(buildPrintHTML(false));
-    w.document.close();
+  const openHtmlInNewTab = (html) => {
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, '_blank');
+    if (!w) {
+      toast('Popup blocked. Please allow popups and try again.');
+      URL.revokeObjectURL(url);
+      return;
+    }
+    // 释放 URL 交给新窗口，等它加载完再回收
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   };
-  const openExport = () => {
-    const w = window.open('', '_blank', 'noopener,noreferrer');
-    if (!w) { toast('Popup blocked'); return; }
-    w.document.write(buildPrintHTML(true));
-    w.document.close();
-  };
+
+  const openPreview = () => openHtmlInNewTab(buildPrintHTML(false));
+  const openExport  = () => openHtmlInNewTab(buildPrintHTML(true));
 
   if (previewBtn) previewBtn.addEventListener('click', () => {
     if (!validateCore()) { toast('Fix highlighted fields'); return; }

@@ -1,4 +1,4 @@
-const CACHE = 'freelancekit-v5-cf';
+const CACHE = 'freelancekit-v6-cf'; // bump to invalidate old cache
 const ASSETS = [
   '/', '/index.html',
   '/styles.css', '/app.js',
