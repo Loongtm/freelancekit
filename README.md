@@ -28,7 +28,7 @@ Offline-first, multi-currency, multi-language, export to PDF, templates system. 
 - Sponsorships: GitHub Sponsors / Ko‑fi
 
 Buttons in the app link to purchase:
-- Replace this link with your own: https://your-gumroad-or-kofi-link.example
+- Replace this link with your own: https://https://ko-fi.com/loongtm
 
 Recommended stores:
 - Gumroad: deliver .json template pack and a license key/instructions
