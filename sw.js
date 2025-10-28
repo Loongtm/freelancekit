@@ -1,4 +1,4 @@
-const CACHE = 'freelancekit-v4';
+const CACHE = 'freelancekit-v5-cf';
 const ASSETS = [
   '/', '/index.html',
   '/styles.css', '/app.js',

@@ -1,6 +1,6 @@
 # FreelanceKit — Quotes • Invoices • Contracts (PWA)
 
-Live demo: https://freelancekit-loongtm.netlify.app/
+Live demo (deploy yours on Cloudflare Pages).
 
 Offline-first, multi-currency, multi-language, export to PDF, templates system. Built for freelancers and small teams.
 
@@ -12,22 +12,19 @@ Offline-first, multi-currency, multi-language, export to PDF, templates system. 
 - **Import/Export**: JSON; Clients CSV (Pro)
 - **100% static** — deploy anywhere
 
-## Quick start
-1) Copy all files to a static host (Netlify / GitHub Pages / Vercel static).  
-2) Open the site → **Install** (PWA) if prompted → Start creating invoices.
+## Deploy on Cloudflare Pages (no build)
+1) Push this repo to GitHub.  
+2) Cloudflare Dashboard → **Pages** → **Connect to Git** → 选择仓库  
+   - Build command: _(leave empty)_  
+   - Output directory: `/`  
+3) 点部署。完成后绑定自定义域名（可选）。  
+4) **强刷缓存**：首次打开后按 `Ctrl+Shift+R`（或在 DevTools→Application→Service Workers → Unregister 旧 SW）。
+
+> SPA 路由和安全头已通过根目录的 `_redirects` 与 `_headers` 配置。
 
 ## Pro (monetization)
-Buttons in the app link to purchase (replace with your own URL):
-- `https://ko-fi.com/loongtm` ← (fixed duplicated protocol)
-
-Pro ideas:
-- Template pack (no watermark), batch invoicing, CSV import, timesheet→invoice, white-label.
-
-## Development
-No build step. Pure HTML/CSS/JS.
-- `sw.js` caches assets for offline.
-- PDF uses browser print-to-PDF.
-- i18n lives in `app.js`.
+按钮指向购买/支持链接（自行替换）：
+- `https://ko-fi.com/loongtm`
 
 ## Roadmap
 - More languages, advanced taxes, recurring invoices, signatures, embedded PDF engine.

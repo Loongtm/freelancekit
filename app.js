@@ -1,13 +1,4 @@
-/* FreelanceKit app — P0 UX upgrade
-   - Online/offline & PWA install cues
-   - Validation (required/pattern), money & percent masks
-   - Sticky totals: live calc
-   - Keyboard shortcuts: Ctrl+S save, Ctrl+P preview/print
-   - Unsaved changes guard
-   - Toast feedback
-   - JSON import/export with precheck; CSV import is Pro (locked)
-   - Defensive DOM querying
-*/
+/* FreelanceKit app — P0 UX upgrade (Cloudflare Pages ready) */
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
