@@ -1,4 +1,4 @@
-const CACHE_NAME = 'freelancekit-v2';
+const CACHE_NAME = 'freelancekit-v3';
 const ASSETS = [
   './',
   'index.html',
@@ -8,6 +8,8 @@ const ASSETS = [
   'manifest.json',
   'assets/logo.svg',
   'assets/icon.svg',
+  'assets/icon-192.png',
+  'assets/icon-512.png',
   'templates/invoice-default.json',
   'templates/invoice-pro-classic.json',
   'templates/invoice-pro-modern.json',
