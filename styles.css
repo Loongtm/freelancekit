@@ -6,7 +6,7 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; font: 16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  margin:0; font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   color:var(--text); background:linear-gradient(180deg,#0b1020,#0b1020 40%,#0e1326 100%);
 }
 a{color:#a5b4fc;text-decoration:none}

@@ -1,14 +1,13 @@
-/* FreelanceKit app — enhanced UX build
+/* FreelanceKit app — P0 UX upgrade
    - Online/offline & PWA install cues
    - Validation (required/pattern), money & percent masks
    - Sticky totals: live calc
-   - Keyboard shortcuts: Ctrl+S save, Ctrl+P preview/print, Ctrl+Z/Y undo/redo (placeholder)
+   - Keyboard shortcuts: Ctrl+S save, Ctrl+P preview/print
    - Unsaved changes guard
    - Toast feedback
    - JSON import/export with precheck; CSV import is Pro (locked)
    - Defensive DOM querying
 */
-
 (() => {
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -16,21 +15,20 @@
 
   // --- Toasts ---
   const toasts = byId('toasts');
-  const toast = (msg, type='info') => {
+  const toast = (msg) => {
     if (!toasts) return;
     const el = document.createElement('div');
     el.className = 'toast';
     el.textContent = msg;
     toasts.appendChild(el);
-    setTimeout(() => el.remove(), 3000);
+    setTimeout(() => el.remove(), 2800);
   };
 
   // --- App/network status & PWA install ---
-  const appStatus = byId('app-status');
   const netState = byId('net-state');
   const pwaState = byId('pwa-state');
-  const buyPro = byId('buyPro');
   const installBtn = byId('installPWA');
+  const buyPro = byId('buyPro');
 
   const setNetState = () => {
     if (netState) netState.textContent = navigator.onLine ? 'Online' : 'Offline';
@@ -39,7 +37,6 @@
   window.addEventListener('online',  () => { setNetState(); toast('You are back online'); });
   window.addEventListener('offline', () => { setNetState(); toast('You are offline'); });
 
-  // PWA install prompt
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -50,15 +47,16 @@
   if (installBtn) {
     installBtn.style.display = 'none';
     installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) { toast('Already installed or not installable yet'); return; }
+      if (!deferredPrompt) { toast('Already installed or not installable'); return; }
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
       deferredPrompt = null;
-      toast('Install action completed');
+      toast('Install prompt shown');
     });
   }
+  if (buyPro) buyPro.title = 'Unlock Pro templates & features';
 
-  // --- Form elements (defensive) ---
+  // --- Form elements ---
   const yourName = byId('yourName');
   const yourEmail = byId('yourEmail');
   const clientName = byId('clientName');
@@ -112,7 +110,6 @@
     return isFinite(x) ? x : 0;
   };
 
-  // Money & percent masks (on blur)
   const moneyMask = (el) => {
     if (!el) return;
     el.addEventListener('blur', () => {
@@ -147,11 +144,10 @@
     const recalc = () => {
       const q = Math.max(0, parseNum(qty.value || 0));
       const p = Math.max(0, parseNum(price.value || 0));
-      // If row tax empty, fall back to global tax
       const t = rowTax.value === '' ? parseNum(taxRate?.value || 0) : Math.min(100, Math.max(0, parseNum(rowTax.value)));
       const base = q * p;
-      const tax = base * (t/100);
-      amount.textContent = fmt(base + tax);
+      const tx = base * (t/100);
+      amount.textContent = fmt(base + tx);
       updateTotals();
     };
 
@@ -163,7 +159,6 @@
       row.remove(); updateTotals(); markDirty();
     });
 
-    // initial
     recalc();
     return row;
   };
@@ -218,7 +213,6 @@
       setInvalid(el, !valid);
       ok = ok && valid;
     });
-    // at least one line item
     if (!lineItemsWrap || lineItemsWrap.children.length === 0) {
       toast('Please add at least one line item'); ok = false;
     }
@@ -235,8 +229,8 @@
     }));
     return {
       meta: { version: 1 },
-      your: { name: yourName?.value, email: yourEmail?.value },
-      client: { name: clientName?.value },
+      your: { name: yourName?.value, email: yourEmail?.value, address: byId('yourAddress')?.value || '', phone: byId('yourPhone')?.value || '' },
+      client: { name: clientName?.value, email: byId('clientEmail')?.value || '', address: byId('clientAddress')?.value || '', ref: byId('clientRef')?.value || '' },
       doc: {
         type: docType?.value, no: docNo?.value, date: docDate?.value,
         currency: currency?.value, taxRate: taxRate?.value
@@ -251,12 +245,20 @@
     try {
       yourName && (yourName.value = data.your?.name || '');
       yourEmail && (yourEmail.value = data.your?.email || '');
+      byId('yourAddress') && (byId('yourAddress').value = data.your?.address || '');
+      byId('yourPhone') && (byId('yourPhone').value = data.your?.phone || '');
+
       clientName && (clientName.value = data.client?.name || '');
+      byId('clientEmail') && (byId('clientEmail').value = data.client?.email || '');
+      byId('clientAddress') && (byId('clientAddress').value = data.client?.address || '');
+      byId('clientRef') && (byId('clientRef').value = data.client?.ref || '');
+
       docType && (docType.value = data.doc?.type || 'invoice');
       docNo && (docNo.value = data.doc?.no || '');
       docDate && (docDate.value = data.doc?.date || '');
       currency && (currency.value = data.doc?.currency || 'MYR');
       taxRate && (taxRate.value = data.doc?.taxRate ?? '');
+
       if (lineItemsWrap) {
         lineItemsWrap.innerHTML = '';
         (data.rows || []).forEach(r => addRow(r));
@@ -291,7 +293,6 @@
       const text = await file.text();
       try {
         const data = JSON.parse(text);
-        // precheck minimal fields
         if (!data || typeof data !== 'object') throw new Error('Invalid JSON');
         hydrate(data);
       } catch {
@@ -309,7 +310,6 @@
 
   // --- Preview & Export (native print) ---
   const openPrintWindow = () => {
-    // Minimal print view leveraging current DOM (you may replace with your template system)
     const w = window.open('', '_blank', 'noopener,noreferrer');
     if (!w) { toast('Popup blocked'); return; }
     const rowsHtml = $$('.item-row').map(row => {
@@ -363,18 +363,9 @@
     const mod = (e.ctrlKey || e.metaKey);
     if (mod && e.key.toLowerCase() === 'p') { e.preventDefault(); previewBtn?.click(); }
     if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); saveJsonBtn?.click(); }
-    // (Optional) Undo/redo stubs
-    if (mod && e.key.toLowerCase() === 'z') { /* TODO: implement history */ }
-    if (mod && e.key.toLowerCase() === 'y') { /* TODO: implement history */ }
   });
 
   // --- Bootstrap defaults ---
-  // Provide one starter row
   if (lineItemsWrap && lineItemsWrap.children.length === 0) addRow({ qty:1, price:0 });
-
-  // initial totals
   updateTotals();
-
-  // Mark Pro boundary clearly
-  if (buyPro) buyPro.title = 'Unlock Pro templates & features';
 })();

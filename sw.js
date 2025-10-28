@@ -2,7 +2,8 @@ const CACHE = 'freelancekit-v4';
 const ASSETS = [
   '/', '/index.html',
   '/styles.css', '/app.js',
-  '/manifest.json', '/assets/icon-192.png', '/assets/icon-512.png'
+  '/manifest.json', '/assets/icon-192.png', '/assets/icon-512.png',
+  '/pages/privacy.html', '/pages/terms.html'
 ];
 
 self.addEventListener('install', e => {
@@ -25,7 +26,7 @@ self.addEventListener('fetch', e => {
         const copy = r.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));
         return r;
-      }))
+      }).catch(() => cached))
     );
   }
 });
