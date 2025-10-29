@@ -1,0 +1,140 @@
+/* =====================================
+   Print Preview Styles (Screen version)
+   ===================================== */
+
+html, body {
+  margin: 0;
+  padding: 24px;
+  font: 14px/1.5 "Segoe UI", Roboto, system-ui, sans-serif;
+  background: #fafafa;
+  color: #111;
+}
+
+h1, h2, h3 {
+  margin: 0 0 8px;
+  color: #111;
+}
+
+/* 顶部标题 */
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+/* 布局区块 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* 基础盒子 */
+.box {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+/* 发票 Meta 区 */
+.meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+.meta .box b {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* 表格 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 13px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 6px;
+}
+th {
+  background: #f3f4f6;
+  text-align: left;
+}
+
+/* 数值列靠右 */
+.r {
+  text-align: right;
+}
+
+/* 合计 */
+.section {
+  margin: 14px 0;
+}
+.section.r {
+  text-align: right;
+}
+.section.r div {
+  margin: 2px 0;
+}
+.section.r b {
+  font-size: 1.1em;
+}
+
+/* 已付款印章 */
+.paid {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #047857;
+  opacity: 0.35;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+/* 备注 / 条款 */
+.section h3 {
+  margin-bottom: 4px;
+  color: #1e293b;
+}
+.section .box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+/* 页脚 */
+footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: #0f172a;
+    color: #f1f5f9;
+  }
+  .box, th {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  th, td {
+    border-color: #334155;
+  }
+  .paid {
+    color: #10b981;
+    opacity: 0.25;
+  }
+  footer {
+    color: #64748b;
+  }
+}
