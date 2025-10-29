@@ -12,11 +12,13 @@ body{
 a{color:#a5b4fc;text-decoration:none}
 a:hover{text-decoration:underline}
 :focus-visible{outline:3px solid var(--primary); outline-offset:2px}
+
 .container{width:min(1100px,92vw); margin-inline:auto}
 .header{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
 .app-title{margin:0; font-size:22px; letter-spacing:.3px}
 .header-actions{display:flex; gap:8px}
-.content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px}
+.content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px} /* 为底部浮动按钮留空间 */
+
 .card{
   background:linear-gradient(180deg,rgba(17,24,39,.6),rgba(17,24,39,.35));
   border:1px solid rgba(255,255,255,.06);
@@ -24,6 +26,7 @@ a:hover{text-decoration:underline}
   box-shadow: 0 6px 20px -12px rgba(0,0,0,.6);
 }
 .card h2{margin:0 0 10px; font-size:18px}
+
 .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
 @media (max-width:900px){ .grid-2,.grid-3{grid-template-columns:1fr} }
@@ -37,6 +40,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--primary); box-shadow:
 input[aria-invalid="true"]{border-color:var(--danger)}
 .muted{color:var(--muted)}
 
+/* 明细表 */
 .items-head{display:grid; grid-template-columns:3fr .8fr 1.2fr .8fr 1.2fr 40px; gap:8px; padding:6px 8px; color:#cbd5e1}
 .items-list{display:flex; flex-direction:column; gap:8px}
 .item-row{display:grid; grid-template-columns:3fr .8fr 1.2fr .8fr 1.2fr 40px; gap:8px; align-items:center}
@@ -44,6 +48,7 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 .item-del{border:none; background:transparent; color:#cbd5e1; cursor:pointer}
 .item-del:hover{color:#fff}
 
+/* 工具条与按钮 */
 .toolbar-inline{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
 .btn{
   appearance:none; border:1px solid rgba(148,163,184,.25); background:rgba(2,6,23,.6);
@@ -57,25 +62,24 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 .btn[disabled], .btn.lock[aria-disabled="true"]{opacity:.5; cursor:not-allowed}
 .lock::after{content:"🔒"; margin-left:.5ch}
 
-.fab{
-  position:fixed; inset:auto 0 16px 0; display:flex; gap:10px; justify-content:center; z-index:20;
-  padding:8px; background:linear-gradient(180deg,rgba(2,6,23,.2),rgba(2,6,23,.6)); backdrop-filter: blur(10px)
-}
-.footer{
-  padding:24px 0 80px; text-align:center; position:relative; z-index:1;
-}
-.footer .muted{color:#cfe1ff}
-.footer a{color:#e0e7ff; text-decoration:underline}
-
+/* 顶部状态条 */
 .status-bar{
   position:sticky; top:0; z-index:50; text-align:center; padding:6px 10px;
   background:linear-gradient(180deg,#101826,#0f172a); border-bottom:1px solid rgba(255,255,255,.06)
 }
 
+/* 合计栏 */
 .sticky{position:sticky; bottom:86px}
 .totals-row{display:flex; justify-content:space-between; padding:6px 0; border-top:1px dashed rgba(148,163,184,.25)}
 .totals-row.total{font-size:18px}
 
+/* 浮动操作条 */
+.fab{
+  position:fixed; inset:auto 0 16px 0; display:flex; gap:10px; justify-content:center; z-index:20;
+  padding:8px; background:linear-gradient(180deg,rgba(2,6,23,.2),rgba(2,6,23,.6)); backdrop-filter: blur(10px)
+}
+
+/* Toast */
 .toasts{ position:fixed; right:16px; bottom:100px; display:flex; flex-direction:column; gap:8px; z-index:30 }
 .toast{
   background:#111827; border:1px solid rgba(148,163,184,.25); color:#e5e7eb;
@@ -92,3 +96,23 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 }
 .dialog h3{margin:0 0 8px}
 .dialog .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
+
+/* 页脚 */
+.footer{ padding:24px 0 80px; text-align:center; position:relative; z-index:1; }
+.footer .muted{color:#cfe1ff}
+.footer a{color:#e0e7ff; text-decoration:underline}
+
+/* 品牌与图标 */
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{width:28px;height:28px;display:block}
+
+/* 让下拉选择器与按钮风格一致并保持可用性 */
+select.btn{
+  appearance:auto;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,.25);
+  background:rgba(2,6,23,.6);
+  color:var(--text);
+}
+select.btn:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--ring)}
