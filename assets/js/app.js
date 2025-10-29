@@ -281,3 +281,143 @@
   if(exportBtn) exportBtn.addEventListener('click',()=>{if(!isFormOk())return;openPrintWindow(true);});
   updateTotals();
 })();
+function buildPrintHTML_Gold(autoPrint=false){
+  const d = serialize();
+  const rowsHtml = $$('.item-row').map(r=>{
+    const desc=$('.item-desc',r)?.value||'';
+    const qty=parseNum($('.item-qty',r)?.value);
+    const price=parseNum($('.item-price',r)?.value);
+    const tax=parseNum($('.item-tax',r)?.value);
+    const net=qty*price;const taxV=net*(tax/100);const amount=net+taxV;
+    return `<tr>
+      <td>${desc}</td>
+      <td class="r">${qty}</td>
+      <td class="r">${fmtMoney(price)}</td>
+      <td class="r">${tax}%</td>
+      <td class="r">${fmtMoney(amount)}</td>
+    </tr>`;
+  }).join('');
+
+  const subtotal=collectRows().reduce((s,it)=>s+it.net,0);
+  const taxSum=collectRows().reduce((s,it)=>s+it.taxV,0);
+  const total=subtotal+taxSum;
+  const auto=autoPrint?`<script>window.print();</script>`:'';
+
+  return `<!doctype html>
+<html lang="${I.getLang()}">
+<head>
+  <meta charset="utf-8">
+  <title>${I.t('invoice')||'Invoice'} ${d.doc.number||''}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body{
+      margin:0;
+      padding:32px;
+      background:#0a0a0a;
+      color:#f8fafc;
+      font-family:system-ui,-apple-system,Roboto,sans-serif;
+      text-align:left;
+      line-height:1.5;
+    }
+    h1,h2,h3{
+      margin:0;
+      color:#fcd34d;
+    }
+    .cover{
+      text-align:center;
+      margin-bottom:28px;
+    }
+    .logo{
+      width:90px;
+      height:90px;
+      margin-bottom:10px;
+      object-fit:contain;
+      display:inline-block;
+    }
+    .invoice-id{
+      margin-top:8px;
+      font-size:1rem;
+      color:#eab308;
+      letter-spacing:0.5px;
+    }
+    .divider{
+      height:2px;
+      background:linear-gradient(90deg,#facc15,#fcd34d,#fde047);
+      margin:16px 0 24px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:14px;
+    }
+    th,td{
+      border:1px solid #fcd34d;
+      padding:8px;
+    }
+    th{
+      background:#111;
+      color:#fcd34d;
+    }
+    .r{text-align:right;}
+    footer{
+      text-align:center;
+      margin-top:28px;
+      font-size:12px;
+      color:#a1a1aa;
+    }
+    .paid{
+      position:fixed;
+      right:40px;
+      bottom:40px;
+      color:#fcd34d;
+      font-size:26px;
+      font-weight:700;
+      opacity:0.25;
+      transform:rotate(-15deg);
+    }
+    /* ✅ 自动切换亮色 Logo（当用户系统为暗色模式） */
+    @media (prefers-color-scheme: dark){
+      .logo[src="/assets/logo.svg"]{
+        content:url("/assets/logo-light.svg");
+      }
+    }
+  </style>
+</head>
+<body>
+  ${d.doc.paid?`<div class="paid">PAID</div>`:''}
+
+  <!-- 顶部居中 Logo 与发票编号 -->
+  <div class="cover">
+    <img src="/assets/logo.svg" class="logo" alt="Logo" onerror="this.style.display='none'">
+    <h1>${d.seller.name||'FreelanceKit'}</h1>
+    <div class="invoice-id">INVOICE · ${d.doc.number||''}</div>
+  </div>
+  <div class="divider"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>${I.t('description')||'Description'}</th>
+        <th class="r">${I.t('qty')||'Qty'}</th>
+        <th class="r">${I.t('unitPrice')||'Unit Price'}</th>
+        <th class="r">${I.t('tax')||'Tax'}</th>
+        <th class="r">${I.t('amount')||'Amount'}</th>
+      </tr>
+    </thead>
+    <tbody>${rowsHtml}</tbody>
+  </table>
+
+  <div class="section r">
+    <div>${I.t('subtotal')||'Subtotal'}：${fmtMoney(subtotal)}</div>
+    <div>${I.t('tax')||'Tax'}：${fmtMoney(taxSum)}</div>
+    <div><b>${I.t('total')||'Total'}：${fmtMoney(total)}</b></div>
+  </div>
+
+  ${d.notes ? `<div class="section"><h3>${I.t('notes')||'Notes'}</h3><div>${d.notes}</div></div>`:''}
+  ${d.terms ? `<div class="section"><h3>${I.t('terms')||'Terms'}</h3><div>${d.terms}</div></div>`:''}
+
+  <footer>FreelanceKit © ${new Date().getFullYear()} — Minimal Gold Edition</footer>
+  ${auto}
+</body>
+</html>`;
+}
