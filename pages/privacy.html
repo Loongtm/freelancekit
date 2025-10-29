@@ -2,13 +2,35 @@
 <html lang="en"><meta charset="utf-8">
 <title>Privacy • FreelanceKit</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>body{font:16px/1.6 system-ui;margin:24px;max-width:800px}h1{margin:0 0 12px}</style>
-<h1>Privacy Policy</h1>
-<p>FreelanceKit is a 100% client-side web app. We do not run a server and we do not store your documents remotely.</p>
-<ul>
-  <li><strong>Local storage only:</strong> Your data stays in your browser unless you export files.</li>
-  <li><strong>No tracking by default:</strong> No analytics or cookies unless explicitly added by you.</li>
-  <li><strong>Imports/Exports:</strong> When you import or export JSON/CSV/PDF, files are processed locally in your browser.</li>
-</ul>
-<p>For questions, contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a>.</p>
+<style>
+:root{--ink:#0f172a;--muted:#56647a;--card:#ffffff}
+body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:
+  radial-gradient(900px 500px at 0% 0%, rgba(79,70,229,.15), transparent 60%),
+  linear-gradient(180deg,#f7f8fb,#eef2ff);}
+.container{max-width:920px;margin:40px auto;padding:0 20px}
+.hero{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo{width:36px;height:36px}
+h1{margin:0;color:var(--ink)}
+.card{background:var(--card);border:1px solid #e8ecf5;border-radius:16px;padding:18px;box-shadow:0 10px 28px -18px rgba(0,0,0,.25)}
+ul{margin:10px 0 0 20px}
+a{color:#2550db}
+.back{display:inline-block;margin-top:16px;text-decoration:none}
+@media (max-width:640px){.container{margin-top:24px}.logo{width:44px;height:44px}}
+</style>
+<div class="container">
+  <div class="hero">
+    <img class="logo" src="/assets/logo.svg" alt="">
+    <h1>Privacy Policy</h1>
+  </div>
+  <div class="card">
+    <p>FreelanceKit is a 100% client-side web app. We do not run a server and we do not store your documents remotely.</p>
+    <ul>
+      <li><strong>Local storage only:</strong> Your data stays in your browser unless you export files.</li>
+      <li><strong>No tracking by default:</strong> No analytics or cookies unless explicitly added by you.</li>
+      <li><strong>Imports/Exports:</strong> JSON/CSV/PDF are processed locally in your browser.</li>
+    </ul>
+    <p>For questions, contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a>.</p>
+  </div>
+  <a class="back" href="/">← Back to app</a>
+</div>
 </html>

@@ -1,49 +1,36 @@
-/* FreelanceKit — Cloudflare Pages
+/* FreelanceKit — Complete app.js
+   - Theme toggle (light/dark) with persistence
    - i18n via [data-i18n] (EN/中文), persisted in localStorage('fk_lang')
-   - Robust preview/export via Blob URL
-   - Pro dialog: ESC / 背景点击 / 按钮均可关闭；同时提供独立 Pro 页面
-   - UI: 统一 Toast、校验、金额/税率掩码、合计实时
-   - 键盘：Ctrl+S 保存 JSON、Ctrl+P 预览
+   - Robust preview/export via Blob URL (fixes blank tab)
+   - Pro dialog: ESC / 背景点击 / 按钮均可关闭；另有 /pages/pro.html
+   - JSON import/export, validation, money/percent masks, totals live calc
+   - Keyboard: Ctrl+S save JSON, Ctrl+P preview
+   - Contact email unified as tmloong0128@gmail.com
 */
 (() => {
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const byId = (id) => document.getElementById(id);
 
-  // ---------- Toast ----------
-  const toasts = byId('toasts');
-  const toast = (msg) => {
-    if (!toasts) return;
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.textContent = msg;
-    toasts.appendChild(el);
-    setTimeout(() => el.remove(), 2800);
+  /* ================= THEME ================= */
+  const THEME_KEY = 'fk_theme';
+  const getTheme = () => localStorage.getItem(THEME_KEY) || 'dark';
+  const setTheme = (v) => {
+    localStorage.setItem(THEME_KEY, v);
+    document.documentElement.setAttribute('data-theme', v === 'light' ? 'light' : 'dark');
   };
-
-  // ---------- Net/PWA ----------
-  const netState = byId('net-state');
-  const pwaState = byId('pwa-state');
-  const installBtn = byId('installPWA');
-  const setNetState = () => netState && (netState.textContent = navigator.onLine ? t().online : t().offline);
-  window.addEventListener('online',  () => { setNetState(); toast('Online'); });
-  window.addEventListener('offline', () => { setNetState(); toast('Offline'); });
-
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); deferredPrompt = e;
-    if (pwaState) pwaState.textContent = 'Installable';
-    if (installBtn) installBtn.style.display = 'inline-flex';
-  });
-  if (installBtn) {
-    installBtn.style.display = 'none';
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) { toast('Already installed / not installable'); return; }
-      deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null;
+  setTheme(getTheme());
+  const themeBtn = byId('themeToggle');
+  if (themeBtn) {
+    const syncIcon = () => themeBtn.textContent = getTheme() === 'light' ? '🌞' : '🌗';
+    syncIcon();
+    themeBtn.addEventListener('click', () => {
+      setTheme(getTheme() === 'light' ? 'dark' : 'light');
+      syncIcon();
     });
   }
 
-  // ---------- i18n ----------
+  /* ================= I18N ================= */
   const I18N = {
     en:{
       pwaReady:"PWA ready", online:"Online", offline:"Offline",
@@ -78,20 +65,21 @@
       from:"发件方", billTo:"收件方", unit:"单价"
     }
   };
-  const getLang = () => localStorage.getItem('fk_lang') || 'en';
-  const setLang = (v) => localStorage.setItem('fk_lang', v);
+  const LANG_KEY = 'fk_lang';
+  const getLang = () => localStorage.getItem(LANG_KEY) || 'en';
+  const setLang = (v) => localStorage.setItem(LANG_KEY, v);
   const t = () => I18N[getLang()] || I18N.en;
 
   const applyI18n = () => {
-    // 所有 data-i18n 文本节点
     $$('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (key && t()[key]) el.textContent = t()[key];
     });
-    // net state
-    setNetState();
-    // 更新按钮占位/列头以外的动态内容无需改
+    // Update network label with current state
+    const netState = byId('net-state');
+    if (netState) netState.textContent = navigator.onLine ? t().online : t().offline;
   };
+
   const langSel = byId('langSwitcher');
   if (langSel) {
     langSel.value = getLang();
@@ -99,20 +87,54 @@
   }
   applyI18n();
 
-  // ---------- Pro Dialog ----------
+  /* ================= STATUS / PWA ================= */
+  const toasts = byId('toasts');
+  const toast = (msg) => {
+    if (!toasts) return;
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    toasts.appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+  };
+
+  const netState = byId('net-state');
+  const pwaState = byId('pwa-state');
+  const installBtn = byId('installPWA');
+
+  const updateNet = () => netState && (netState.textContent = navigator.onLine ? t().online : t().offline);
+  updateNet();
+  window.addEventListener('online',  () => { updateNet(); toast('Online'); });
+  window.addEventListener('offline', () => { updateNet(); toast('Offline'); });
+
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); deferredPrompt = e;
+    if (pwaState) pwaState.textContent = 'Installable';
+    if (installBtn) installBtn.style.display = 'inline-flex';
+  });
+  if (installBtn) {
+    installBtn.style.display = 'none';
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) { toast('Already installed / not installable'); return; }
+      deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null;
+    });
+  }
+
+  /* ================= PRO DIALOG ================= */
   const buyProBtn = byId('buyPro');
   const proDlg = byId('proDlg');
   const proClose = byId('proClose');
   const openPro = (e) => { if (e) e.preventDefault(); if (!proDlg) return; proDlg.style.display='flex'; proDlg.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; };
   const closePro = () => { if (!proDlg) return; proDlg.style.display='none'; proDlg.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
   if (buyProBtn) buyProBtn.addEventListener('click', openPro);
-  if (proClose) proClose.addEventListener('click', closePro);
+  if (proClose)  proClose.addEventListener('click', closePro);
   if (proDlg) {
     proDlg.addEventListener('click', (e)=>{ if(e.target===proDlg) closePro(); });
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && proDlg.style.display==='flex') closePro(); });
   }
 
-  // ---------- Elements ----------
+  /* ================= ELEMENTS ================= */
   const yourName = byId('yourName');
   const yourEmail = byId('yourEmail');
   const yourAddress = byId('yourAddress');
@@ -144,7 +166,7 @@
   const previewBtn = byId('previewPDF');
   const exportBtn = byId('exportPDF');
 
-  // ---------- helpers ----------
+  /* ================= HELPERS ================= */
   const setInvalid = (el, bad) => el && el.setAttribute('aria-invalid', bad ? 'true' : 'false');
   const parseNum = (v) => {
     if (typeof v === 'number') return v;
@@ -166,7 +188,7 @@
   $$('input,textarea,select').forEach(el => el.addEventListener('input', markDirty));
   window.addEventListener('beforeunload', (e) => { if (!dirty) return; e.preventDefault(); e.returnValue=''; });
 
-  // ---------- Items ----------
+  /* ================= ITEMS ================= */
   const newRow = (data={}) => {
     const row = document.createElement('div');
     row.className = 'item-row';
@@ -226,7 +248,7 @@
   taxRate && (percentMask(taxRate), taxRate.addEventListener('input', ()=>{ markDirty(); updateTotals(); }));
   currency && currency.addEventListener('change', updateTotals);
 
-  // ---------- Validate ----------
+  /* ================= VALIDATE ================= */
   const validateCore = () => {
     let ok=true;
     [yourName,yourEmail,clientName,docType,docNo,docDate,currency].forEach(el=>{
@@ -236,7 +258,7 @@
     return ok;
   };
 
-  // ---------- JSON Import/Export ----------
+  /* ================= JSON I/O ================= */
   const serialize = () => {
     const rows = $$('.item-row').map(row=>({
       desc: $('.item-desc',row)?.value||'',
@@ -291,7 +313,7 @@
   });
   importCSVBtn && importCSVBtn.addEventListener('click', ()=>toast('Clients CSV import is a Pro feature'));
 
-  // ---------- Print / Export (Blob URL) ----------
+  /* ================= PRINT / EXPORT ================= */
   const buildPrintHTML = (autoPrint=false) => {
     const data=serialize(); const lang=getLang(); const tt=t();
     const rowsHtml=$$('.item-row').map(row=>{
@@ -345,8 +367,8 @@
     </tfoot>
   </table>
 
-  <p><strong>${tt.notes}</strong><br>${data.notes||'-'}</p>
-  <p><strong>${tt.terms}</strong><br>${data.terms||'-'}</p>
+  <p><strong>${tt.notes}</strong><br>${byId('notes')?.value||'-'}</p>
+  <p><strong>${tt.terms}</strong><br>${byId('terms')?.value||'-'}</p>
   <footer style="margin-top:40px;color:#666;font-size:12px">
     <hr>
     <p>Made with FreelanceKit — For questions, contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a></p>
@@ -365,13 +387,13 @@
   previewBtn && previewBtn.addEventListener('click', ()=>{ if(!validateCore()) { toast(t().fixFields); return; } openPreview(); });
   exportBtn  && exportBtn.addEventListener('click', ()=>{ if(!validateCore()) { toast(t().fixFields); return; } openExport(); toast(t().useDialog); });
 
-  // ---------- Keybindings ----------
+  /* ================= KEYS ================= */
   window.addEventListener('keydown', (e)=>{ const mod=(e.ctrlKey||e.metaKey);
     if(mod && e.key.toLowerCase()==='p'){ e.preventDefault(); previewBtn?.click(); }
     if(mod && e.key.toLowerCase()==='s'){ e.preventDefault(); saveJsonBtn?.click(); }
   });
 
-  // ---------- Boot ----------
+  /* ================= BOOT ================= */
   if(lineItemsWrap && lineItemsWrap.children.length===0) addRow({qty:1,price:0});
   updateTotals();
 })();

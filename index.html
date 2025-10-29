@@ -23,16 +23,17 @@
 
   <header class="container header">
     <div class="brand">
-      <img src="/assets/logo.svg" alt="" class="brand-logo" width="28" height="28" />
+      <img src="/assets/logo.svg" alt="" class="brand-logo" width="40" height="40" />
       <h1 class="app-title">FreelanceKit</h1>
     </div>
     <div class="header-actions">
-      <select id="langSwitcher" class="btn ghost" aria-label="Language">
+      <button id="themeToggle" class="btn pill ghost" aria-label="Toggle theme">🌗</button>
+      <select id="langSwitcher" class="btn pill select-like" aria-label="Language">
         <option value="en">English</option>
         <option value="zh">简体中文</option>
       </select>
-      <button id="installPWA" class="btn ghost" aria-label="Install as app" data-i18n="install">Install</button>
-      <a id="buyPro" class="btn primary lock" href="/pages/pro.html" target="_blank" rel="noopener" data-i18n="unlockPro">Unlock Pro</a>
+      <button id="installPWA" class="btn pill ghost" aria-label="Install as app" data-i18n="install">Install</button>
+      <a id="buyPro" class="btn pill gradient lock" href="/pages/pro.html" target="_blank" rel="noopener" data-i18n="unlockPro">Unlock Pro</a>
     </div>
   </header>
 
@@ -123,8 +124,8 @@
       </div>
       <div id="lineItems" class="items-list" role="table" aria-label="Line items"></div>
       <div class="toolbar-inline">
-        <button id="addItem" class="btn primary" data-i18n="addItem">Add Item</button>
-        <button id="clearItems" class="btn danger ghost" data-i18n="clearAll">Clear All</button>
+        <button id="addItem" class="btn primary pill" data-i18n="addItem">Add Item</button>
+        <button id="clearItems" class="btn danger ghost pill" data-i18n="clearAll">Clear All</button>
       </div>
     </section>
 
@@ -157,17 +158,17 @@
 
   <!-- Actions -->
   <nav class="fab" aria-label="Primary actions">
-    <button id="previewPDF" class="btn primary" data-i18n="preview">Preview (Ctrl+P)</button>
-    <button id="exportPDF" class="btn" data-i18n="export">Export PDF</button>
+    <button id="previewPDF" class="btn primary pill" data-i18n="preview">Preview (Ctrl+P)</button>
+    <button id="exportPDF" class="btn pill" data-i18n="export">Export PDF</button>
   </nav>
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- Pro dialog (can be closed) -->
+  <!-- Pro dialog -->
   <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle" aria-hidden="true">
     <div class="dialog" role="document">
       <h3 id="proTitle">FreelanceKit Pro</h3>
-      <p>Features in progress:</p>
+      <p>In progress:</p>
       <ul>
         <li>No-watermark templates (Invoice / Quote / Contract)</li>
         <li>Clients/Projects CSV import</li>
@@ -176,8 +177,8 @@
       </ul>
       <p>Contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a> • <a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Ko-fi</a></p>
       <div class="actions">
-        <a href="/pages/pro.html" target="_blank" rel="noopener" class="btn">Open Pro page</a>
-        <button id="proClose" class="btn primary">Got it</button>
+        <a href="/pages/pro.html" target="_blank" rel="noopener" class="btn pill">Open Pro page</a>
+        <button id="proClose" class="btn primary pill">Got it</button>
       </div>
     </div>
   </div>
