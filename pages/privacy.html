@@ -4,30 +4,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 :root{--ink:#0f172a;--muted:#56647a}
-body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:
-  radial-gradient(900px 500px at -10% -10%, rgba(124,58,237,.12), transparent 55%),
-  linear-gradient(180deg,#f7f8fb,#eef2ff);}
+body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#ffffff,#f8fafc)}
 .container{max-width:980px;margin:40px auto;padding:0 20px}
 .hero{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-.logo{width:40px;height:40px}
+.logo{width:44px;height:44px}
 h1{margin:0;color:var(--ink)}
-.section{background:#fff;border:1px solid #e8ecf5;border-radius:16px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.15);margin-bottom:14px}
+.section{background:#fff;border:1px solid #e8ecf5;border-radius:16px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.12);margin-bottom:14px}
 .kv{display:grid;grid-template-columns:180px 1fr;gap:8px}
 .kv div:first-child{color:#64748b}
-ul{margin:10px 0 0 20px}
-a{color:#2550db}
-.back{display:inline-block;margin-top:16px;text-decoration:none}
+a{color:#1e40af}
+.back{display:inline-block;margin-top:16px}
 @media (max-width:640px){.kv{grid-template-columns:1fr}}
 </style>
 <div class="container">
-  <div class="hero">
-    <img class="logo" src="/assets/logo.svg" alt="">
-    <h1>Privacy Policy</h1>
-  </div>
+  <div class="hero"><img class="logo" src="/assets/logo.svg" alt=""><h1>Privacy Policy</h1></div>
   <div class="section">
-    <div class="kv"><div>Data Location</div><div>Everything runs locally in your browser. No server, no cloud sync.</div></div>
-    <div class="kv"><div>Storage</div><div>We use LocalStorage/Cache for your convenience. You can clear it anytime.</div></div>
-    <div class="kv"><div>Files</div><div>JSON/CSV/PDF import & export are processed client-side.</div></div>
+    <div class="kv"><div>Data Location</div><div>All processing happens in your browser. No server, no cloud sync.</div></div>
+    <div class="kv"><div>Storage</div><div>LocalStorage/Cache only. You can clear anytime.</div></div>
+    <div class="kv"><div>Files</div><div>JSON/CSV/PDF are handled client-side.</div></div>
     <div class="kv"><div>Contact</div><div><a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a></div></div>
   </div>
   <a class="back" href="/">← Back to app</a>
