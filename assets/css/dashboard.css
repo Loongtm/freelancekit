@@ -94,3 +94,33 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.05);
   margin-top: 60px;
 }
+/* ========= Pro Dialog ========= */
+.dialog-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  place-items:center;
+  background:rgba(0,0,0,.7);
+  z-index:100;
+}
+.dialog{
+  background:var(--panel);
+  border:1px solid var(--gold);
+  border-radius:var(--radius);
+  padding:28px 24px;
+  box-shadow:var(--shadow);
+  max-width:400px;
+  text-align:center;
+}
+.dialog .actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+.dialog-backdrop.show{display:grid;}
+.btn.primary{
+  background:var(--gold);
+  color:#111;
+  border:none;
+}
