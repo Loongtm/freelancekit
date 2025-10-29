@@ -164,3 +164,30 @@ input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="
   .brand-logo{width:64px;height:64px}
   .app-title{font-size:26px}
 }
+/* --- Mobile-first tuning --- */
+:root{ --gap:10px; --control-h:44px; --radius:12px; --brand:#2563eb; }
+body{ background: linear-gradient(180deg,#ffffff,#f7f9fc); }
+
+/* header */
+.brand-logo{width:72px;height:72px}
+.header-actions .btn, .header-actions .select-like{ height:44px; padding:0 14px; border-radius:22px; }
+
+/* form card spacing for mobile-first */
+.card{ margin:14px 8px; border-radius:16px; padding:16px; }
+@media (min-width:900px){ .container{max-width:1100px;margin:24px auto;} .card{ margin:18px 0; } }
+
+/* touch targets */
+button, .btn { min-width:44px; min-height:44px; }
+
+/* ensure dropdown z-index */
+.header-actions{ position:relative; z-index:10; }
+.select-like{ z-index:12; }
+
+/* dark-mode safe: ensure no white band */
+:root[data-theme="dark"] body{ background: radial-gradient(900px 500px at -20% -20%, rgba(99,102,241,.12), transparent 50%), linear-gradient(180deg,#071025,#0b1220); }
+
+/* print: hide fixed & floating UI */
+@media print {
+  .header, .header-actions, .fab, .toasts, .dialog-backdrop { display:none !important; }
+  body{ background:transparent !important; color:#111; }
+}
