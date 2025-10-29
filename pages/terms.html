@@ -3,16 +3,21 @@
 <title>Terms • FreelanceKit</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-:root{--ink:#0f172a}
-body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#ffffff,#f8fafc)}
+:root{--ink:#0f172a;--panel:#fff;--bor:#e8ecf5;--bg1:#ffffff;--bg2:#f8fafc}
+body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--ink)}
 .container{max-width:980px;margin:40px auto;padding:0 20px}
 .hero{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .logo{width:44px;height:44px}
-h1{margin:0;color:var(--ink)}
-.section{background:#fff;border:1px solid #e8ecf5;border-radius:16px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.12);margin-bottom:14px}
+h1{margin:0}
+.section{background:var(--panel);border:1px solid var(--bor);border-radius:16px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.12);margin-bottom:14px}
 ul{margin:10px 0 0 20px}
 a{color:#1e40af}
 .back{display:inline-block;margin-top:16px}
+/* Dark mode */
+@media (prefers-color-scheme: dark){
+  :root{--ink:#e5e7eb;--panel:#0f172a;--bor:rgba(255,255,255,.08);--bg1:#0b1220;--bg2:#0b1220}
+  a{color:#93c5fd}
+}
 </style>
 <div class="container">
   <div class="hero"><img class="logo" src="/assets/logo.svg" alt=""><h1>Terms of Use</h1></div>
