@@ -1,0 +1,13 @@
+/* print.css — 专用于打印/导出视图 */
+@media print {
+  @page { margin: 12mm; }
+  html,body{height:auto!important;background:none!important;color:#111!important}
+  header, footer{page-break-inside:avoid}
+  nav, .fab, .header, .toasts, .dialog-backdrop, .header-actions { display:none !important; } 
+  .container{max-width:100%; padding:0}
+  .card{box-shadow:none;border: none;background:transparent}
+  .items-table, table{width:100%; border-collapse:collapse; font-size:12px}
+  th, td{border:1px solid #ddd; padding:6px}
+  th{background:#f3f4f6}
+  img.logo{width:36px;height:36px}
+}
