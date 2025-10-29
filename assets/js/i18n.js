@@ -9,9 +9,6 @@ window.FK_I18N = (function(){
       exportPdf: "Export PDF",
       addItem: "Add Item",
       clearAll: "Clear All",
-      loadJson: "Load JSON",
-      saveJson: "Save JSON",
-      importCsvPro: "Import Clients CSV (Pro)",
       notes: "Notes",
       terms: "Terms",
       subtotal: "Subtotal",
@@ -22,24 +19,24 @@ window.FK_I18N = (function(){
       dueDate: "Due Date",
       paymentMethod: "Payment Method",
       paidStatus: "Paid Status",
-      discount: "Discount",
-      shippingFee: "Shipping Fee",
       sellerInfo: "Seller Info",
       clientInfo: "Client Info",
       paidStatusCheckbox: "Marked as Paid",
-      contactEmail: "tmloong0128@gmail.com",
-      from: "From",
-      billTo: "Bill To",
       description: "Description",
       qty: "Qty",
-      unit: "Unit",
-      taxPct: "Tax %",
       amount: "Amount",
-      invoice: "Invoice",
       name: "Name",
       address: "Address",
       email: "Email",
-      phone: "Phone"
+      phone: "Phone",
+      unlockPro: "Unlock Pro 🔒",
+      // Payment options
+      bankTransfer: "Bank Transfer",
+      creditCard: "Credit Card",
+      paypal: "PayPal",
+      ewallet: "e-Wallet",
+      cash: "Cash",
+      other: "Other (Custom)",
     },
     zh: {
       pwaReady: "PWA 就绪",
@@ -50,9 +47,6 @@ window.FK_I18N = (function(){
       exportPdf: "导出 PDF",
       addItem: "新增项目",
       clearAll: "全部清除",
-      loadJson: "导入 JSON",
-      saveJson: "保存 JSON",
-      importCsvPro: "导入客户 CSV（Pro）",
       notes: "备注",
       terms: "付款条款",
       subtotal: "小计",
@@ -63,24 +57,23 @@ window.FK_I18N = (function(){
       dueDate: "付款截止",
       paymentMethod: "付款方式",
       paidStatus: "已付款状态",
-      discount: "折扣",
-      shippingFee: "运费",
       sellerInfo: "发票开具方",
       clientInfo: "客户信息",
-      paidStatusCheckbox: "标记为已付款",
-      contactEmail: "tmloong0128@gmail.com",
-      from: "发件方",
-      billTo: "收件方",
       description: "项目描述",
       qty: "数量",
-      unit: "单价",
-      taxPct: "税率 %",
       amount: "金额",
-      invoice: "发票",
       name: "名称",
       address: "地址",
       email: "邮箱",
-      phone: "电话"
+      phone: "电话",
+      unlockPro: "解锁 Pro 🔒",
+      // 付款方式选项
+      bankTransfer: "银行转账",
+      creditCard: "信用卡",
+      paypal: "PayPal",
+      ewallet: "电子钱包",
+      cash: "现金",
+      other: "其他（自定义）",
     }
   };
 
@@ -89,7 +82,7 @@ window.FK_I18N = (function(){
   function setLang(l){ localStorage.setItem(KEY, l); }
   function t(key){
     const lang = getLang();
-    return (LOCALES[lang] && LOCALES[lang][key]) || (LOCALES['en'][key]||key);
+    return (LOCALES[lang] && LOCALES[lang][key]) || LOCALES['en'][key] || key;
   }
   return { getLang, setLang, t, LOCALES };
 })();
