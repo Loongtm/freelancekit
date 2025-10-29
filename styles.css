@@ -11,11 +11,11 @@ body{
 }
 a{color:#a5b4fc;text-decoration:none}
 a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--primary); outline-offset:2px}
 .container{width:min(1100px,92vw); margin-inline:auto}
 .header{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
 .app-title{margin:0; font-size:22px; letter-spacing:.3px}
 .header-actions{display:flex; gap:8px}
-.header select{padding:8px 10px; border-radius:10px; background:rgba(2,6,23,.6); color:var(--text); border:1px solid rgba(148,163,184,.25)}
 .content{display:flex; flex-direction:column; gap:16px; padding-bottom:160px}
 .card{
   background:linear-gradient(180deg,rgba(17,24,39,.6),rgba(17,24,39,.35));
@@ -83,11 +83,9 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 }
 
 /* Dialog */
-body.modal-open{overflow:hidden}
 .dialog-backdrop{
   position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:60;
 }
-.dialog-backdrop[aria-hidden="false"]{display:flex}
 .dialog{
   width:min(560px,92vw); background:#0f172a; border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px;
   box-shadow:0 20px 60px -20px rgba(0,0,0,.8)

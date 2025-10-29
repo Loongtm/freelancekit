@@ -4,25 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>FreelanceKit — Quotes • Invoices • Contracts</title>
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0f172a" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <!-- App status bar -->
   <div id="app-status" role="status" aria-live="polite" class="status-bar">
-    <span id="pwa-state">PWA ready</span> • <span id="net-state">Online</span>
+    <span id="pwa-state" data-i18n="pwaReady">PWA ready</span> •
+    <span id="net-state" data-i18n="online">Online</span>
   </div>
 
   <header class="container header">
     <h1 class="app-title">FreelanceKit</h1>
     <div class="header-actions">
-      <select id="langSwitcher" aria-label="Language">
+      <!-- 语言切换 -->
+      <select id="langSwitcher" class="btn ghost" aria-label="Language">
         <option value="en">English</option>
-        <option value="zh">中文</option>
+        <option value="zh">简体中文</option>
       </select>
-      <button id="installPWA" class="btn ghost" aria-label="Install as app">Install</button>
-      <a id="buyPro" class="btn primary lock" href="#" rel="noopener">Unlock Pro</a>
+      <button id="installPWA" class="btn ghost" aria-label="Install as app" data-i18n="install">Install</button>
+      <a id="buyPro" class="btn primary lock" href="/pages/pro.html" target="_blank" rel="noopener" data-i18n="unlockPro">Unlock Pro</a>
     </div>
   </header>
 
@@ -33,20 +34,16 @@
     <section class="card" aria-labelledby="sec-your">
       <h2 id="sec-your" data-i18n="yourDetails">Your Details</h2>
       <div class="grid-2">
-        <label data-i18n-label="yourName">
-          <span>Business / Name</span>
+        <label><span data-i18n="businessName">Business / Name</span>
           <input id="yourName" required placeholder="Acme Studio" autocomplete="organization" />
         </label>
-        <label data-i18n-label="yourEmail">
-          <span>Email</span>
+        <label><span data-i18n="email">Email</span>
           <input id="yourEmail" type="email" required placeholder="you@domain.com" autocomplete="email" />
         </label>
-        <label data-i18n-label="yourAddress">
-          <span>Address</span>
+        <label><span data-i18n="address">Address</span>
           <textarea id="yourAddress" placeholder="Street, City, Country"></textarea>
         </label>
-        <label data-i18n-label="yourPhone">
-          <span>Phone</span>
+        <label><span data-i18n="phone">Phone</span>
           <input id="yourPhone" type="tel" placeholder="+60 12-345 6789" autocomplete="tel" />
         </label>
       </div>
@@ -56,20 +53,16 @@
     <section class="card" aria-labelledby="sec-client">
       <h2 id="sec-client" data-i18n="clientDetails">Client Details</h2>
       <div class="grid-2">
-        <label data-i18n-label="clientName">
-          <span>Client Name</span>
+        <label><span data-i18n="clientName">Client Name</span>
           <input id="clientName" required placeholder="Client Co. Ltd." />
         </label>
-        <label data-i18n-label="clientEmail">
-          <span>Client Email</span>
+        <label><span data-i18n="clientEmail">Client Email</span>
           <input id="clientEmail" type="email" placeholder="ap@client.com" />
         </label>
-        <label data-i18n-label="clientAddress">
-          <span>Client Address</span>
+        <label><span data-i18n="clientAddress">Client Address</span>
           <textarea id="clientAddress" placeholder="Street, City, Country"></textarea>
         </label>
-        <label data-i18n-label="clientRef">
-          <span>PO / Reference</span>
+        <label><span data-i18n="clientRef">PO / Reference</span>
           <input id="clientRef" placeholder="PO-2025-0012" />
         </label>
       </div>
@@ -79,37 +72,32 @@
     <section class="card" aria-labelledby="sec-doc">
       <h2 id="sec-doc" data-i18n="document">Document</h2>
       <div class="grid-3">
-        <label data-i18n-label="type">
-          <span>Type</span>
+        <label><span data-i18n="type">Type</span>
           <select id="docType" required>
             <option value="invoice" data-i18n="invoice">Invoice</option>
             <option value="quote" data-i18n="quote">Quote</option>
             <option value="contract" data-i18n="contract">Contract</option>
           </select>
         </label>
-        <label data-i18n-label="docNo">
-          <span>Document No.</span>
+        <label><span data-i18n="docNo">Document No.</span>
           <input id="docNo" required pattern="[A-Za-z0-9-_]{1,32}" placeholder="INV-2025-0001" />
         </label>
-        <label data-i18n-label="date">
-          <span>Date</span>
+        <label><span data-i18n="date">Date</span>
           <input id="docDate" type="date" required />
         </label>
-        <label data-i18n-label="currency">
-          <span>Currency</span>
+        <label><span data-i18n="currency">Currency</span>
           <select id="currency" required>
             <option>MYR</option><option>USD</option><option>EUR</option><option>SGD</option><option>CNY</option>
           </select>
         </label>
-        <label data-i18n-label="tax">
-          <span>Tax %</span>
+        <label><span data-i18n="tax">Tax %</span>
           <input id="taxRate" inputmode="decimal" pattern="^([0-9]|[1-9][0-9]|100)(\\.[0-9]{1,2})?$" placeholder="0–100" />
         </label>
       </div>
       <div class="toolbar-inline">
-        <button id="loadJson" class="btn" data-i18n="loadJson">Load JSON</button>
-        <button id="saveJson" class="btn" data-i18n="saveJson">Save JSON</button>
-        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only" data-i18n="importCSV">Import Clients CSV (Pro)</button>
+        <button id="loadJson" class="btn" data-i18n="load">Load JSON</button>
+        <button id="saveJson" class="btn" data-i18n="save">Save JSON</button>
+        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only" data-i18n="importPro">Import Clients CSV (Pro)</button>
       </div>
     </section>
 
@@ -117,10 +105,10 @@
     <section class="card" aria-labelledby="sec-items">
       <h2 id="sec-items" data-i18n="lineItems">Line Items</h2>
       <div class="items-head">
-        <span data-i18n="desc">Description</span>
+        <span data-i18n="description">Description</span>
         <span data-i18n="qty">Qty</span>
         <span data-i18n="unitPrice">Unit Price</span>
-        <span data-i18n="taxShort">Tax %</span>
+        <span data-i18n="tax">Tax %</span>
         <span data-i18n="amount">Amount</span>
         <span></span>
       </div>
@@ -135,12 +123,10 @@
     <section class="card" aria-labelledby="sec-notes">
       <h2 id="sec-notes" data-i18n="notesTerms">Notes & Terms</h2>
       <div class="grid-2">
-        <label data-i18n-label="notes">
-          <span>Notes</span>
+        <label><span data-i18n="notes">Notes</span>
           <textarea id="notes" placeholder="Optional notes to the client"></textarea>
         </label>
-        <label data-i18n-label="terms">
-          <span>Terms</span>
+        <label><span data-i18n="terms">Terms</span>
           <textarea id="terms" placeholder="Payment due in 14 days. Late fees may apply."></textarea>
         </label>
       </div>
@@ -152,7 +138,7 @@
         <div data-i18n="subtotal">Subtotal</div><div id="subtotal">—</div>
       </div>
       <div class="totals-row">
-        <div data-i18n="tax">Tax</div><div id="taxAmount">—</div>
+        <div data-i18n="totalTax">Tax</div><div id="taxAmount">—</div>
       </div>
       <div class="totals-row total">
         <div data-i18n="total">Total</div><div id="grandTotal">—</div>
@@ -160,38 +146,43 @@
     </section>
   </main>
 
-  <!-- Floating action bar -->
   <nav class="fab" aria-label="Primary actions">
     <button id="previewPDF" class="btn primary" data-i18n="preview">Preview (Ctrl+P)</button>
     <button id="exportPDF" class="btn" data-i18n="export">Export PDF</button>
   </nav>
 
-  <!-- Toasts -->
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- Pro 说明弹窗 -->
+  <!-- Pro 弹窗（可关闭） -->
   <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle" aria-hidden="true">
-    <div class="dialog">
+    <div class="dialog" role="document">
       <h3 id="proTitle">FreelanceKit Pro</h3>
-      <p data-i18n="proIntro">Upcoming / rolling out:</p>
+      <p>即将提供/逐步开放的能力：</p>
       <ul>
-        <li data-i18n="proTpl">Template pack (no watermark)</li>
-        <li data-i18n="proCsv">Clients/Projects CSV import</li>
-        <li data-i18n="proBatch">Batch invoicing, Timesheet → Invoice</li>
-        <li data-i18n="proWL">White-label option</li>
+        <li>无水印模板包（发票/报价/合同，多样配色）</li>
+        <li>Clients/Projects CSV 导入</li>
+        <li>批量开票、Timesheet → Invoice</li>
+        <li>White-label（可隐藏品牌标识）</li>
       </ul>
-      <p><a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">https://ko-fi.com/loongtm</a></p>
+      <p>现在可以先支持作者或预购：</p>
+      <p><a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a> • <a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Ko-fi</a></p>
       <div class="actions">
-        <button id="proClose" class="btn primary" data-i18n="gotIt">Got it</button>
+        <a href="/pages/pro.html" target="_blank" rel="noopener" class="btn">Open Pro page</a>
+        <button id="proClose" class="btn primary">Got it</button>
       </div>
     </div>
   </div>
 
   <footer class="container footer">
-    <small class="muted">Made with FreelanceKit • <a href="/pages/privacy.html">Privacy</a> • <a href="/pages/terms.html">Terms</a></small>
+    <small class="muted">
+      Made with FreelanceKit •
+      <a href="/pages/privacy.html">Privacy</a> •
+      <a href="/pages/terms.html">Terms</a> •
+      <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a>
+    </small>
   </footer>
 
-  <script src="app.js" defer></script>
-  <script src="sw.js" defer></script>
+  <script src="/app.js" defer></script>
+  <script src="/sw.js" defer></script>
 </body>
 </html>
