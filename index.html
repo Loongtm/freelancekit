@@ -4,20 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>FreelanceKit — Quotes • Invoices • Contracts</title>
-  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Icons / PWA -->
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
   <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="/manifest.json" />
+
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <!-- App status bar -->
   <div id="app-status" role="status" aria-live="polite" class="status-bar">
     <span id="pwa-state" data-i18n="pwaReady">PWA ready</span> •
     <span id="net-state" data-i18n="online">Online</span>
   </div>
 
   <header class="container header">
-    <h1 class="app-title">FreelanceKit</h1>
+    <div class="brand">
+      <img src="/assets/logo.svg" alt="" class="brand-logo" width="28" height="28" />
+      <h1 class="app-title">FreelanceKit</h1>
+    </div>
     <div class="header-actions">
-      <!-- 语言切换 -->
       <select id="langSwitcher" class="btn ghost" aria-label="Language">
         <option value="en">English</option>
         <option value="zh">简体中文</option>
@@ -38,7 +47,7 @@
           <input id="yourName" required placeholder="Acme Studio" autocomplete="organization" />
         </label>
         <label><span data-i18n="email">Email</span>
-          <input id="yourEmail" type="email" required placeholder="you@domain.com" autocomplete="email" />
+          <input id="yourEmail" type="email" required placeholder="tmloong0128@gmail.com" autocomplete="email" />
         </label>
         <label><span data-i18n="address">Address</span>
           <textarea id="yourAddress" placeholder="Street, City, Country"></textarea>
@@ -146,6 +155,7 @@
     </section>
   </main>
 
+  <!-- Actions -->
   <nav class="fab" aria-label="Primary actions">
     <button id="previewPDF" class="btn primary" data-i18n="preview">Preview (Ctrl+P)</button>
     <button id="exportPDF" class="btn" data-i18n="export">Export PDF</button>
@@ -153,19 +163,18 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- Pro 弹窗（可关闭） -->
+  <!-- Pro dialog (can be closed) -->
   <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle" aria-hidden="true">
     <div class="dialog" role="document">
       <h3 id="proTitle">FreelanceKit Pro</h3>
-      <p>即将提供/逐步开放的能力：</p>
+      <p>Features in progress:</p>
       <ul>
-        <li>无水印模板包（发票/报价/合同，多样配色）</li>
-        <li>Clients/Projects CSV 导入</li>
-        <li>批量开票、Timesheet → Invoice</li>
-        <li>White-label（可隐藏品牌标识）</li>
+        <li>No-watermark templates (Invoice / Quote / Contract)</li>
+        <li>Clients/Projects CSV import</li>
+        <li>Batch invoicing • Timesheet → Invoice</li>
+        <li>White-label mode</li>
       </ul>
-      <p>现在可以先支持作者或预购：</p>
-      <p><a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a> • <a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Ko-fi</a></p>
+      <p>Contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a> • <a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Ko-fi</a></p>
       <div class="actions">
         <a href="/pages/pro.html" target="_blank" rel="noopener" class="btn">Open Pro page</a>
         <button id="proClose" class="btn primary">Got it</button>

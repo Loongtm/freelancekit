@@ -1,8 +1,10 @@
-const CACHE = 'freelancekit-v8-cf';
+const CACHE = 'freelancekit-v9-cf';
 const ASSETS = [
   '/', '/index.html',
   '/styles.css', '/app.js',
-  '/manifest.json', '/assets/icon-192.png', '/assets/icon-512.png',
+  '/manifest.json',
+  '/assets/logo.svg', '/assets/favicon.svg',
+  '/assets/icon-192.png', '/assets/icon-512.png',
   '/pages/privacy.html', '/pages/terms.html', '/pages/pro.html'
 ];
 
