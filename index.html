@@ -96,9 +96,19 @@
 
       <div class="payment-info">
         <h3 data-i18n="paymentMethod">付款方式</h3>
-        <textarea id="paymentMethod" placeholder="银行转账 / 信用卡 / PayPal 等说明" required></textarea>
+        <div class="field">
+          <select id="paymentMethodSelect" class="select-like" required aria-label="付款方式">
+            <option value="bank">银行转账</option>
+            <option value="card">信用卡</option>
+            <option value="paypal">PayPal</option>
+            <option value="ewallet">电子钱包</option>
+            <option value="cash">现金</option>
+            <option value="other">其他（自定义）</option>
+          </select>
+          <input id="paymentMethodOther" type="text" placeholder="请输入具体方式，如：银行名 / 账号" style="display:none;margin-top:8px;">
+        </div>
         <label>
-          <input type="checkbox" id="paidStatus"> <span data-i18n="paidStatus">已付款</span>
+          <input type="checkbox" id="paidStatus" title="勾选代表已收到付款"> <span data-i18n="paidStatus">已付款</span>
         </label>
       </div>
 
