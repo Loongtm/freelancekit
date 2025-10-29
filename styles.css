@@ -191,3 +191,86 @@ button, .btn { min-width:44px; min-height:44px; }
   .header, .header-actions, .fab, .toasts, .dialog-backdrop { display:none !important; }
   body{ background:transparent !important; color:#111; }
 }
+/* ====== Mobile overflow & layout fixes ====== */
+/* Prevent horizontal overflow globally */
+html, body { overflow-x: hidden; }
+
+/* Container safe area and consistent max width */
+.container {
+  width: min(1100px, 96vw);
+  margin-inline: auto;
+  padding-inline: 12px;
+  box-sizing: border-box;
+}
+
+/* Card responsiveness and avoid internal overflow hidden that clips children */
+.card {
+  max-width: 100%;
+  margin: 18px 0;
+  overflow: visible; /* allow drop-downs/panels to remain visible */
+  box-sizing: border-box;
+}
+
+/* Fix bottom floating toolbar to not overlap content on small screens */
+.fab {
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  justify-content: center;
+  padding: 8px;
+  gap: 12px;
+  z-index: 40;
+}
+
+/* Ensure clickable actions don't get clipped at the very bottom on mobile */
+body { padding-bottom: 120px; }
+
+/* Ensure totals panel never exceeds viewport width on small screens */
+.totals-row, .item-row, .items-head {
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+/* Prevent dropdowns / selects / buttons from being pushed off-screen */
+.header-actions { display:flex; gap:12px; align-items:center; position:relative; z-index:50; }
+.select-like { z-index:60; }
+
+/* ====== Install button (hidden by default, visible when installable) ====== */
+#installPWA {
+  display: none; /* shown by JS when install available */
+}
+
+/* ====== Unlock Pro button styling (prevent wrap / lost border) ====== */
+.btn.lock {
+  white-space: nowrap;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 16px;
+  height:44px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(135deg,#7c3aed 0%,#2563eb 60%);
+  color:#fff;
+  box-shadow: 0 8px 20px -10px rgba(0,0,0,.6);
+}
+
+/* ensure the language dropdown doesn't overlap unlock button */
+.header-actions .select-like { margin-left:6px; }
+
+/* ====== "Back to app" pill style ====== */
+.back-link {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:28px;
+  border:1px solid rgba(0,0,0,.06);
+  background:rgba(255,255,255,.88);
+  color:var(--text);
+  text-decoration:none;
+  box-shadow: 0 6px 16px rgba(2,6,23,.06);
+}
+:root[data-theme="dark"] .back-link { background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.04); color:var(--text); }
+.back-link:hover { transform: translateY(-2px); transition:transform .12s ease; }
