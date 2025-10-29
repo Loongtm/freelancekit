@@ -1,4 +1,3 @@
-// assets/js/i18n.js — 简易国际化（中/英），全局 FK_I18N 对象
 window.FK_I18N = (function(){
   const LOCALES = {
     en: {
@@ -18,9 +17,16 @@ window.FK_I18N = (function(){
       subtotal: "Subtotal",
       tax: "Tax",
       total: "Total",
-      pleaseAddItem: "Please add at least one line item",
-      fixFields: "Please fix highlighted fields",
-      savedJson: "Saved JSON",
+      invoiceNumber: "Invoice Number",
+      invoiceDate: "Invoice Date",
+      dueDate: "Due Date",
+      paymentMethod: "Payment Method",
+      paidStatus: "Paid Status",
+      discount: "Discount",
+      shippingFee: "Shipping Fee",
+      sellerInfo: "Seller Info",
+      clientInfo: "Client Info",
+      paidStatusCheckbox: "Marked as Paid",
       contactEmail: "tmloong0128@gmail.com",
       from: "From",
       billTo: "Bill To",
@@ -30,8 +36,10 @@ window.FK_I18N = (function(){
       taxPct: "Tax %",
       amount: "Amount",
       invoice: "Invoice",
-      install: "Install",
-      unlockPro: "Unlock Pro"
+      name: "Name",
+      address: "Address",
+      email: "Email",
+      phone: "Phone"
     },
     zh: {
       pwaReady: "PWA 就绪",
@@ -40,19 +48,26 @@ window.FK_I18N = (function(){
       workflow: "流程：填写 → 预览 → 导出/保存",
       preview: "预览（Ctrl+P）",
       exportPdf: "导出 PDF",
-      addItem: "新增行",
-      clearAll: "清空",
+      addItem: "新增项目",
+      clearAll: "全部清除",
       loadJson: "导入 JSON",
       saveJson: "保存 JSON",
       importCsvPro: "导入客户 CSV（Pro）",
       notes: "备注",
-      terms: "条款",
+      terms: "付款条款",
       subtotal: "小计",
       tax: "税额",
       total: "合计",
-      pleaseAddItem: "请至少添加一行项目",
-      fixFields: "请修正高亮字段",
-      savedJson: "已保存 JSON",
+      invoiceNumber: "发票编号",
+      invoiceDate: "开具日期",
+      dueDate: "付款截止",
+      paymentMethod: "付款方式",
+      paidStatus: "已付款状态",
+      discount: "折扣",
+      shippingFee: "运费",
+      sellerInfo: "发票开具方",
+      clientInfo: "客户信息",
+      paidStatusCheckbox: "标记为已付款",
       contactEmail: "tmloong0128@gmail.com",
       from: "发件方",
       billTo: "收件方",
@@ -62,8 +77,10 @@ window.FK_I18N = (function(){
       taxPct: "税率 %",
       amount: "金额",
       invoice: "发票",
-      install: "安装",
-      unlockPro: "解锁 Pro"
+      name: "名称",
+      address: "地址",
+      email: "邮箱",
+      phone: "电话"
     }
   };
 

@@ -1,11 +1,10 @@
-/* assets/css/print.css - 打印专用（确保导出/打印时格式正确） */
 @media print {
-  @page { margin: 12mm; }
+  @page { margin:12mm; }
   html, body { height:auto!important; background:none!important; color:#111!important; }
   .header, .header-actions, .fab, .toasts, .dialog-backdrop { display:none !important; }
   .container{ width:100%; padding:0; margin:0; }
   .card{ box-shadow:none; border:none; background:transparent; }
   table{ width:100%; border-collapse:collapse; font-size:12px; }
-  th, td{ border:1px solid #ddd; padding:6px; }
+  th, td { border:1px solid #ddd; padding:6px; }
   th{ background:#f3f4f6; }
 }
