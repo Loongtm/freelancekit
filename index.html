@@ -5,17 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>FreelanceKit — Quotes • Invoices • Contracts</title>
 
-  <!-- Icons / PWA -->
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="/assets/icon-192.png">
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="manifest" href="/manifest.json" />
-
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <!-- App status bar -->
   <div id="app-status" role="status" aria-live="polite" class="status-bar">
     <span id="pwa-state" data-i18n="pwaReady">PWA ready</span> •
     <span id="net-state" data-i18n="online">Online</span>
@@ -23,11 +20,11 @@
 
   <header class="container header">
     <div class="brand">
-      <img src="/assets/logo.svg" alt="" class="brand-logo" width="40" height="40" />
+      <img src="/assets/logo.svg" alt="" class="brand-logo" width="56" height="56" />
       <h1 class="app-title">FreelanceKit</h1>
     </div>
     <div class="header-actions">
-      <button id="themeToggle" class="btn pill ghost" aria-label="Toggle theme">🌗</button>
+      <button id="themeToggle" class="btn pill ghost" aria-label="Toggle theme">🌞</button>
       <select id="langSwitcher" class="btn pill select-like" aria-label="Language">
         <option value="en">English</option>
         <option value="zh">简体中文</option>
@@ -40,7 +37,6 @@
   <main id="app" class="container content" aria-describedby="workflow">
     <p id="workflow" class="muted" data-i18n="workflow">Workflow: Fill → Preview → Export/Save</p>
 
-    <!-- Your Details -->
     <section class="card" aria-labelledby="sec-your">
       <h2 id="sec-your" data-i18n="yourDetails">Your Details</h2>
       <div class="grid-2">
@@ -59,7 +55,6 @@
       </div>
     </section>
 
-    <!-- Client Details -->
     <section class="card" aria-labelledby="sec-client">
       <h2 id="sec-client" data-i18n="clientDetails">Client Details</h2>
       <div class="grid-2">
@@ -78,7 +73,6 @@
       </div>
     </section>
 
-    <!-- Document -->
     <section class="card" aria-labelledby="sec-doc">
       <h2 id="sec-doc" data-i18n="document">Document</h2>
       <div class="grid-3">
@@ -105,13 +99,12 @@
         </label>
       </div>
       <div class="toolbar-inline">
-        <button id="loadJson" class="btn" data-i18n="load">Load JSON</button>
-        <button id="saveJson" class="btn" data-i18n="save">Save JSON</button>
-        <button id="importClientsCSV" class="btn lock" disabled aria-disabled="true" title="Pro only" data-i18n="importPro">Import Clients CSV (Pro)</button>
+        <button id="loadJson" class="btn pill" data-i18n="load">Load JSON</button>
+        <button id="saveJson" class="btn pill" data-i18n="save">Save JSON</button>
+        <button id="importClientsCSV" class="btn pill lock" disabled aria-disabled="true" title="Pro only" data-i18n="importPro">Import Clients CSV (Pro)</button>
       </div>
     </section>
 
-    <!-- Line Items -->
     <section class="card" aria-labelledby="sec-items">
       <h2 id="sec-items" data-i18n="lineItems">Line Items</h2>
       <div class="items-head">
@@ -129,7 +122,6 @@
       </div>
     </section>
 
-    <!-- Notes / Terms -->
     <section class="card" aria-labelledby="sec-notes">
       <h2 id="sec-notes" data-i18n="notesTerms">Notes & Terms</h2>
       <div class="grid-2">
@@ -142,7 +134,6 @@
       </div>
     </section>
 
-    <!-- Totals (sticky) -->
     <section id="totals" class="card sticky" aria-live="polite">
       <div class="totals-row">
         <div data-i18n="subtotal">Subtotal</div><div id="subtotal">—</div>
@@ -156,7 +147,6 @@
     </section>
   </main>
 
-  <!-- Actions -->
   <nav class="fab" aria-label="Primary actions">
     <button id="previewPDF" class="btn primary pill" data-i18n="preview">Preview (Ctrl+P)</button>
     <button id="exportPDF" class="btn pill" data-i18n="export">Export PDF</button>
@@ -164,21 +154,13 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <!-- Pro dialog -->
   <div id="proDlg" class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="proTitle" aria-hidden="true">
     <div class="dialog" role="document">
-      <h3 id="proTitle">FreelanceKit Pro</h3>
-      <p>In progress:</p>
-      <ul>
-        <li>No-watermark templates (Invoice / Quote / Contract)</li>
-        <li>Clients/Projects CSV import</li>
-        <li>Batch invoicing • Timesheet → Invoice</li>
-        <li>White-label mode</li>
-      </ul>
-      <p>Contact: <a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a> • <a href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Ko-fi</a></p>
+      <h3 id="proTitle">FreelanceKit Pro (Demo)</h3>
+      <p>Pro includes: branded templates, CSV import, batch invoicing, white-label.</p>
       <div class="actions">
         <a href="/pages/pro.html" target="_blank" rel="noopener" class="btn pill">Open Pro page</a>
-        <button id="proClose" class="btn primary pill">Got it</button>
+        <button id="proClose" class="btn primary pill">Close</button>
       </div>
     </div>
   </div>
