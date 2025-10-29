@@ -9,13 +9,11 @@ body{margin:0;font:16px/1.6 system-ui,Segoe UI,Roboto,Arial;background:linear-gr
 .hero{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .logo{width:44px;height:44px}
 h1{margin:0}
-.section{background:var(--panel);border:1px solid var(--bor);border-radius:16px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.12);margin-bottom:14px}
+.section{background:var(--panel);border:1px solid var(--bor);border-radius:12px;padding:18px;box-shadow:0 12px 24px -16px rgba(0,0,0,.08);margin-bottom:14px}
 .kv{display:grid;grid-template-columns:180px 1fr;gap:8px}
 .kv div:first-child{color:#64748b}
 a{color:#1e40af}
 .back{display:inline-block;margin-top:16px}
-@media (max-width:640px){.kv{grid-template-columns:1fr}}
-/* Dark mode */
 @media (prefers-color-scheme: dark){
   :root{--ink:#e5e7eb;--muted:#9fb0c8;--panel:#0f172a;--bor:rgba(255,255,255,.08);--bg1:#0b1220;--bg2:#0b1220}
   a{color:#93c5fd}
@@ -29,6 +27,6 @@ a{color:#1e40af}
     <div class="kv"><div>Files</div><div>JSON/CSV/PDF are handled client-side.</div></div>
     <div class="kv"><div>Contact</div><div><a href="mailto:tmloong0128@gmail.com">tmloong0128@gmail.com</a></div></div>
   </div>
-  <a class="back" href="/">← Back to app</a>
+  <a class="back" href="/" class="back-link">← Back to app</a>
 </div>
 </html>
