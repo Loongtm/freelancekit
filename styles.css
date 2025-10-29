@@ -8,6 +8,10 @@
   --card-grad: linear-gradient(180deg,#ffffff,#fafcff);
   --accent-grad: linear-gradient(135deg,#7c3aed 0%,#2563eb 60%,#06b6d4 100%);
   --shadow: 0 12px 24px -16px rgba(0,0,0,.15);
+
+  /* 控件统一尺寸 */
+  --control-h: 44px;
+  --control-radius: 999px;
 }
 :root[data-theme="dark"]{
   --bg:#0b1020; --bg-2:#0e1326; --panel:#0f172a; --panel-2:#111827;
@@ -19,42 +23,77 @@
   --shadow: 0 8px 22px -12px rgba(0,0,0,.7);
 }
 
-/* ===== Base ===== */
+/* 主题切换过渡：临时加 .theme-transition 到 html */
+html.theme-transition *{
+  transition: background-color .28s ease, color .28s ease, border-color .28s ease, box-shadow .28s ease !important;
+}
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; font:16px/1.55 system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   color:var(--text);
+  /* 更平滑的背景：两层超大径向 + 线性，避免条带 */
   background:
-    radial-gradient(900px 500px at -10% -10%, rgba(99,102,241,.18), transparent 55%),
-    radial-gradient(700px 500px at 110% -10%, rgba(34,197,94,.15), transparent 50%),
+    radial-gradient(1200px 800px at -10% -20%, rgba(99,102,241,.12), transparent 60%),
+    radial-gradient(1000px 700px at 110% -10%, rgba(34,197,94,.10), transparent 55%),
     linear-gradient(180deg,var(--bg),var(--bg-2));
 }
 a{color:#2550db;text-decoration:none}
 a:hover{text-decoration:underline}
 :focus-visible{outline:3px solid var(--primary); outline-offset:2px}
 
-/* ===== Layout ===== */
+/* ===== Layout / Header ===== */
 .container{width:min(1100px,92vw); margin-inline:auto}
-.header{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+.header{display:flex; align-items:center; justify-content:space-between; padding:16px 0}
 .brand{display:flex; align-items:center; gap:12px}
-.brand-logo{width:56px;height:56px;display:block; filter:drop-shadow(0 6px 18px rgba(99,102,241,.25))}
+.brand-logo{width:56px;height:56px;display:block; filter:drop-shadow(0 6px 18px rgba(99,102,241,.20))}
 .app-title{margin:0; font-size:28px; letter-spacing:.2px}
-.header-actions{display:flex; gap:10px; align-items:center}
 
-.content{display:flex; flex-direction:column; gap:16px; padding-bottom:140px}
+/* 右上角三颗按钮：统一高度/圆角/间距 */
+.header-actions{display:flex; gap:10px; align-items:center}
+.btn{
+  appearance:none; height:var(--control-h); line-height:calc(var(--control-h) - 2px);
+  border:1px solid rgba(148,163,184,.35); background:#fff; color:var(--text);
+  padding:0 14px; border-radius:12px; cursor:pointer; text-decoration:none;
+  transition:transform .08s ease, filter .12s ease;
+  box-shadow: var(--shadow);
+  display:inline-flex; align-items:center; justify-content:center;
+}
+:root[data-theme="dark"] .btn{background:rgba(2,6,23,.45)}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(1px)}
+.btn.pill{border-radius:var(--control-radius)}
+.btn.ghost{background:transparent}
+.btn.primary{background:linear-gradient(180deg,var(--primary),var(--primary-2)); border-color:transparent; color:#fff}
+.btn.gradient{background:var(--accent-grad); border-color:transparent; color:#fff}
+.btn.danger{border-color:rgba(239,68,68,.6); color:#b91c1c; background:#fff}
+:root[data-theme="dark"] .btn.danger{color:#fecaca; background:rgba(2,6,23,.45)}
+.btn[disabled], .btn.lock[aria-disabled="true"]{opacity:.55; cursor:not-allowed}
+.lock::after{content:"🔒"; margin-left:.4ch; font-size:14px}
+
+/* Select 样式与按钮统一 */
+.select-like{
+  appearance:auto; height:var(--control-h); padding:0 14px; border-radius:var(--control-radius);
+  border:1px solid rgba(148,163,184,.35);
+  background:#fff; color:var(--text);
+}
+:root[data-theme="dark"] .select-like{background:rgba(2,6,23,.45); color:var(--text)}
+
+/* ===== Content Cards ===== */
+.content{display:flex; flex-direction:column; gap:18px; padding-bottom:140px}
 .card{
   background:var(--card-grad);
   border:1px solid #e8ecf5; border-radius:16px; padding:16px;
   box-shadow: var(--shadow);
 }
+:root[data-theme="dark"] .card{border-color:rgba(255,255,255,.08)}
 .card h2{margin:0 0 12px; font-size:18px}
-
 .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
 .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
 @media (max-width:900px){ .grid-2,.grid-3{grid-template-columns:1fr} }
 
-/* ===== Form ===== */
+/* ===== Forms ===== */
 label{display:flex; flex-direction:column; gap:6px; color:var(--muted)}
 input,select,textarea{
   width:100%; padding:12px 14px; border-radius:12px;
@@ -72,33 +111,12 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 .item-del{border:none; background:transparent; color:var(--muted); cursor:pointer}
 .item-del:hover{color:var(--text)}
 
-/* ===== Buttons / Pills ===== */
-.btn{
-  appearance:none; border:1px solid rgba(148,163,184,.35); background:#fff;
-  color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer; text-decoration:none;
-  transition:transform .08s ease, box-shadow .12s ease, filter .12s ease, background .12s ease;
-  box-shadow: var(--shadow);
-}
-:root[data-theme="dark"] .btn{background:rgba(2,6,23,.45)}
-.btn:hover{filter:brightness(1.06)}
-.btn:active{transform:translateY(1px)}
-.btn.pill{border-radius:999px}
-.btn.ghost{background:transparent}
-.btn.primary{background:linear-gradient(180deg,var(--primary),var(--primary-2)); border-color:transparent; color:#fff}
-.btn.primary:hover{filter:brightness(1.05)}
-.btn.gradient{background:var(--accent-grad); border-color:transparent; color:#fff}
-.btn.danger{border-color:rgba(239,68,68,.6); color:#b91c1c; background:#fff}
-:root[data-theme="dark"] .btn.danger{color:#fecaca; background:rgba(2,6,23,.45)}
-.btn[disabled], .btn.lock[aria-disabled="true"]{opacity:.55; cursor:not-allowed}
-.lock::after{content:"🔒"; margin-left:.4ch}
-
-/* Styled select like a button */
-.select-like{appearance:auto; background:#fff}
-:root[data-theme="dark"] .select-like{background:rgba(2,6,23,.45); color:var(--text)}
+/* ===== Toolbars：统一间距（Load/Save、Add/Clear） ===== */
+.toolbar-inline{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
 
 /* ===== Status bar ===== */
 .status-bar{
-  position:sticky; top:0; z-index:50; text-align:center; padding:6px 10px;
+  position:sticky; top:0; z-index:50; text-align:center; padding:8px 10px;
   background:linear-gradient(180deg,#ffffff,#f3f6ff); border-bottom:1px solid #e8ecf5; color:#334155;
 }
 :root[data-theme="dark"] .status-bar{
@@ -106,12 +124,16 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 }
 
 /* ===== Totals / FAB ===== */
-.sticky{position:sticky; bottom:86px}
+/* 桌面不粘底；仅小屏粘底，避免滚动困惑 */
+.sticky{position:static}
+@media (max-width:680px){ .sticky{position:sticky; bottom:86px} }
+
 .totals-row{display:flex; justify-content:space-between; padding:8px 0; border-top:1px dashed rgba(148,163,184,.35)}
 .totals-row.total{font-size:18px}
+
 .fab{
   position:fixed; inset:auto 0 16px 0; display:flex; gap:10px; justify-content:center; z-index:20;
-  padding:8px; background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.9));
+  padding:8px; background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.95));
   border-top:1px solid #e8ecf5;
 }
 :root[data-theme="dark"] .fab{
@@ -128,6 +150,7 @@ input[aria-invalid="true"]{border-color:var(--danger)}
 /* ===== Dialog ===== */
 .dialog-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:60}
 .dialog{width:min(560px,92vw); background:var(--panel); border:1px solid #e8ecf5; border-radius:16px; padding:18px; box-shadow:var(--shadow)}
+:root[data-theme="dark"] .dialog{border-color:rgba(255,255,255,.12)}
 .dialog h3{margin:0 0 10px}
 .dialog .actions{display:flex; gap:8px; justify-content:flex-end; margin-top:12px}
 
@@ -141,9 +164,8 @@ input[aria-invalid="true"]{border-color:var(--danger)}
   body{font-size:17px}
   .brand-logo{width:56px;height:56px}
   .app-title{font-size:24px}
-  .btn{padding:12px 14px}
+  .btn{height:var(--control-h); padding:0 14px}
   input,select,textarea{padding:14px 14px}
   .items-head,.item-row{grid-template-columns:2.4fr .8fr 1.2fr .8fr 1.2fr 40px}
   .fab{inset:auto 8px 10px 8px}
-  .sticky{bottom:98px}
 }
