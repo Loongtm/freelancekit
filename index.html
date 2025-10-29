@@ -1,143 +1,92 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FreelanceKit - 发票生成器</title>
-
-  <link rel="icon" href="/assets/logo.svg">
-
-  <link rel="stylesheet" href="/assets/css/styles.css?v=6">
-  <link rel="stylesheet" href="/assets/css/print.css">
-
-  <script src="/assets/js/i18n.js?v=6"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FreelanceKit Dashboard</title>
+  <link rel="icon" href="assets/logo.svg">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <!-- 可选：如果你想在首页也用到多语言，解开下面两行并按需使用 data-i18n -->
+  <!-- <script src="assets/js/i18n.js"></script> -->
+  <!-- <script>document.addEventListener('DOMContentLoaded',()=>{window.FK_I18N&&console.log('i18n ready')})</script> -->
 </head>
 <body>
-
-  <header class="header container">
-    <div class="brand">
-      <img src="/assets/logo.svg" alt="FreelanceKit" class="brand-logo">
-      <h1 class="app-title">FreelanceKit</h1>
+  <nav class="navbar">
+    <h1>FreelanceKit</h1>
+    <div class="actions">
+      <a class="btn" href="invoice.html">📄 Invoice</a>
+      <button id="themeSwitch" class="btn">🌓 Theme</button>
+      <a class="btn" href="pages/pro.html">🔒 Unlock Pro</a>
     </div>
-    <div class="header-actions">
-      <button id="themeToggle" class="btn" title="切换主题">🌗</button>
-      <select id="langSwitcher" class="select-like" aria-label="语言选择">
-        <option value="zh">简体中文</option>
-        <option value="en">English</option>
-      </select>
-      <button id="installPWA" class="btn ghost" style="display:none;" data-i18n="install">安装 PWA</button>
-      <button id="openPro" class="btn lock" data-i18n="unlockPro">解锁 Pro 🔒</button>
-    </div>
-  </header>
+  </nav>
 
-  <div class="status-bar">
-    <span id="pwa-state" data-i18n="pwaReady">PWA 就绪</span> • <span id="net-state">online</span>
-  </div>
+  <main class="container">
+    <header style="text-align:center">
+      <h2 style="color:#facc15;margin:0 0 6px">Welcome Back!</h2>
+      <p style="color:#a1a1aa;margin:0">Your all-in-one toolkit for freelancers.</p>
+    </header>
 
-  <div class="container content">
-    <div class="card">
-      <h2 data-i18n="workflow">流程：填写 → 预览 → 导出/保存</h2>
+    <section class="grid" aria-label="Quick actions">
+      <article class="card" data-link="invoice.html" role="button" tabindex="0" aria-label="Open Invoice Generator">
+        <h3>🧾 Invoice Generator</h3>
+        <p>Create beautiful invoices and export to PDF instantly.</p>
+      </article>
 
-      <div class="invoice-header grid-2">
-        <div class="from">
-          <h3 data-i18n="sellerInfo">发票开具方</h3>
-          <label><span data-i18n="name">名称</span></label>
-          <input id="sellerName" type="text" placeholder="Acme Studio" required>
-          <label><span data-i18n="address">地址</span></label>
-          <textarea id="sellerAddress" placeholder="Street, City, Country" required></textarea>
-          <label><span data-i18n="email">邮箱</span></label>
-          <input id="sellerEmail" type="email" placeholder="you@example.com" required>
-          <label><span data-i18n="phone">电话</span></label>
-          <input id="sellerPhone" type="text" placeholder="+00 00-000 0000" required>
-        </div>
-        <div class="to">
-          <h3 data-i18n="clientInfo">客户信息</h3>
-          <label><span data-i18n="name">名称</span></label>
-          <input id="clientName" type="text" placeholder="Client Co. Ltd." required>
-          <label><span data-i18n="address">地址</span></label>
-          <textarea id="clientAddress" placeholder="Street, City, Country" required></textarea>
-          <label><span data-i18n="email">邮箱</span></label>
-          <input id="clientEmail" type="email" placeholder="client@example.com" required>
-          <label><span data-i18n="phone">电话</span></label>
-          <input id="clientPhone" type="text" placeholder="+00 00-000 0000">
-        </div>
-      </div>
+      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Client Manager">
+        <h3>📊 Client Manager</h3>
+        <p>Manage client profiles and transaction history.</p>
+      </article>
 
-      <div class="invoice-meta grid-3">
-        <div class="field">
-          <label><span data-i18n="invoiceNumber">发票编号</span></label>
-          <input id="invoiceNumber" type="text" placeholder="INV-2025-0001" required>
-        </div>
-        <div class="field">
-          <label><span data-i18n="invoiceDate">开具日期</span></label>
-          <input id="invoiceDate" type="date" required>
-        </div>
-        <div class="field">
-          <label><span data-i18n="dueDate">付款截止</span></label>
-          <input id="dueDate" type="date" required>
-        </div>
-      </div>
+      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Project Tracker">
+        <h3>📁 Project Tracker</h3>
+        <p>Organize your freelance jobs and milestones in one place.</p>
+      </article>
 
-      <div id="lineItems"></div>
+      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Reports & Finance">
+        <h3>💰 Reports & Finance</h3>
+        <p>Track income, expenses and growth trends.</p>
+      </article>
 
-      <div class="toolbar-inline">
-        <button id="addItem" class="btn ghost" data-i18n="addItem">新增项目</button>
-        <button id="clearItems" class="btn ghost" data-i18n="clearAll">全部清除</button>
-      </div>
+      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Settings">
+        <h3>⚙️ Settings</h3>
+        <p>Customize templates, themes, and company info.</p>
+      </article>
+    </section>
+  </main>
 
-      <div class="totals">
-        <div class="totals-row"><span data-i18n="subtotal">小计</span><span id="subtotal">MYR 0.00</span></div>
-        <div class="totals-row"><span data-i18n="tax">税额</span><span id="taxAmount">MYR 0.00</span></div>
-        <div class="totals-row"><span data-i18n="total">合计</span><span id="grandTotal">MYR 0.00</span></div>
-      </div>
+  <footer>FreelanceKit © 2025 — Made for Independent Creators</footer>
 
-      <div class="payment-info">
-        <h3 data-i18n="paymentMethod">付款方式</h3>
-        <div class="field">
-          <select id="paymentMethodSelect" class="select-like" required aria-label="付款方式">
-            <option value="bank">银行转账</option>
-            <option value="card">信用卡</option>
-            <option value="paypal">PayPal</option>
-            <option value="ewallet">电子钱包</option>
-            <option value="cash">现金</option>
-            <option value="other">其他（自定义）</option>
-          </select>
-          <input id="paymentMethodOther" type="text" placeholder="请输入具体方式（如银行名/账号）" style="display:none;margin-top:8px;">
-        </div>
-        <label>
-          <input type="checkbox" id="paidStatus" title="勾选代表已收到付款"> <span data-i18n="paidStatus">已付款</span>
-        </label>
-      </div>
+  <!-- ========= Pro Dialog ========= -->
+<div id="proDialog" class="dialog-backdrop" hidden>
+  <div class="dialog">
+    <h2 style="color:#facc15;margin-top:0">FreelanceKit Pro</h2>
+    <p style="color:#a1a1aa;font-size:.95rem;line-height:1.6">
+      Unlock unlimited invoices, custom branding, PDF templates and cloud sync.
+    </p>
 
-      <div class="notes-terms grid-2">
-        <div class="notes">
-          <label><span data-i18n="notes">备注</span></label>
-          <textarea id="notes" placeholder="可选备注"></textarea>
-        </div>
-        <div class="terms">
-          <label><span data-i18n="terms">付款条款</span></label>
-          <textarea id="terms" placeholder="例如：付款请于 30 日内完成。逾期将收取滞纳金。"></textarea>
-        </div>
-      </div>
+    <ul style="text-align:left;color:#f8fafc;font-size:.9rem;margin:14px 0 0 20px">
+      <li>🚀 Unlimited Projects &amp; Clients</li>
+      <li>🎨 Custom Logo &amp; Brand Themes</li>
+      <li>☁️ Cloud Backup (Supabase ready)</li>
+      <li>💰 Auto Reports &amp; Tax Summaries</li>
+    </ul>
+
+    <div class="actions">
+      <button id="buyPro" class="btn primary">Buy Pro Now</button>
+      <button id="closePro" class="btn ghost">Cancel</button>
     </div>
   </div>
+</div>
 
-  <div class="fab">
-    <button id="previewPDF" class="btn primary" data-i18n="preview">预览 (Ctrl+P)</button>
-    <button id="exportPDF" class="btn primary" data-i18n="exportPdf">导出 PDF</button>
-  </div>
 
-  <div id="proDlg" class="dialog-backdrop" style="display:none;">
-    <div class="dialog">
-      <h3>升级到 Pro</h3>
-      <p>Pro 功能：CSV 导入、模板保存、云端存储（示例）</p>
-      <div class="actions">
-        <button id="proClose" class="btn ghost">关闭</button>
-        <button id="proBuy" class="btn primary">购买 Pro</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="/assets/js/app.js?v=6"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script>
+    // 键盘可访问性：回车打开卡片
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Enter' && e.target.classList.contains('card')){
+        const link=e.target.getAttribute('data-link'); if(link) location.href=link;
+      }
+    });
+  </script>
 </body>
 </html>
