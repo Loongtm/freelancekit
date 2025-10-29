@@ -1,4 +1,4 @@
-// i18n.js — 翻译集合与工具
+// assets/js/i18n.js — 简易国际化（中/英），全局 FK_I18N 对象
 window.FK_I18N = (function(){
   const LOCALES = {
     en: {
@@ -29,7 +29,9 @@ window.FK_I18N = (function(){
       unit: "Unit",
       taxPct: "Tax %",
       amount: "Amount",
-      invoice: "Invoice"
+      invoice: "Invoice",
+      install: "Install",
+      unlockPro: "Unlock Pro"
     },
     zh: {
       pwaReady: "PWA 就绪",
@@ -59,7 +61,9 @@ window.FK_I18N = (function(){
       unit: "单价",
       taxPct: "税率 %",
       amount: "金额",
-      invoice: "发票"
+      invoice: "发票",
+      install: "安装",
+      unlockPro: "解锁 Pro"
     }
   };
 
