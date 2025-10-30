@@ -280,6 +280,24 @@
   if(previewBtn) previewBtn.addEventListener('click',()=>{if(!isFormOk())return;openPrintWindow(false);});
   if(exportBtn) exportBtn.addEventListener('click',()=>{if(!isFormOk())return;openPrintWindow(true);});
   updateTotals();
+  // ========== Cloud Sync Integration ==========
+async function autoSave() {
+  const data = serialize();
+  await CloudSync.saveDraft(data);
+  console.log("Draft synced at", new Date().toLocaleTimeString());
+}
+setInterval(autoSave, 60000); // 每分钟自动同步一次
+window.addEventListener("beforeunload", autoSave);
+
+// 页面加载时尝试恢复草稿
+document.addEventListener("DOMContentLoaded", async () => {
+  const draft = await CloudSync.loadDraft();
+  if (draft) {
+    console.log("Loaded cloud draft", draft);
+    // 这里可补充表单回填逻辑
+  }
+});
+
 })();
 function buildPrintHTML_Gold(autoPrint=false){
   const d = serialize();
