@@ -6,30 +6,35 @@
   <title>FreelanceKit Dashboard</title>
   <link rel="icon" href="assets/logo.svg">
   <link rel="stylesheet" href="assets/css/dashboard.css">
-  <!-- 可选：如果你想在首页也用到多语言，解开下面两行并按需使用 data-i18n -->
-  <!-- <script src="assets/js/i18n.js"></script> -->
-  <!-- <script>document.addEventListener('DOMContentLoaded',()=>{window.FK_I18N&&console.log('i18n ready')})</script> -->
 </head>
 <body>
+  <!-- 顶部导航 -->
   <nav class="navbar">
     <h1>FreelanceKit</h1>
     <div class="actions">
       <a class="btn" href="invoice.html">📄 Invoice</a>
       <button id="themeSwitch" class="btn">🌓 Theme</button>
-      <a class="btn" href="pages/pro.html">🔒 Unlock Pro</a>
+      <a class="btn" href="pages/pro.html" data-pro>🔒 Unlock Pro</a>
     </div>
   </nav>
 
+  <!-- 主内容 -->
   <main class="container">
     <header style="text-align:center">
       <h2 style="color:#facc15;margin:0 0 6px">Welcome Back!</h2>
       <p style="color:#a1a1aa;margin:0">Your all-in-one toolkit for freelancers.</p>
     </header>
 
+    <!-- 快捷模块 -->
     <section class="grid" aria-label="Quick actions">
       <article class="card" data-link="invoice.html" role="button" tabindex="0" aria-label="Open Invoice Generator">
         <h3>🧾 Invoice Generator</h3>
         <p>Create beautiful invoices and export to PDF instantly.</p>
+      </article>
+
+      <article class="card" data-link="pages/quote.html" role="button" tabindex="0" aria-label="Open AI Quote Generator">
+        <h3>💼 Generate Quote (AI)</h3>
+        <p>Turn a short brief into a professional sales quote.</p>
       </article>
 
       <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Client Manager">
@@ -57,31 +62,29 @@
   <footer>FreelanceKit © 2025 — Made for Independent Creators</footer>
 
   <!-- ========= Pro Dialog ========= -->
-<div id="proDialog" class="dialog-backdrop" hidden>
-  <div class="dialog">
-    <h2 style="color:#facc15;margin-top:0">FreelanceKit Pro</h2>
-    <p style="color:#a1a1aa;font-size:.95rem;line-height:1.6">
-      Unlock unlimited invoices, custom branding, PDF templates and cloud sync.
-    </p>
-
-    <ul style="text-align:left;color:#f8fafc;font-size:.9rem;margin:14px 0 0 20px">
-      <li>🚀 Unlimited Projects &amp; Clients</li>
-      <li>🎨 Custom Logo &amp; Brand Themes</li>
-      <li>☁️ Cloud Backup (Supabase ready)</li>
-      <li>💰 Auto Reports &amp; Tax Summaries</li>
-    </ul>
-
-    <div class="actions">
-      <button id="buyPro" class="btn primary">Buy Pro Now</button>
-      <button id="closePro" class="btn ghost">Cancel</button>
+  <div id="proDialog" class="dialog-backdrop" hidden>
+    <div class="dialog">
+      <h2 style="color:#facc15;margin-top:0">FreelanceKit Pro</h2>
+      <p style="color:#a1a1aa;font-size:.95rem;line-height:1.6">
+        Unlock unlimited invoices, custom branding, PDF templates and cloud sync.
+      </p>
+      <ul style="text-align:left;color:#f8fafc;font-size:.9rem;margin:14px 0 0 20px">
+        <li>🚀 Unlimited Projects &amp; Clients</li>
+        <li>🎨 Custom Logo &amp; Brand Themes</li>
+        <li>☁️ Cloud Backup (Supabase ready)</li>
+        <li>💰 Auto Reports &amp; Tax Summaries</li>
+      </ul>
+      <div class="actions">
+        <button id="buyPro" class="btn primary">Buy Pro Now</button>
+        <button id="closePro" class="btn ghost">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
 
-
+  <!-- 脚本 -->
   <script src="assets/js/dashboard.js"></script>
   <script>
-    // 键盘可访问性：回车打开卡片
+    // 键盘可访问性：Enter 打开卡片
     document.addEventListener('keydown', e=>{
       if(e.key==='Enter' && e.target.classList.contains('card')){
         const link=e.target.getAttribute('data-link'); if(link) location.href=link;
