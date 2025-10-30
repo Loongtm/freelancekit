@@ -4,31 +4,40 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>FreelanceKit — AI-Powered Freelancer Toolkit</title>
-  <meta name="description" content="Create invoices, quotes and manage clients effortlessly. FreelanceKit is your AI-powered freelance business suite.">
+  <meta name="description" content="Create invoices, AI quotes and manage clients with FreelanceKit — the black-gold toolkit for modern freelancers.">
+  <meta property="og:title" content="FreelanceKit — Freelancer Toolkit">
+  <meta property="og:description" content="AI invoices, quotes and freelance business suite.">
+  <meta property="og:image" content="/assets/logo.svg">
   <link rel="icon" href="assets/logo.svg">
   <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
   <style>
+    body{scroll-behavior:smooth;overflow-x:hidden}
     header.hero{
-      text-align:center;
-      padding:80px 20px 60px;
-      background:linear-gradient(180deg,#0a0a0a 0%,#111 100%);
+      text-align:center;padding:120px 20px 100px;
+      background:linear-gradient(180deg,#0a0a0a 0%,#111111 100%);
     }
-    header.hero h1{color:var(--gold);font-size:2.2rem;margin:0}
-    header.hero p{color:var(--muted);font-size:1.1rem;margin-top:12px}
-    .cta{margin-top:28px}
-    .cta a{padding:14px 24px;border-radius:14px;background:var(--gold);color:#111;text-decoration:none;font-weight:600}
-    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;max-width:1080px;margin:80px auto;padding:0 20px}
-    .fcard{background:var(--panel);border:1px solid rgba(250,204,21,.25);border-radius:14px;padding:24px;text-align:center;box-shadow:var(--shadow)}
+    header.hero h1{color:var(--gold);font-size:2.6rem;margin:0}
+    header.hero p{color:var(--muted);font-size:1.15rem;margin-top:12px}
+    .cta{margin-top:32px}
+    .cta a{padding:14px 26px;border-radius:14px;background:var(--gold);color:#111;text-decoration:none;font-weight:600;font-size:1.05rem;transition:.2s}
+    .cta a:hover{filter:brightness(1.1)}
+    section.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;max-width:1080px;margin:80px auto;padding:0 20px}
+    .fcard{background:var(--panel);border:1px solid rgba(250,204,21,.25);border-radius:14px;padding:30px;text-align:center;box-shadow:var(--shadow);transition:.3s}
+    .fcard:hover{transform:translateY(-6px);border-color:var(--gold)}
     .fcard h3{color:var(--gold);margin-bottom:10px}
-    .subscribe{max-width:480px;margin:80px auto;text-align:center}
-    .subscribe input{width:70%;padding:12px;border-radius:12px;border:none;outline:none}
-    .subscribe button{padding:12px 18px;border-radius:12px;border:none;background:var(--gold);color:#111;font-weight:600;cursor:pointer}
-    footer{margin-top:80px;text-align:center;color:var(--muted);font-size:.9rem;padding:30px}
+    .fcard p{color:var(--muted);font-size:.95rem}
+    section.subscribe{max-width:500px;margin:120px auto;text-align:center}
+    section.subscribe input{width:70%;padding:14px;border-radius:12px;border:none;outline:none;font-size:1rem}
+    section.subscribe button{padding:14px 20px;border-radius:12px;border:none;background:var(--gold);color:#111;font-weight:600;font-size:1rem;cursor:pointer}
+    footer{margin-top:100px;text-align:center;color:var(--muted);font-size:.9rem;padding:30px}
+    .success{color:#facc15;margin-top:10px}
   </style>
 </head>
 <body>
-  <header class="hero">
-    <img src="assets/logo.svg" alt="FreelanceKit logo" width="90" height="90" style="margin-bottom:12px">
+  <!-- Hero -->
+  <header class="hero" data-aos="fade-up">
+    <img src="assets/logo.svg" alt="FreelanceKit logo" width="100" height="100" style="margin-bottom:12px">
     <h1>FreelanceKit</h1>
     <p>AI-Powered Toolkit for Freelancers — Create invoices, quotes & reports in seconds.</p>
     <div class="cta">
@@ -36,38 +45,70 @@
     </div>
   </header>
 
+  <!-- Features -->
   <section class="features">
-    <div class="fcard">
+    <div class="fcard" data-aos="fade-up" data-aos-delay="100">
       <h3>🧾 Smart Invoice</h3>
       <p>Design stunning invoices and export them as PDF instantly.</p>
     </div>
-    <div class="fcard">
+    <div class="fcard" data-aos="fade-up" data-aos-delay="200">
       <h3>💼 AI Quote</h3>
       <p>Turn your project brief into a professional sales quote using AI.</p>
     </div>
-    <div class="fcard">
+    <div class="fcard" data-aos="fade-up" data-aos-delay="300">
       <h3>⚙️ Cloud Sync</h3>
       <p>Auto-save your invoices securely via Cloudflare KV or Supabase.</p>
     </div>
-    <div class="fcard">
+    <div class="fcard" data-aos="fade-up" data-aos-delay="400">
       <h3>💳 Unlock Pro</h3>
       <p>Access branding tools, analytics, and custom templates.</p>
     </div>
   </section>
 
-  <section class="subscribe">
+  <!-- Subscribe -->
+  <section class="subscribe" data-aos="fade-up">
     <h2 style="color:var(--gold)">Stay Updated</h2>
     <p style="color:var(--muted)">Join our early access list — get updates, new templates & discounts.</p>
-    <form action="https://formspree.io/f/mwpkbgka" method="POST">
-      <input type="email" name="email" placeholder="Your email address" required>
+    <form id="subscribeForm">
+      <input type="email" id="email" placeholder="Your email address" required>
       <button type="submit">Subscribe</button>
+      <div id="subMsg" class="success"></div>
     </form>
   </section>
 
+  <!-- Footer -->
   <footer>
     FreelanceKit © 2025 — Built for Independent Creators<br>
     <a href="https://github.com/Loongtm/freelancekit" style="color:#facc15;text-decoration:none">GitHub</a> · 
     <a href="pages/terms.html" style="color:#facc15;text-decoration:none">Terms</a>
   </footer>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+
+    // Supabase email capture (无服务器模式)
+    const FORM = document.getElementById('subscribeForm');
+    FORM?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const subMsg = document.getElementById('subMsg');
+      if (!email) return;
+      subMsg.textContent = '⏳ Subscribing...';
+
+      try {
+        const res = await fetch('/functions/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        subMsg.textContent = '✅ You’re on the list! Thank you.';
+        FORM.reset();
+      } catch (err) {
+        subMsg.textContent = '❌ Failed: ' + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
