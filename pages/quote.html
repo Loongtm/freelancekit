@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Quote Generator • FreelanceKit</title>
+  <link rel="icon" href="/assets/logo.svg">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+  <style>
+    .wrap{max-width:1100px;margin:24px auto;padding:0 16px}
+    .split{display:grid;grid-template-columns:380px 1fr;gap:20px}
+    @media(max-width:980px){.split{grid-template-columns:1fr}}
+    .panel{background:var(--panel);border:1px solid rgba(250,204,21,.25);border-radius:14px;box-shadow:var(--shadow);padding:16px}
+    .panel h3{color:var(--gold);margin:6px 0 10px}
+    .panel label{display:block;font-size:.9rem;color:var(--muted);margin:10px 0 6px}
+    .panel input,.panel textarea,.panel select{width:100%;border:1px solid rgba(250,204,21,.25);border-radius:12px;background:#0c0c0c;color:#f8fafc;padding:10px}
+    .panel textarea{min-height:120px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .btn{padding:10px 16px;border-radius:12px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer}
+    .btn.primary{background:var(--gold);color:#111;border:none}
+    .preview{min-height:420px;background:#0b0b0b;border-radius:14px;border:1px solid rgba(250,204,21,.2);padding:18px;overflow:auto}
+    .muted{color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <h1>FreelanceKit</h1>
+    <div class="actions">
+      <a class="btn" href="/index.html">🏠 Dashboard</a>
+      <a class="btn" href="/invoice.html">🧾 Invoice</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <div class="split">
+      <section class="panel">
+        <h3>Project Brief</h3>
+        <label>Company / Seller</label>
+        <input id="seller" placeholder="Acme Studio">
+        <label>Client Name</label>
+        <input id="client" placeholder="Client Co. Ltd.">
+        <div class="row">
+          <div>
+            <label>Language</label>
+            <select id="lang">
+              <option value="en">English</option>
+              <option value="zh">简体中文</option>
+            </select>
+          </div>
+          <div>
+            <label>Currency</label>
+            <select id="currency">
+              <option value="MYR">MYR</option>
+              <option value="USD">USD</option>
+              <option value="SGD">SGD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Scope / Requirements</label>
+        <textarea id="scope" placeholder="- Build a marketing website
+- 6 pages (Home, About, Services, Pricing, Blog, Contact)
+- CMS for blog
+- SEO basic setup"></textarea>
+
+        <label>Deliverables (optional)</label>
+        <textarea id="deliverables" placeholder="- Responsive website
+- Design system & components
+- Basic analytics
+- 1-month post-launch support"></textarea>
+
+        <label>Constraints / Notes (optional)</label>
+        <textarea id="notes" placeholder="- Timeline: 4–6 weeks
+- Client provides copywriting and images
+- Two rounds of revisions included"></textarea>
+
+        <div class="row">
+          <div>
+            <label>Pricing Model</label>
+            <select id="pricingModel">
+              <option value="fixed">Fixed price</option>
+              <option value="milestones">Milestones</option>
+              <option value="hourly">Hourly</option>
+            </select>
+          </div>
+          <div>
+            <label>Tone</label>
+            <select id="tone">
+              <option value="professional">Professional</option>
+              <option value="friendly">Friendly</option>
+              <option value="formal">Formal</option>
+              <option value="concise">Concise</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="gen" class="btn primary">✨ AI Generate</button>
+          <button id="preview" class="btn">👁️ Preview</button>
+          <button id="export" class="btn">📄 Export PDF</button>
+        </div>
+        <p class="muted">AI 内容会生成结构化 HTML，导出样式沿用你的打印样式。</p>
+      </section>
+
+      <section class="panel">
+        <h3>Preview</h3>
+        <div id="out" class="preview muted">Click <b>AI Generate</b> to create a quote…</div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/assets/js/quote.js"></script>
+</body>
+</html>
