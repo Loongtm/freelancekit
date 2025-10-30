@@ -4,46 +4,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>FreelanceKit — AI-Powered Freelancer Toolkit</title>
-  <meta name="description" content="Create invoices, AI quotes and manage clients...">
+  <meta name="description" content="Create invoices, AI quotes and manage clients with FreelanceKit — the black-gold toolkit for modern freelancers.">
+
+  <!-- SEO 自动注入（必须在 </head> 前） -->
   <script defer src="/assets/js/seo.js"></script>
 
-  <meta property="og:title" content="FreelanceKit — Freelancer Toolkit">
-  <meta property="og:description" content="AI invoices, quotes and freelance business suite.">
-  <meta property="og:image" content="/assets/logo.svg">
-  <link rel="icon" href="assets/logo.svg">
-  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="icon" href="/assets/logo.svg">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+
+  <!-- 最小兜底样式（即使 dashboard.css 加载失败也能看到内容） -->
   <style>
-    body{scroll-behavior:smooth;overflow-x:hidden}
-    header.hero{
-      text-align:center;padding:120px 20px 100px;
-      background:linear-gradient(180deg,#0a0a0a 0%,#111111 100%);
-    }
-    header.hero h1{color:var(--gold);font-size:2.6rem;margin:0}
-    header.hero p{color:var(--muted);font-size:1.15rem;margin-top:12px}
+    body{margin:0;background:#0a0a0a;color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    header.hero{text-align:center;padding:120px 20px 100px;background:linear-gradient(180deg,#0a0a0a 0%,#111 100%)}
+    header.hero h1{color:#facc15;font-size:2.6rem;margin:0}
+    header.hero p{color:#a1a1aa;font-size:1.15rem;margin:12px 0 0}
     .cta{margin-top:32px}
-    .cta a{padding:14px 26px;border-radius:14px;background:var(--gold);color:#111;text-decoration:none;font-weight:600;font-size:1.05rem;transition:.2s}
-    .cta a:hover{filter:brightness(1.1)}
+    .cta a{display:inline-block;padding:14px 26px;border-radius:14px;background:#facc15;color:#111;text-decoration:none;font-weight:600}
     section.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px;max-width:1080px;margin:80px auto;padding:0 20px}
-    .fcard{background:var(--panel);border:1px solid rgba(250,204,21,.25);border-radius:14px;padding:30px;text-align:center;box-shadow:var(--shadow);transition:.3s}
-    .fcard:hover{transform:translateY(-6px);border-color:var(--gold)}
-    .fcard h3{color:var(--gold);margin-bottom:10px}
-    .fcard p{color:var(--muted);font-size:.95rem}
-    section.subscribe{max-width:500px;margin:120px auto;text-align:center}
-    section.subscribe input{width:70%;padding:14px;border-radius:12px;border:none;outline:none;font-size:1rem}
-    section.subscribe button{padding:14px 20px;border-radius:12px;border:none;background:var(--gold);color:#111;font-weight:600;font-size:1rem;cursor:pointer}
-    footer{margin-top:100px;text-align:center;color:var(--muted);font-size:.9rem;padding:30px}
+    .fcard{background:#111;border:1px solid rgba(250,204,21,.25);border-radius:14px;padding:30px;text-align:center;box-shadow:0 8px 24px -12px rgba(0,0,0,.6)}
+    .fcard h3{color:#facc15;margin:0 0 10px}
+    .fcard p{color:#a1a1aa;margin:0}
+    section.subscribe{max-width:520px;margin:120px auto;text-align:center;padding:0 20px}
+    section.subscribe input{width:70%;min-width:220px;padding:14px;border-radius:12px;border:none;outline:none}
+    section.subscribe button{padding:14px 20px;border-radius:12px;border:none;background:#facc15;color:#111;font-weight:600;cursor:pointer;margin-left:8px}
+    footer{margin-top:100px;text-align:center;color:#a1a1aa;font-size:.9rem;padding:30px;border-top:1px solid rgba(255,255,255,.05)}
     .success{color:#facc15;margin-top:10px}
   </style>
 </head>
 <body>
   <!-- Hero -->
   <header class="hero" data-aos="fade-up">
-    <img src="assets/logo.svg" alt="FreelanceKit logo" width="100" height="100" style="margin-bottom:12px">
+    <img src="/assets/logo.svg" alt="FreelanceKit logo" width="100" height="100" style="margin-bottom:12px">
     <h1>FreelanceKit</h1>
     <p>AI-Powered Toolkit for Freelancers — Create invoices, quotes & reports in seconds.</p>
     <div class="cta">
-      <a href="index.html">🚀 Launch App</a>
+      <a href="/index.html">🚀 Launch App</a>
     </div>
   </header>
 
@@ -69,9 +65,9 @@
 
   <!-- Subscribe -->
   <section class="subscribe" data-aos="fade-up">
-    <h2 style="color:var(--gold)">Stay Updated</h2>
-    <p style="color:var(--muted)">Join our early access list — get updates, new templates & discounts.</p>
-    <form id="subscribeForm">
+    <h2 style="color:#facc15;margin:0 0 8px">Stay Updated</h2>
+    <p style="color:#a1a1aa;margin:0 0 16px">Join our early access list — get updates, new templates & discounts.</p>
+    <form id="subscribeForm" autocomplete="off">
       <input type="email" id="email" placeholder="Your email address" required>
       <button type="submit">Subscribe</button>
       <div id="subMsg" class="success"></div>
@@ -81,39 +77,38 @@
   <!-- Footer -->
   <footer>
     FreelanceKit © 2025 — Built for Independent Creators<br>
-    <a href="https://github.com/Loongtm/freelancekit" style="color:#facc15;text-decoration:none">GitHub</a> · 
-    <a href="pages/terms.html" style="color:#facc15;text-decoration:none">Terms</a>
+    <a href="https://github.com/Loongtm/freelancekit" style="color:#facc15;text-decoration:none">GitHub</a> ·
+    <a href="/pages/terms.html" style="color:#facc15;text-decoration:none">Terms</a>
   </footer>
 
+  <!-- AOS 动效 -->
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true });</script>
+
+  <!-- 订阅脚本（和新版 subscribe.js 配套，可显示具体报错） -->
   <script>
-  const FORM = document.getElementById('subscribeForm');
-  FORM?.addEventListener('submit', async e => {
-    e.preventDefault();
-    const email = document.getElementById('email').value.trim();
-    const subMsg = document.getElementById('subMsg');
-    if (!email) return;
-    subMsg.textContent = '⏳ Subscribing...';
+    const FORM = document.getElementById('subscribeForm');
+    FORM?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const subMsg = document.getElementById('subMsg');
+      if (!email) return;
+      subMsg.textContent = '⏳ Subscribing...';
 
-    try {
-      const res = await fetch('/functions/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok || data.error) {
-        throw new Error(data.error || `HTTP ${res.status}`);
+      try {
+        const res = await fetch('/functions/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+        subMsg.textContent = data.message || '✅ You’re on the list! Thank you.';
+        FORM.reset();
+      } catch (err) {
+        subMsg.textContent = '❌ Failed: ' + (err?.message || err);
       }
-
-      subMsg.textContent = data.message || '✅ You’re on the list! Thank you.';
-      FORM.reset();
-    } catch (err) {
-      subMsg.textContent = '❌ Failed: ' + (err?.message || err);
-    }
-  });
-</script>
-
+    });
+  </script>
 </body>
 </html>
