@@ -87,30 +87,33 @@
 
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
-    AOS.init({ duration: 800, once: true });
+  const FORM = document.getElementById('subscribeForm');
+  FORM?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const subMsg = document.getElementById('subMsg');
+    if (!email) return;
+    subMsg.textContent = '⏳ Subscribing...';
 
-    // Supabase email capture (无服务器模式)
-    const FORM = document.getElementById('subscribeForm');
-    FORM?.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const subMsg = document.getElementById('subMsg');
-      if (!email) return;
-      subMsg.textContent = '⏳ Subscribing...';
+    try {
+      const res = await fetch('/functions/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json().catch(() => ({}));
 
-      try {
-        const res = await fetch('/functions/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        if (!res.ok) throw new Error(await res.text());
-        subMsg.textContent = '✅ You’re on the list! Thank you.';
-        FORM.reset();
-      } catch (err) {
-        subMsg.textContent = '❌ Failed: ' + err.message;
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `HTTP ${res.status}`);
       }
-    });
-  </script>
+
+      subMsg.textContent = data.message || '✅ You’re on the list! Thank you.';
+      FORM.reset();
+    } catch (err) {
+      subMsg.textContent = '❌ Failed: ' + (err?.message || err);
+    }
+  });
+</script>
+
 </body>
 </html>
