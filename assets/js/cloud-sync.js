@@ -1,6 +1,6 @@
 // Simple cloud sync helper (can work with Supabase or Cloudflare Worker)
 const CloudSync = (() => {
-  const ENDPOINT = "/functions/sync";   // 你在Cloudflare配置的worker路径
+  const ENDPOINT = "/sync";
   const KEY = "fk_sync_token";
 
   function getToken() {

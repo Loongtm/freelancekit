@@ -24,7 +24,7 @@
     }
     out.innerHTML = '⏳ Generating…';
     try {
-      const res = await fetch('/functions/ai-quote', {
+      const res = await fetch('/ai-quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
