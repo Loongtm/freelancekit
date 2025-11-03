@@ -1,98 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FreelanceKit Dashboard</title>
-<script defer src="/assets/js/seo.js"></script>
-  <link rel="icon" href="assets/logo.svg">
-  <link rel="stylesheet" href="assets/css/dashboard.css">
-  <script defer src="/assets/js/pro.js"></script>
+  <meta name="description" content="All-in-one dashboard for invoices, AI quotes and client tools." />
 
+  <!-- SEO -->
+  <script defer src="/assets/js/seo.js"></script>
+
+  <!-- 先行：未激活拦截（就算还没改 app.js 也能生效） -->
+  <script>
+    (function () {
+      const path = location.pathname;
+      const isProPage = path.includes('/pages/pro.html');
+      const proActive = localStorage.getItem('pro_active') === 'true';
+      if (!isProPage && !proActive) {
+        location.href = '/pages/pro.html';
+      }
+    })();
+  </script>
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <style>
+    :root{--bg:#0a0a0a;--panel:#111;--gold:#facc15;--text:#f8fafc;--muted:#a1a1aa}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .navbar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .navbar h1{color:var(--gold);margin:0;font-size:1.15rem;display:flex;align-items:center;gap:10px}
+    .actions{display:flex;align-items:center;gap:10px}
+    .btn{display:inline-block;padding:10px 16px;border-radius:12px;border:1px solid var(--gold);color:var(--gold);text-decoration:none}
+    .grid{max-width:1080px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:#111;border:1px solid rgba(250,204,21,.25);border-radius:16px;padding:18px}
+    .card h3{color:var(--gold);margin:0 0 6px}
+    #pro-badge{display:none;background:#facc15;color:#111;padding:2px 8px;border-radius:6px;font-weight:bold}
+  </style>
+
+  <!-- Pro 前端脚本（负责徽章、文本状态等） -->
+  <script defer src="/assets/js/pro.js"></script>
 </head>
 <body>
   <!-- 顶部导航 -->
   <nav class="navbar">
-    <h1>FreelanceKit</h1>
+    <h1>
+      <img src="/assets/logo.svg" alt="FreelanceKit" width="28" height="28" onerror="this.style.display='none'"/>
+      FreelanceKit
+    </h1>
     <div class="actions">
-      <a class="btn" href="invoice.html">📄 Invoice</a>
-      <button id="themeSwitch" class="btn">🌓 Theme</button>
-      <a class="btn" href="pages/pro.html" data-pro>🔒 Unlock Pro</a>
+      <span id="pro-badge">PRO</span>
+      <a class="btn" href="/pages/pro.html" data-pro>🔒 Unlock Pro</a>
     </div>
   </nav>
 
-  <!-- 主内容 -->
-  <main class="container">
-    <header style="text-align:center">
-      <h2 style="color:#facc15;margin:0 0 6px">Welcome Back!</h2>
-      <p style="color:#a1a1aa;margin:0">Your all-in-one toolkit for freelancers.</p>
-    </header>
+  <!-- 主功能入口 -->
+  <main class="grid">
+    <div class="card">
+      <h3>🧾 Invoice Generator</h3>
+      <p style="color:var(--muted);margin:0 0 10px">Create and export invoices as PDF.</p>
+      <a class="btn" href="/invoice.html">Open</a>
+    </div>
 
-    <!-- 快捷模块 -->
-    <section class="grid" aria-label="Quick actions">
-      <article class="card" data-link="invoice.html" role="button" tabindex="0" aria-label="Open Invoice Generator">
-        <h3>🧾 Invoice Generator</h3>
-        <p>Create beautiful invoices and export to PDF instantly.</p>
-      </article>
+    <div class="card">
+      <h3>💼 AI Quote</h3>
+      <p style="color:var(--muted);margin:0 0 10px">Turn requirements into a professional quote.</p>
+      <a class="btn" href="/pages/quote.html">Open</a>
+    </div>
 
-      <article class="card" data-link="pages/quote.html" role="button" tabindex="0" aria-label="Open AI Quote Generator">
-        <h3>💼 Generate Quote (AI)</h3>
-        <p>Turn a short brief into a professional sales quote.</p>
-      </article>
-
-      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Client Manager">
-        <h3>📊 Client Manager</h3>
-        <p>Manage client profiles and transaction history.</p>
-      </article>
-
-      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Project Tracker">
-        <h3>📁 Project Tracker</h3>
-        <p>Organize your freelance jobs and milestones in one place.</p>
-      </article>
-
-      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Reports & Finance">
-        <h3>💰 Reports & Finance</h3>
-        <p>Track income, expenses and growth trends.</p>
-      </article>
-
-      <article class="card" data-link="#" role="button" tabindex="0" aria-label="Open Settings">
-        <h3>⚙️ Settings</h3>
-        <p>Customize templates, themes, and company info.</p>
-      </article>
-    </section>
+    <div class="card">
+      <h3>☁️ Cloud Sync</h3>
+      <p style="color:var(--muted);margin:0 0 10px">Auto-save drafts via KV / Supabase.</p>
+      <a class="btn" href="/index.html#sync">Details</a>
+    </div>
   </main>
 
-  <footer>FreelanceKit © 2025 — Made for Independent Creators</footer>
+  <!-- 页脚 -->
+  <footer style="text-align:center;color:#a1a1aa;font-size:.9rem;padding:28px;border-top:1px solid rgba(255,255,255,.06)">
+    FreelanceKit © 2025 — Built for Independent Creators ·
+    <a href="https://github.com/Loongtm/freelancekit" style="color:#facc15;text-decoration:none">GitHub</a> ·
+    <a href="/pages/terms.html" style="color:#facc15;text-decoration:none">Terms</a>
+  </footer>
 
-  <!-- ========= Pro Dialog ========= -->
-  <div id="proDialog" class="dialog-backdrop" hidden>
-    <div class="dialog">
-      <h2 style="color:#facc15;margin-top:0">FreelanceKit Pro</h2>
-      <p style="color:#a1a1aa;font-size:.95rem;line-height:1.6">
-        Unlock unlimited invoices, custom branding, PDF templates and cloud sync.
-      </p>
-      <ul style="text-align:left;color:#f8fafc;font-size:.9rem;margin:14px 0 0 20px">
-        <li>🚀 Unlimited Projects &amp; Clients</li>
-        <li>🎨 Custom Logo &amp; Brand Themes</li>
-        <li>☁️ Cloud Backup (Supabase ready)</li>
-        <li>💰 Auto Reports &amp; Tax Summaries</li>
-      </ul>
-      <div class="actions">
-        <button id="buyPro" class="btn primary">Buy Pro Now</button>
-        <button id="closePro" class="btn ghost">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 脚本 -->
-  <script src="assets/js/dashboard.js"></script>
+  <!-- 启动后根据会话显示徽章/按钮状态 -->
   <script>
-    // 键盘可访问性：Enter 打开卡片
-    document.addEventListener('keydown', e=>{
-      if(e.key==='Enter' && e.target.classList.contains('card')){
-        const link=e.target.getAttribute('data-link'); if(link) location.href=link;
+    (function showProBadge(){
+      if (localStorage.getItem('pro_active') === 'true') {
+        document.getElementById('pro-badge').style.display = 'inline-block';
+        const unlock = document.querySelector('[data-pro]');
+        if (unlock) unlock.textContent = '✅ Pro Active';
       }
-    });
+    })();
   </script>
 </body>
 </html>

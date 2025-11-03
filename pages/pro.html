@@ -1,20 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Unlock Pro • FreelanceKit</title>
+
+  <!-- SEO & 基础样式 -->
   <script defer src="/assets/js/seo.js"></script>
-  <link rel="stylesheet" href="/assets/css/dashboard.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+
   <style>
-    .wrap{max-width:520px;margin:60px auto;padding:0 16px}
-    .panel{background:#111;border:1px solid rgba(250,204,21,.25);border-radius:14px;padding:22px;text-align:center}
-    input{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(250,204,21,.25);background:#0c0c0c;color:#f8fafc}
-    .row{display:grid;grid-template-columns:1fr;gap:12px}
+    :root{--bg:#0a0a0a;--panel:#111;--gold:#facc15;--text:#f8fafc;--muted:#a1a1aa}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0}
+    .navbar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .navbar h1{color:var(--gold);margin:0;font-size:1.15rem}
+    .btn{display:inline-block;padding:10px 16px;border-radius:12px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;background:transparent;cursor:pointer}
+    .btn.primary{background:var(--gold);color:#111;border:none}
+    .wrap{max-width:520px;margin:64px auto;padding:0 16px}
+    .panel{background:var(--panel);border:1px solid rgba(250,204,21,.25);border-radius:16px;padding:24px;text-align:center}
+    input{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(250,204,21,.25);background:#0c0c0c;color:var(--text)}
+    .row{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
     .actions{display:flex;gap:10px;justify-content:center;margin-top:14px}
-    .btn{padding:10px 16px;border-radius:12px;border:1px solid #facc15;background:transparent;color:#facc15;cursor:pointer}
-    .btn.primary{background:#facc15;color:#111;border:none}
-    .msg{margin-top:10px}
+    .msg{margin-top:10px;color:var(--gold)}
   </style>
 </head>
 <body>
@@ -27,12 +34,14 @@
 
   <main class="wrap">
     <div class="panel">
-      <h2 style="color:#facc15;margin:0 0 8px">Unlock Pro</h2>
-      <p style="color:#a1a1aa;margin:0 0 16px">Enter your email and license key to activate Pro features.</p>
+      <h2 style="color:var(--gold);margin:0 0 8px">Unlock Pro</h2>
+      <p style="color:var(--muted);margin:0 0 16px">Enter your email and license key to activate Pro features.</p>
+
       <div class="row">
-        <input id="email" placeholder="you@email.com">
-        <input id="key" placeholder="FK-PRO-XXXX-XXXX-XXXX">
+        <input id="email" type="email" placeholder="you@email.com" />
+        <input id="key" placeholder="FK-PRO-XXXX-XXXX-XXXX" />
       </div>
+
       <div class="actions">
         <button id="activate" class="btn primary">Activate</button>
         <button id="logout" class="btn">Sign out</button>
@@ -41,36 +50,46 @@
     </div>
   </main>
 
+  <!-- Pro 前端会话工具（徽章、存 token 等） -->
   <script src="/assets/js/pro.js"></script>
+
   <script>
+    // 支持从购买回跳时带参填入
     const qs = new URLSearchParams(location.search);
     if (qs.get('email')) document.getElementById('email').value = qs.get('email');
     if (qs.get('key')) document.getElementById('key').value = qs.get('key');
 
-    document.getElementById('activate').addEventListener('click', async ()=>{
+    const msg = document.getElementById('msg');
+
+    document.getElementById('activate').addEventListener('click', async () => {
       const email = document.getElementById('email').value.trim();
-      const key = document.getElementById('key').value.trim();
-      const msg = document.getElementById('msg');
-      if (!email || !key) return msg.textContent = 'Please fill email and license key.';
+      const key   = document.getElementById('key').value.trim();
+      if (!email || !key) { msg.textContent = 'Please fill email and license key.'; return; }
       msg.textContent = '⏳ Verifying...';
-      try{
-        const res = await fetch('/pro-verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+
+      try {
+        const res  = await fetch('/pro-verify', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, key })
         });
         const data = await res.json().catch(()=>({}));
+
         if (!res.ok || !data.pro || !data.token) throw new Error(data.error || `HTTP ${res.status}`);
+
+        // 保存会话：token + email + Pro 开关
         FK_PRO.setSession(data.token, data.email || email);
+        localStorage.setItem('pro_active', 'true');
+
         msg.textContent = '✅ Pro activated!';
         setTimeout(()=>location.href='/index.html', 800);
-      }catch(e){
+      } catch (e) {
         msg.textContent = '❌ ' + (e.message || e);
       }
     });
 
-    document.getElementById('logout').addEventListener('click', ()=>{
+    document.getElementById('logout').addEventListener('click', () => {
       FK_PRO.clear();
+      localStorage.removeItem('pro_active');
       alert('Signed out Pro.');
     });
   </script>
