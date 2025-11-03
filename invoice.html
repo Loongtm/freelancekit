@@ -1,45 +1,252 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Invoice Generator • FreelanceKit</title>
-  <meta name="description" content="Create, edit and export professional invoices with FreelanceKit.">
-  
-  <!-- SEO 自动注入脚本 -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>发票 · FreelanceKit</title>
+
+  <!-- SEO -->
   <script defer src="/assets/js/seo.js"></script>
-  <!-- Structured Data for SEO -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "FreelanceKit Invoice Generator",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Create, customize and export invoices online using FreelanceKit.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "FreelanceKit"
-  }
-}
-</script>
 
+  <!-- 你已有的通用样式（保持） -->
+  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <!-- 可选：你的打印预览基础样式（若存在） -->
+  <link rel="stylesheet" href="/assets/css/print.css" />
+  <link rel="stylesheet" href="/assets/css/print-preview.css" />
 
-  <link rel="icon" href="/assets/logo.svg">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <link rel="stylesheet" href="/assets/css/print.css">
+  <style>
+    :root{
+      --bg:#0a0a0a; --panel:#111; --text:#0b1220; --muted:#6b7280;
+      --border:#e5e7eb; --brand:#111827; --white:#fff;
+      /* 黑金主题色 */
+      --gold:#facc15; --gold-2:#fde68a; --black:#0a0a0a; --card:#0f0f0f; --line:rgba(250,204,21,.32);
+    }
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b0f14;color:#111}
+
+    /* 页面容器与工具栏 */
+    .page{max-width:1024px;margin:28px auto;padding:0 16px}
+    .toolbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 16px;border:1px solid #222;border-radius:14px;background:#0f1217;color:#e5e7eb
+    }
+    .toolbar .left{display:flex;align-items:center;gap:10px}
+    .toolbar select, .toolbar button{
+      border-radius:10px;border:1px solid #2a2f38;background:#0b0f14;color:#e5e7eb;
+      padding:8px 12px;cursor:pointer
+    }
+    .toolbar button.primary{background:#facc15;color:#111;border-color:#facc15;font-weight:700}
+
+    /* 打印纸张 */
+    .sheet{background:#fff;color:#0b1220;border-radius:18px;border:1px solid #e5e7eb;margin:18px 0;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .sheet-inner{padding:40px 42px}
+
+    /* ====== 标准（Classic）主题 ====== */
+    .theme-classic .sheet{background:#fff;color:#0b1220;border-color:#e5e7eb}
+    .theme-classic .meta-label{color:#6b7280}
+    .theme-classic .hline{height:1px;background:#e5e7eb;margin:18px 0}
+
+    /* ====== 黑金（Pro）主题 ====== */
+    .theme-black-gold body{background:var(--black)}
+    .theme-black-gold .toolbar{background:#0c0c0c;border-color:#232323;color:#d1d5db}
+    .theme-black-gold .sheet{background:var(--card);color:#f8fafc;border:1px solid var(--line)}
+    .theme-black-gold .meta-label{color:#d1d5db;opacity:.75}
+    .theme-black-gold .hline{height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-2));margin:18px 0;border-radius:2px}
+
+    /* 发票封面（Logo 居中 + 标题） */
+    .cover{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;margin-bottom:12px}
+    .cover .logo{width:88px;height:88px;object-fit:contain}
+    .cover .title{font-size:28px;font-weight:800;letter-spacing:.5px}
+    .theme-black-gold .cover .title{color:var(--gold)}
+    .cover .subtitle{color:#6b7280;font-size:14px}
+    .theme-black-gold .cover .subtitle{color:#eab308;opacity:.95}
+
+    /* 基本信息三栏：编号 / 开具日期 / 付款截止 */
+    .meta-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px
+    }
+    .meta-box{border:1px dashed #e5e7eb;border-radius:12px;padding:12px 14px}
+    .meta-kv{display:flex;flex-direction:column;gap:4px}
+    .meta-label{font-size:12px;letter-spacing:.5px;text-transform:uppercase}
+    .meta-value{font-weight:700;font-size:16px;word-break:break-all}
+
+    .theme-black-gold .meta-box{border-color:var(--line);background:#0b0b0b}
+    .theme-black-gold .meta-value{color:#fff}
+
+    /* 买卖双方两栏 */
+    .party-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+    .panel{border:1px solid #e5e7eb;border-radius:12px;padding:14px}
+    .panel h4{margin:0 0 6px 0;font-size:14px;color:#374151}
+    .theme-black-gold .panel{border-color:var(--line);background:#0b0b0b}
+    .theme-black-gold .panel h4{color:var(--gold)}
+
+    /* 项目明细表格 */
+    table.items{width:100%;border-collapse:collapse;margin-top:14px}
+    table.items th, table.items td{padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:left;vertical-align:top}
+    table.items th{font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:#6b7280}
+    table.items td.num{text-align:right;white-space:nowrap}
+    .theme-black-gold table.items th{color:#f4f4f5;border-color:var(--line)}
+    .theme-black-gold table.items td{border-color:var(--line);color:#f8fafc}
+
+    /* 合计 */
+    .totals{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:18px}
+    .totals .label{color:#6b7280}
+    .totals .val{font-weight:800}
+    .theme-black-gold .totals .label{color:#e5e7eb;opacity:.8}
+    .theme-black-gold .totals .val{color:#fff}
+
+    /* 付款方式与备注 */
+    .notes{margin-top:16px;border:1px dashed #e5e7eb;border-radius:12px;padding:12px}
+    .theme-black-gold .notes{border-color:var(--line);background:#0b0b0b;color:#e5e7eb}
+
+    /* 页脚 */
+    .foot{margin-top:18px;text-align:center;color:#6b7280;font-size:12px}
+    .theme-black-gold .foot{color:#d1d5db}
+
+    /* 打印优化 */
+    @media print{
+      body{background:#fff}
+      .toolbar{display:none !important}
+      .page{margin:0;padding:0}
+      .sheet{border:none;box-shadow:none;border-radius:0}
+      .sheet-inner{padding:28px}
+    }
+  </style>
 </head>
 <body>
-  <main id="app">
-    <h2 style="text-align:center;color:#facc15;margin-top:20px">FreelanceKit Invoice Generator</h2>
-    <noscript style="color:red;text-align:center">Please enable JavaScript to use this app.</noscript>
-  </main>
 
-  <script src="/assets/js/app.js"></script>
+  <div class="page">
+    <!-- 工具栏 -->
+    <div class="toolbar">
+      <div class="left">
+        <strong>发票</strong>
+        <span style="opacity:.7">· 主题：</span>
+        <select id="themeSelect" title="切换主题">
+          <option value="classic">Classic</option>
+          <option value="black-gold">Minimal Black-Gold (PRO)</option>
+        </select>
+      </div>
+      <div class="right">
+        <!-- 你原本的按钮（id 可与 app.js 对应），不改逻辑 -->
+        <button id="btnPreview">预览</button>
+        <button id="btnExport" class="primary">导出 PDF</button>
+      </div>
+    </div>
+
+    <!-- 纸张（主题通过 html[data-theme] 控制） -->
+    <div id="sheetWrap" class="sheet">
+      <div class="sheet-inner" id="printRoot">
+        <!-- 封面 / 居中 Logo -->
+        <div class="cover">
+          <!-- 根据主题用亮/暗 logo；如果没有 logo-light.svg 也没关系，会回退 -->
+          <img id="logoImg" class="logo" src="/assets/logo.svg" alt="Logo" onerror="this.style.display='none'"/>
+          <div class="title">INVOICE · 发票</div>
+          <div class="subtitle" id="subtitleText">FreelanceKit — Professional Billing</div>
+        </div>
+
+        <!-- 编号/日期 三栏 -->
+        <div class="meta-grid">
+          <div class="meta-box"><div class="meta-kv">
+            <div class="meta-label">发票编号</div>
+            <div class="meta-value" id="invNo">INV-2025-0001</div>
+          </div></div>
+          <div class="meta-box"><div class="meta-kv">
+            <div class="meta-label">开具日期</div>
+            <div class="meta-value" id="issueDate">2025-11-02</div>
+          </div></div>
+          <div class="meta-box"><div class="meta-kv">
+            <div class="meta-label">付款截止</div>
+            <div class="meta-value" id="dueDate">2025-11-30</div>
+          </div></div>
+        </div>
+
+        <div class="hline"></div>
+
+        <!-- 买卖双方 -->
+        <div class="party-grid">
+          <div class="panel">
+            <h4>卖方 / From</h4>
+            <div id="sellerBlock">
+              FreelanceKit Studio<br/> hello@freelancekit.dev<br/> +60 1X-XXXX XXX
+            </div>
+          </div>
+          <div class="panel">
+            <h4>买方 / Bill To</h4>
+            <div id="buyerBlock">
+              Client Company Sdn Bhd<br/> client@email.com<br/> +60 1X-XXXX XXX
+            </div>
+          </div>
+        </div>
+
+        <!-- 明细 -->
+        <table class="items" id="itemsTable">
+          <thead>
+            <tr>
+              <th style="width:50%">项目</th>
+              <th style="width:15%">数量</th>
+              <th style="width:15%">单价</th>
+              <th style="width:20%" class="num">小计</th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody">
+            <!-- 示例行（你的 app.js 可填充/覆盖） -->
+            <tr>
+              <td>UI/UX 设计</td>
+              <td>1</td>
+              <td>MYR 9,000.00</td>
+              <td class="num">MYR 9,000.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- 合计 -->
+        <div class="totals">
+          <div class="label">税额</div><div class="val" id="taxVal">MYR 0.00</div>
+          <div class="label">合计</div><div class="val" id="totalVal">MYR 9,000.00</div>
+        </div>
+
+        <!-- 付款方式 / 备注 -->
+        <div class="notes" id="payNotes">
+          <strong>付款方式：</strong> 银行转账 / 信用卡 / PayPal（若无在选项里，请备注）<br/>
+          <strong>备注：</strong> 付款请注明发票编号。逾期可能产生滞纳金。
+        </div>
+
+        <div class="foot">感谢合作 · Thank you for your business</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主题切换脚本（保存到 localStorage，不影响你的 app.js） -->
+  <script>
+    (function(){
+      const rootHtml = document.documentElement;
+      const themeSel = document.getElementById('themeSelect');
+      const sheetWrap = document.getElementById('sheetWrap');
+      const logoImg = document.getElementById('logoImg');
+
+      // 应用主题
+      function applyTheme(val){
+        // 页面主题 class
+        document.body.classList.toggle('theme-black-gold', val === 'black-gold');
+        document.body.classList.toggle('theme-classic', val !== 'black-gold');
+
+        // 黑金主题用浅色 Logo（若存在则显示）
+        logoImg.src = (val === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
+
+        localStorage.setItem('invoice_theme', val);
+      }
+
+      // 初始化
+      const saved = localStorage.getItem('invoice_theme') || 'black-gold';
+      themeSel.value = saved;
+      applyTheme(saved);
+
+      // 切换
+      themeSel.addEventListener('change', (e)=> applyTheme(e.target.value));
+
+      // 按钮占位（不破坏你原有事件绑定）
+      document.getElementById('btnPreview')?.addEventListener('click', ()=> window.print());
+      document.getElementById('btnExport')?.addEventListener('click', ()=> window.print());
+    })();
+  </script>
 </body>
 </html>
