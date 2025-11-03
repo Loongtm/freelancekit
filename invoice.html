@@ -4,15 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>发票 · FreelanceKit</title>
-  <script defer src="/assets/js/brand.js"></script>
-
 
   <!-- SEO -->
   <script defer src="/assets/js/seo.js"></script>
 
-  <!-- 你已有的通用样式（保持） -->
+  <!-- 样式（按你项目结构保持以下路径） -->
   <link rel="stylesheet" href="/assets/css/dashboard.css" />
-  <!-- 可选：你的打印预览基础样式（若存在） -->
   <link rel="stylesheet" href="/assets/css/print.css" />
   <link rel="stylesheet" href="/assets/css/print-preview.css" />
 
@@ -20,7 +17,7 @@
     :root{
       --bg:#0a0a0a; --panel:#111; --text:#0b1220; --muted:#6b7280;
       --border:#e5e7eb; --brand:#111827; --white:#fff;
-      /* 黑金主题色 */
+      /* 黑金主题色（可被 brand.js 动态覆盖） */
       --gold:#facc15; --gold-2:#fde68a; --black:#0a0a0a; --card:#0f0f0f; --line:rgba(250,204,21,.32);
     }
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b0f14;color:#111}
@@ -62,15 +59,12 @@
     .cover .subtitle{color:#6b7280;font-size:14px}
     .theme-black-gold .cover .subtitle{color:#eab308;opacity:.95}
 
-    /* 基本信息三栏：编号 / 开具日期 / 付款截止 */
-    .meta-grid{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px
-    }
+    /* 编号 / 日期 / 截止 */
+    .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:10px}
     .meta-box{border:1px dashed #e5e7eb;border-radius:12px;padding:12px 14px}
     .meta-kv{display:flex;flex-direction:column;gap:4px}
     .meta-label{font-size:12px;letter-spacing:.5px;text-transform:uppercase}
     .meta-value{font-weight:700;font-size:16px;word-break:break-all}
-
     .theme-black-gold .meta-box{border-color:var(--line);background:#0b0b0b}
     .theme-black-gold .meta-value{color:#fff}
 
@@ -128,18 +122,49 @@
         </select>
       </div>
       <div class="right">
-        <!-- 你原本的按钮（id 可与 app.js 对应），不改逻辑 -->
         <button id="btnPreview">预览</button>
         <button id="btnExport" class="primary">导出 PDF</button>
       </div>
     </div>
 
-    <!-- 纸张（主题通过 html[data-theme] 控制） -->
+    <!-- 品牌设置（Pro 专属） -->
+    <div class="panel" id="brandPanel" style="margin-top:12px;border:1px solid rgba(250,204,21,.25);border-radius:12px;padding:12px;background:#0f1217;color:#e5e7eb">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <strong style="color:#facc15">品牌设置（Pro）</strong>
+        <div style="opacity:.7">Logo / 主题色 / 页脚文案</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+        <div>
+          <label style="display:block;margin-bottom:6px;opacity:.85">上传 Logo（PNG/SVG/JPG）</label>
+          <input id="brandLogo" type="file" accept="image/*" style="width:100%;background:#0b0f14;color:#e5e7eb;padding:10px;border-radius:10px;border:1px solid #2a2f38">
+          <div style="font-size:12px;opacity:.6;margin-top:6px">建议透明底 PNG，展示在发票封面居中。</div>
+        </div>
+        <div>
+          <label style="display:block;margin-bottom:6px;opacity:.85">主色（影响黑金主题金色）</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="brandColor" type="text" placeholder="#facc15" style="flex:1;background:#0b0f14;color:#e5e7eb;padding:10px;border-radius:10px;border:1px solid #2a2f38">
+            <input id="brandColorPicker" type="color" value="#facc15" style="width:46px;height:42px;border:none;background:transparent">
+          </div>
+          <div style="font-size:12px;opacity:.6;margin-top:6px">可输入 6 位十六进制（如 #D4AF37）。</div>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label style="display:block;margin-bottom:6px;opacity:.85">页脚文案</label>
+        <input id="brandFooter" type="text" placeholder="Thank you for your business" style="width:100%;background:#0b0f14;color:#e5e7eb;padding:10px;border-radius:10px;border:1px solid #2a2f38">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button id="brandSave" class="primary" style="padding:10px 14px;border-radius:10px;border:none;background:#facc15;color:#111;font-weight:700;cursor:pointer">保存并应用</button>
+        <button id="brandReset" style="padding:10px 14px;border-radius:10px;border:1px solid #2a2f38;background:transparent;color:#e5e7eb;cursor:pointer">恢复默认</button>
+        <div id="brandMsg" style="margin-left:8px;opacity:.8"></div>
+      </div>
+    </div>
+
+    <!-- 纸张 -->
     <div id="sheetWrap" class="sheet">
       <div class="sheet-inner" id="printRoot">
         <!-- 封面 / 居中 Logo -->
         <div class="cover">
-          <!-- 根据主题用亮/暗 logo；如果没有 logo-light.svg 也没关系，会回退 -->
+          <!-- 黑金主题默认用浅色 Logo；品牌设置后会被替换成自定义 -->
           <img id="logoImg" class="logo" src="/assets/logo.svg" alt="Logo" onerror="this.style.display='none'"/>
           <div class="title">INVOICE · 发票</div>
           <div class="subtitle" id="subtitleText">FreelanceKit — Professional Billing</div>
@@ -217,37 +242,91 @@
     </div>
   </div>
 
-  <!-- 主题切换脚本（保存到 localStorage，不影响你的 app.js） -->
+  <!-- Pro 前端会话工具（徽章、存 token 等） -->
+  <script defer src="/assets/js/pro.js"></script>
+  <!-- 白标逻辑（品牌配置） -->
+  <script defer src="/assets/js/brand.js"></script>
+
+  <!-- 主题切换 + 品牌设置应用脚本 -->
   <script>
     (function(){
-      const rootHtml = document.documentElement;
+      // 主题切换
       const themeSel = document.getElementById('themeSelect');
-      const sheetWrap = document.getElementById('sheetWrap');
-      const logoImg = document.getElementById('logoImg');
+      const logoImg  = document.getElementById('logoImg');
 
-      // 应用主题
       function applyTheme(val){
-        // 页面主题 class
         document.body.classList.toggle('theme-black-gold', val === 'black-gold');
         document.body.classList.toggle('theme-classic', val !== 'black-gold');
-
-        // 黑金主题用浅色 Logo（若存在则显示）
-        logoImg.src = (val === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
-
+        // 黑金主题默认浅色 logo（品牌自定义会覆盖）
+        if (!localStorage.getItem('fk_brand') || !JSON.parse(localStorage.getItem('fk_brand')).logo) {
+          logoImg.src = (val === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
+        }
         localStorage.setItem('invoice_theme', val);
       }
+      const savedTheme = localStorage.getItem('invoice_theme') || 'black-gold';
+      themeSel.value = savedTheme; applyTheme(savedTheme);
+      themeSel.addEventListener('change', e => applyTheme(e.target.value));
 
-      // 初始化
-      const saved = localStorage.getItem('invoice_theme') || 'black-gold';
-      themeSel.value = saved;
-      applyTheme(saved);
-
-      // 切换
-      themeSel.addEventListener('change', (e)=> applyTheme(e.target.value));
-
-      // 按钮占位（不破坏你原有事件绑定）
+      // 按钮（与 app.js 不冲突）
       document.getElementById('btnPreview')?.addEventListener('click', ()=> window.print());
       document.getElementById('btnExport')?.addEventListener('click', ()=> window.print());
+
+      // Pro 面板显示控制
+      const pro = localStorage.getItem('pro_active') === 'true';
+      if (!pro) document.getElementById('brandPanel').style.display = 'none';
+
+      // 读取现有品牌并应用到页面
+      BrandKit.applyToInvoice(document);
+
+      // 绑定品牌设置交互
+      const logoInput   = document.getElementById('brandLogo');
+      const colorInput  = document.getElementById('brandColor');
+      const colorPicker = document.getElementById('brandColorPicker');
+      const footerInput = document.getElementById('brandFooter');
+      const msgEl       = document.getElementById('brandMsg');
+
+      // 初始化输入
+      const cfg = BrandKit.getConfig();
+      if (cfg.color) {
+        const c = cfg.color.startsWith('#') ? cfg.color : ('#' + cfg.color);
+        colorInput.value = c; colorPicker.value = c;
+      }
+      if (cfg.footer) footerInput.value = cfg.footer;
+
+      colorInput.addEventListener('input', ()=> {
+        const v = colorInput.value.trim();
+        if (/^#?[0-9a-f]{6}$/i.test(v)) colorPicker.value = v.startsWith('#') ? v : ('#' + v);
+      });
+      colorPicker.addEventListener('input', ()=> { colorInput.value = colorPicker.value; });
+
+      document.getElementById('brandSave').addEventListener('click', async ()=>{
+        try{
+          if (logoInput.files && logoInput.files[0]) {
+            await BrandKit.setLogoFile(logoInput.files[0]);
+          }
+          if (colorInput.value.trim()) BrandKit.setColor(colorInput.value.trim());
+          BrandKit.setFooter(footerInput.value.trim());
+          BrandKit.applyToInvoice(document);
+          msgEl.textContent = '✅ 已保存并应用';
+          setTimeout(()=>msgEl.textContent='', 1500);
+        }catch(e){ msgEl.textContent = '❌ ' + (e.message || e); }
+      });
+
+      document.getElementById('brandReset').addEventListener('click', ()=>{
+        localStorage.removeItem('fk_brand');
+        // 恢复默认色
+        document.documentElement.style.removeProperty('--gold');
+        document.documentElement.style.removeProperty('--gold-2');
+        // 恢复默认 logo（按主题）
+        const t = localStorage.getItem('invoice_theme') || 'black-gold';
+        logoImg.src = (t === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
+        // 恢复页脚
+        const footEl = document.querySelector('.foot');
+        if (footEl) footEl.textContent = '感谢合作 · Thank you for your business';
+        // 清空输入
+        logoInput.value = ''; colorInput.value = ''; footerInput.value = ''; colorPicker.value = '#facc15';
+        msgEl.textContent = '↩️ 已恢复默认'; setTimeout(()=>msgEl.textContent='', 1500);
+      });
     })();
   </script>
 </body>
