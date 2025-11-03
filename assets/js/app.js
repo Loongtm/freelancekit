@@ -1,3 +1,15 @@
+// === Pro Access Guard ===
+(function() {
+  const currentPage = window.location.pathname;
+  const isProPage = currentPage.includes('/pages/pro.html');
+  const proActive = localStorage.getItem('pro_active') === 'true';
+
+  if (!isProPage && !proActive) {
+    // 跳转到 Pro 激活页面
+    window.location.href = '/pages/pro.html';
+  }
+})();
+
 // assets/js/app.js — FreelanceKit Full Version (with Minimal Gold Theme)
 (() => {
   const $ = (s, r=document) => r.querySelector(s);
