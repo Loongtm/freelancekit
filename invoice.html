@@ -8,6 +8,14 @@
   <!-- SEO -->
   <script defer src="/assets/js/seo.js"></script>
 
+  <!-- A：Pro 访问守卫（未激活跳转到 /pages/pro.html） -->
+  <script>
+    (function () {
+      const isPro = localStorage.getItem('pro_active') === 'true';
+      if (!isPro) location.href = '/pages/pro.html';
+    })();
+  </script>
+
   <!-- 样式（按你项目结构保持以下路径） -->
   <link rel="stylesheet" href="/assets/css/dashboard.css" />
   <link rel="stylesheet" href="/assets/css/print.css" />
@@ -127,7 +135,7 @@
       </div>
     </div>
 
-    <!-- 品牌设置（Pro 专属） -->
+    <!-- C：品牌设置（Pro 专属） -->
     <div class="panel" id="brandPanel" style="margin-top:12px;border:1px solid rgba(250,204,21,.25);border-radius:12px;padding:12px;background:#0f1217;color:#e5e7eb">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
         <strong style="color:#facc15">品牌设置（Pro）</strong>
@@ -152,14 +160,19 @@
         <label style="display:block;margin-bottom:6px;opacity:.85">页脚文案</label>
         <input id="brandFooter" type="text" placeholder="Thank you for your business" style="width:100%;background:#0b0f14;color:#e5e7eb;padding:10px;border-radius:10px;border:1px solid #2a2f38">
       </div>
-      <div style="display:flex;gap:10px;margin-top:12px">
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
         <button id="brandSave" class="primary" style="padding:10px 14px;border-radius:10px;border:none;background:#facc15;color:#111;font-weight:700;cursor:pointer">保存并应用</button>
         <button id="brandReset" style="padding:10px 14px;border-radius:10px;border:1px solid #2a2f38;background:transparent;color:#e5e7eb;cursor:pointer">恢复默认</button>
-        <div id="brandMsg" style="margin-left:8px;opacity:.8"></div>
+
+        <!-- D：云端同步按钮 -->
+        <button id="brandUpload" style="padding:10px 14px;border-radius:10px;border:1px solid #2a2f38;background:transparent;color:#e5e7eb;cursor:pointer">☁️ 上传到云端</button>
+        <button id="brandDownload" style="padding:10px 14px;border-radius:10px;border:1px solid #2a2f38;background:transparent;color:#e5e7eb;cursor:pointer">⬇️ 从云端拉取</button>
+
+        <div id="brandMsg" style="margin-left:8px;opacity:.85"></div>
       </div>
     </div>
 
-    <!-- 纸张 -->
+    <!-- B：纸张（主题通过 body.class 控制） -->
     <div id="sheetWrap" class="sheet">
       <div class="sheet-inner" id="printRoot">
         <!-- 封面 / 居中 Logo -->
@@ -242,50 +255,50 @@
     </div>
   </div>
 
-  <!-- Pro 前端会话工具（徽章、存 token 等） -->
+  <!-- A：前端 Pro 会话脚本（徽章等） -->
   <script defer src="/assets/js/pro.js"></script>
-  <!-- 白标逻辑（品牌配置） -->
+  <!-- C：白标逻辑（品牌配置） -->
   <script defer src="/assets/js/brand.js"></script>
 
-  <!-- 主题切换 + 品牌设置应用脚本 -->
+  <!-- B+C+D：主题切换 + 品牌应用 + 云端同步 -->
   <script>
     (function(){
-      // 主题切换
+      // ===== B：主题切换 =====
       const themeSel = document.getElementById('themeSelect');
       const logoImg  = document.getElementById('logoImg');
 
       function applyTheme(val){
         document.body.classList.toggle('theme-black-gold', val === 'black-gold');
         document.body.classList.toggle('theme-classic', val !== 'black-gold');
-        // 黑金主题默认浅色 logo（品牌自定义会覆盖）
-        if (!localStorage.getItem('fk_brand') || !JSON.parse(localStorage.getItem('fk_brand')).logo) {
-          logoImg.src = (val === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
-        }
+        // 没有自定义 logo 时才根据主题切换默认 logo
+        try{
+          const cfg = JSON.parse(localStorage.getItem('fk_brand')||'{}');
+          if (!cfg.logo) {
+            logoImg.src = (val === 'black-gold') ? '/assets/logo-light.svg' : '/assets/logo.svg';
+          }
+        }catch{}
         localStorage.setItem('invoice_theme', val);
       }
       const savedTheme = localStorage.getItem('invoice_theme') || 'black-gold';
       themeSel.value = savedTheme; applyTheme(savedTheme);
       themeSel.addEventListener('change', e => applyTheme(e.target.value));
 
-      // 按钮（与 app.js 不冲突）
+      // ===== 占位按钮（与 app.js 不冲突；若你在 app.js 中另有绑定，会覆盖这里） =====
       document.getElementById('btnPreview')?.addEventListener('click', ()=> window.print());
       document.getElementById('btnExport')?.addEventListener('click', ()=> window.print());
 
-      // Pro 面板显示控制
+      // ===== C：品牌设置（本地保存并应用） =====
       const pro = localStorage.getItem('pro_active') === 'true';
       if (!pro) document.getElementById('brandPanel').style.display = 'none';
 
-      // 读取现有品牌并应用到页面
+      // 初始化输入值 & 应用现有品牌
       BrandKit.applyToInvoice(document);
-
-      // 绑定品牌设置交互
       const logoInput   = document.getElementById('brandLogo');
       const colorInput  = document.getElementById('brandColor');
       const colorPicker = document.getElementById('brandColorPicker');
       const footerInput = document.getElementById('brandFooter');
       const msgEl       = document.getElementById('brandMsg');
 
-      // 初始化输入
       const cfg = BrandKit.getConfig();
       if (cfg.color) {
         const c = cfg.color.startsWith('#') ? cfg.color : ('#' + cfg.color);
@@ -326,6 +339,55 @@
         // 清空输入
         logoInput.value = ''; colorInput.value = ''; footerInput.value = ''; colorPicker.value = '#facc15';
         msgEl.textContent = '↩️ 已恢复默认'; setTimeout(()=>msgEl.textContent='', 1500);
+      });
+
+      // ===== D：云端同步（使用你已部署的 /brand-save 与 /brand-load） =====
+      const email = (window.FK_PRO && FK_PRO.getEmail && FK_PRO.getEmail()) || localStorage.getItem('fk_pro_email') || '';
+      const uploadBtn = document.getElementById('brandUpload');
+      const downloadBtn = document.getElementById('brandDownload');
+
+      function needEmailGuard(){
+        if (!email) {
+          msgEl.textContent = '❗ 需要已激活的 Pro 邮箱才能同步';
+          setTimeout(()=>msgEl.textContent='',1500);
+          return true;
+        }
+        return false;
+      }
+
+      if (uploadBtn) uploadBtn.addEventListener('click', async ()=>{
+        if (needEmailGuard()) return;
+        try{
+          const data = BrandKit.getConfig() || {};
+          const res = await fetch('/brand-save', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email, data })
+          });
+          msgEl.textContent = res.ok ? '☁️ 已上传到云端' : ('❌ 上传失败：HTTP '+res.status);
+          setTimeout(()=>msgEl.textContent='',1500);
+        }catch(e){ msgEl.textContent='❌ '+(e.message||e); }
+      });
+
+      if (downloadBtn) downloadBtn.addEventListener('click', async ()=>{
+        if (needEmailGuard()) return;
+        try{
+          const res = await fetch(`/brand-load?email=${encodeURIComponent(email)}`);
+          if (!res.ok) throw new Error('HTTP '+res.status);
+          const json = await res.json();
+          if (!json || !json.data) throw new Error('云端暂无品牌数据');
+          localStorage.setItem('fk_brand', JSON.stringify(json.data));
+          BrandKit.applyToInvoice(document);
+          // 同步输入框显示
+          const d = json.data || {};
+          if (d.color){
+            const c = d.color.startsWith('#') ? d.color : ('#'+d.color);
+            colorInput.value = c; colorPicker.value = c;
+          }
+          footerInput.value = d.footer || '';
+          msgEl.textContent = '⬇️ 已从云端拉取';
+          setTimeout(()=>msgEl.textContent='',1500);
+        }catch(e){ msgEl.textContent='❌ '+(e.message||e); }
       });
     })();
   </script>
