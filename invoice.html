@@ -3,30 +3,39 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark light">
   <title>FreelanceKit — Invoice</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0ea5e9"/>
   <link rel="icon" href="/assets/icon-192.png"/>
   <style>
-    :root{--bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--ink:#e5e7eb;--brand:#0ea5e9;--b:#1f2937}
-    *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#0b1220;color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    :root{--bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--ink:#e5e7eb;--brand:#0ea5e9;--b:#1f2937;--focus:#facc15}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;background:#0b1220;color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a:focus,button:focus,input:focus,select:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:2px}
     header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(15,23,42,.6);backdrop-filter:blur(6px);position:sticky;top:0}
     header a{color:#fff;text-decoration:none}
     .wrap{max-width:1100px;margin:0 auto;padding:20px}
     .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
     .panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px}
     .h{margin:0 0 10px}.muted{color:var(--muted)}
+    label{display:block;margin-bottom:4px}
     input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0b1220;color:var(--ink)}
+    input[type="number"]{appearance:textfield}
+    input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{appearance:none;margin:0}
     table{width:100%;border-collapse:collapse}
     th,td{border-bottom:1px dashed rgba(255,255,255,.1);padding:10px;text-align:left}
     tfoot td{border:0}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.1);text-decoration:none;color:#0b1220;background:var(--brand);font-weight:700;cursor:pointer}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
     .btn.ghost{background:transparent;color:#e5e7eb}
     .right{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+    .hint{font-size:12px;color:var(--muted)}
+    .error{border-color:#ef4444}
     @media (max-width:940px){.grid{grid-template-columns:1fr}}
     @media print{
-      header,.actions{display:none}
+      header,.actions,#__toast{display:none}
       body{background:#fff;color:#000}
       .panel{border:none}
       input,select,textarea{border:0;background:transparent}
@@ -36,51 +45,54 @@
   </style>
 </head>
 <body>
-<header>
+<header role="banner">
   <a href="/index.html">← Back</a>
   <div style="display:flex;gap:10px;align-items:center"><img src="/assets/icon-192.png" width="22" height="22" alt=""><b>Invoice</b></div>
-  <nav class="right">
+  <nav class="right" aria-label="invoice actions">
     <a class="btn ghost" href="/landing.html">Home</a>
-    <button class="btn ghost" id="btn-load">Load</button>
-    <button class="btn" id="btn-save">Save</button>
+    <button class="btn ghost" id="btn-load" title="Load from browser (Ctrl+L)">Load</button>
+    <button class="btn" id="btn-save" title="Save locally (Ctrl+S)">Save</button>
   </nav>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main" tabindex="-1">
 
   <!-- A. Business & Client -->
-  <section class="panel" id="section-a">
-    <h3 class="h">A. Business & Client</h3>
+  <section class="panel" id="section-a" aria-labelledby="a-title">
+    <h3 class="h" id="a-title">A. Business & Client</h3>
     <div class="row">
       <div>
-        <label class="pill">Your business</label>
-        <input id="biz_name" placeholder="Business name">
-        <textarea id="biz_addr" rows="3" placeholder="Address, tax ID, email"></textarea>
+        <label class="pill" for="biz_name">Your business</label>
+        <input id="biz_name" placeholder="Business name" autocomplete="organization" required>
+        <span class="hint">e.g., Loong TM Studio</span>
+        <label class="pill" for="biz_addr" style="margin-top:8px">Business details</label>
+        <textarea id="biz_addr" rows="3" placeholder="Address, tax ID, email" autocomplete="street-address"></textarea>
       </div>
       <div>
-        <div class="row">
+        <div class="row" aria-label="Invoice meta">
           <div>
-            <label class="pill">Invoice #</label>
-            <input id="inv_no" placeholder="e.g. 2025-001">
+            <label class="pill" for="inv_no">Invoice #</label>
+            <input id="inv_no" placeholder="e.g. 2025-001" inputmode="numeric" pattern="[0-9\-]*" required>
           </div>
           <div>
-            <label class="pill">Date</label>
-            <input id="inv_date" type="date">
+            <label class="pill" for="inv_date">Date</label>
+            <input id="inv_date" type="date" required>
           </div>
         </div>
-        <label class="pill" style="margin-top:10px">Bill to (client)</label>
-        <input id="client_name" placeholder="Client company / person">
-        <textarea id="client_addr" rows="2" placeholder="Client address / email"></textarea>
+        <label class="pill" for="client_name" style="margin-top:10px">Bill to (client)</label>
+        <input id="client_name" placeholder="Client company / person" autocomplete="name" required>
+        <label class="pill" for="client_addr" style="margin-top:6px">Client details</label>
+        <textarea id="client_addr" rows="2" placeholder="Client address / email" autocomplete="street-address"></textarea>
       </div>
     </div>
   </section>
 
   <!-- B. Items -->
-  <section class="panel" id="section-b">
-    <h3 class="h">B. Items</h3>
+  <section class="panel" id="section-b" aria-labelledby="b-title">
+    <h3 class="h" id="b-title">B. Items</h3>
     <div class="row">
       <div>
-        <label class="pill">Currency</label>
+        <label class="pill" for="currency">Currency</label>
         <select id="currency">
           <option value="USD">$ USD</option>
           <option value="EUR">€ EUR</option>
@@ -91,48 +103,50 @@
         </select>
       </div>
       <div>
-        <label class="pill">Locale</label>
+        <label class="pill" for="locale">Locale</label>
         <select id="locale">
           <option value="en-US">en-US</option>
           <option value="zh-CN">zh-CN</option>
           <option value="ms-MY">ms-MY</option>
         </select>
+        <div class="hint">Numbers & dates follow locale format.</div>
       </div>
     </div>
 
-    <table id="items">
+    <table id="items" aria-describedby="items-help">
+      <caption class="hint" id="items-help">Use Tab to move cells. Use Delete button or keyboard (Alt+Backspace) to remove a row. Undo available.</caption>
       <thead>
-        <tr><th style="width:42%">Description</th><th style="width:12%">Qty</th><th style="width:16%">Unit</th><th style="width:16%">Price</th><th style="width:10%"></th></tr>
+        <tr><th scope="col" style="width:42%">Description</th><th scope="col" style="width:12%">Qty</th><th scope="col" style="width:16%">Unit</th><th scope="col" style="width:16%">Price</th><th scope="col" style="width:10%">Actions</th></tr>
       </thead>
       <tbody></tbody>
       <tfoot>
-        <tr><td colspan="5"><button class="btn" id="add-item">+ Add item</button></td></tr>
+        <tr><td colspan="5"><button class="btn" id="add-item" title="Add item (Ctrl+Enter)">+ Add item</button></td></tr>
       </tfoot>
     </table>
   </section>
 
   <!-- C. Summary -->
-  <section class="panel" id="section-c">
-    <h3 class="h">C. Taxes • Discount • Notes</h3>
+  <section class="panel" id="section-c" aria-labelledby="c-title">
+    <h3 class="h" id="c-title">C. Taxes • Discount • Notes</h3>
     <div class="row">
       <div class="row">
         <div>
-          <label class="pill">Tax %</label>
-          <input id="tax_rate" type="number" step="0.01" placeholder="e.g. 6">
+          <label class="pill" for="tax_rate">Tax %</label>
+          <input id="tax_rate" type="number" min="0" max="100" step="0.01" placeholder="e.g. 6">
         </div>
         <div>
-          <label class="pill">Discount %</label>
-          <input id="disc_rate" type="number" step="0.01" placeholder="e.g. 5">
+          <label class="pill" for="disc_rate">Discount %</label>
+          <input id="disc_rate" type="number" min="0" max="100" step="0.01" placeholder="e.g. 5">
         </div>
       </div>
       <div>
-        <label class="pill">Notes (invoice footer)</label>
+        <label class="pill" for="notes">Notes (invoice footer)</label>
         <textarea id="notes" rows="3" placeholder="Payment terms, bank info, thanks, etc."></textarea>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr .5fr;gap:16px;margin-top:10px">
       <div></div>
-      <div class="panel" style="padding:12px">
+      <div class="panel" style="padding:12px" aria-live="polite">
         <table style="width:100%">
           <tbody>
             <tr><td class="muted">Subtotal</td><td style="text-align:right" id="v-subtotal">—</td></tr>
@@ -146,17 +160,19 @@
   </section>
 
   <!-- D. Actions -->
-  <section class="panel actions" id="section-d">
-    <h3 class="h">D. Actions</h3>
+  <section class="panel actions" id="section-d" aria-labelledby="d-title">
+    <h3 class="h" id="d-title">D. Actions</h3>
     <div class="right">
-      <button class="btn ghost" id="btn-new">New</button>
-      <button class="btn ghost" id="btn-import">Import JSON</button>
-      <button class="btn" id="btn-export">Export JSON</button>
-      <button class="btn" id="btn-print">Print / PDF</button>
+      <button class="btn ghost" id="btn-new" title="New invoice (Ctrl+N)">New</button>
+      <button class="btn ghost" id="btn-import" title="Import JSON (Ctrl+O)">Import JSON</button>
+      <button class="btn" id="btn-export" title="Export JSON (Ctrl+E)">Export JSON</button>
+      <button class="btn" id="btn-print" title="Print / PDF (Ctrl+P)">Print / PDF</button>
+      <button class="btn ghost" id="btn-undo" disabled title="Undo last delete (Ctrl+Z)">Undo</button>
       <a class="btn ghost" id="btn-template" href="/templates/default.html" target="_blank" rel="noopener">Preview Template</a>
       <a class="btn" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro Templates</a>
       <input type="file" id="file" accept="application/json" style="display:none">
     </div>
+    <div class="hint">Unsaved changes are kept automatically. You can leave and come back.</div>
   </section>
 
 </main>

@@ -13,15 +13,15 @@
   </style>
 </head>
 <body>
-  <div class="head">
+  <div class="head" role="banner">
     <div>
       <h2 style="margin:0">Invoice</h2>
-      <div id="inv-no">#</div>
+      <div id="inv-no" aria-live="polite">#</div>
     </div>
     <img src="/assets/icon-192.png" width="48" height="48" alt="logo">
   </div>
 
-  <table>
+  <table role="table" aria-label="Invoice items">
     <thead><tr><th>Description</th><th>Qty</th><th>Unit</th><th>Price</th></tr></thead>
     <tbody>
       <tr><td>Example item</td><td>1</td><td>hr</td><td>$100.00</td></tr>

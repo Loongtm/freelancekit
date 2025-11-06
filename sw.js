@@ -1,5 +1,5 @@
-// Basic cache-first service worker for FreelanceKit
-const CACHE = 'fk-cache-v3';
+// Service worker with cache-first + versioning
+const CACHE = 'fk-cache-v4';
 const ASSETS = [
   '/',
   '/landing.html',

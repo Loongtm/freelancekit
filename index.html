@@ -3,13 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark light">
   <title>FreelanceKit — App</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0ea5e9"/>
   <link rel="icon" href="/assets/icon-192.png"/>
   <style>
-    :root{--bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--ink:#e5e7eb;--brand:#0ea5e9;--b:#1f2937}
-    *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    :root{--bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--ink:#e5e7eb;--brand:#0ea5e9;--b:#1f2937;--focus:#facc15}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    a:focus,button:focus{outline:2px solid var(--focus);outline-offset:2px}
     header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(15,23,42,.6);backdrop-filter:blur(6px);position:sticky;top:0}
     nav a{color:var(--muted);text-decoration:none;margin-left:14px}
     nav a:hover{color:#fff}
@@ -22,20 +25,20 @@
   </style>
 </head>
 <body>
-<header>
+<header role="banner">
   <div style="display:flex;gap:10px;align-items:center">
-    <img src="/assets/icon-192.png" width="24" height="24" alt=""/>
+    <img src="/assets/icon-192.png" width="24" height="24" alt="FreelanceKit logo"/>
     <b>FreelanceKit</b>
   </div>
-  <nav>
-    <a href="/invoice.html">Invoice</a>
-    <a href="/templates/">Templates</a>
-    <a href="/pages/privacy.html">Privacy</a>
+  <nav aria-label="primary">
+    <a href="/invoice.html" title="Create and manage invoices">Invoice</a>
+    <a href="/templates/" title="Browse templates">Templates</a>
+    <a href="/pages/privacy.html" title="Read privacy policy">Privacy</a>
   </nav>
 </header>
 
-<main class="wrap">
-  <div class="cards">
+<main class="wrap" id="main" tabindex="-1">
+  <div class="cards" aria-label="Main actions">
     <div class="card">
       <h3>Invoices</h3>
       <p class="muted">Create, save locally, export JSON/PDF.</p>
@@ -53,6 +56,21 @@
     </div>
   </div>
 </main>
+
+<div id="help-dialog" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+  <div style="max-width:720px;margin:10vh auto;background:#0f172a;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px">
+    <h2 id="help-title" style="margin-top:0">Shortcuts</h2>
+    <ul>
+      <li><kbd>Ctrl</kbd> + <kbd>S</kbd> Save</li>
+      <li><kbd>Ctrl</kbd> + <kbd>P</kbd> Print / PDF</li>
+      <li><kbd>Ctrl</kbd> + <kbd>E</kbd> Export JSON</li>
+      <li><kbd>Ctrl</kbd> + <kbd>O</kbd> Import JSON</li>
+      <li><kbd>Ctrl</kbd> + <kbd>N</kbd> New invoice</li>
+      <li><kbd>?</kbd> Toggle this help</li>
+    </ul>
+    <button id="help-close" class="btn" style="margin-top:8px">Close</button>
+  </div>
+</div>
 
 <script src="/app.js"></script>
 <script>

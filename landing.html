@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light">
   <title>FreelanceKit — Landing</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#111827" />
@@ -10,9 +11,13 @@
   <link rel="apple-touch-icon" href="/assets/icon-192.png" />
   <meta name="description" content="Quotes • Invoices • Contracts — PWA for freelancers" />
   <style>
-    :root { --bg:#0b1220; --fg:#e5e7eb; --muted:#9ca3af; --brand:#06b6d4; --card:#111827; }
-    *{box-sizing:border-box}html,body{height:100%}
+    :root { --bg:#0b1220; --fg:#e5e7eb; --muted:#9ca3af; --brand:#06b6d4; --card:#111827; --focus:#facc15; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#0e172a);color:var(--fg);}
+    a:focus,button:focus,input:focus,select:focus,textarea:focus{outline:2px solid var(--focus);outline-offset:2px}
+    .skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .skip:focus{left:12px;top:12px;width:auto;height:auto;background:#111827;color:#fff;padding:8px 10px;border-radius:8px;z-index:1000}
     .wrap{max-width:1080px;margin:0 auto;padding:32px}
     header{display:flex;align-items:center;justify-content:space-between}
     .logo{display:flex;gap:12px;align-items:center}
@@ -31,13 +36,14 @@
   </style>
 </head>
 <body>
+  <a href="#main" class="skip">Skip to main content</a>
   <div class="wrap">
-    <header>
-      <div class="logo">
-        <img src="/assets/icon-192.png" alt="FreelanceKit" width="28" height="28" />
+    <header role="banner">
+      <div class="logo" aria-label="FreelanceKit">
+        <img src="/assets/icon-192.png" alt="FreelanceKit logo" width="28" height="28" />
         <b>FreelanceKit</b>
       </div>
-      <nav>
+      <nav aria-label="primary">
         <a href="/index.html">App</a>
         <a href="/invoice.html">Create Invoice</a>
         <a href="/pages/privacy.html">Privacy</a>
@@ -45,29 +51,31 @@
       </nav>
     </header>
 
-    <section class="hero">
-      <div>
-        <h1>Quotes • Invoices • Contracts — Offline-first</h1>
-        <p class="lead">PWA, 多语言、多币种、PDF 导出、模板系统。为自由职业者和小团队而生。</p>
-        <div style="display:flex;gap:12px;margin-top:10px">
-          <a class="btn" href="/index.html">Launch App</a>
-          <a class="btn secondary" href="/invoice.html">Create Invoice</a>
+    <main id="main" tabindex="-1">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <h1 id="hero-title">Quotes • Invoices • Contracts — Offline-first</h1>
+          <p class="lead">PWA, 多语言、多币种、PDF 导出、模板系统。为自由职业者和小团队而生。</p>
+          <div style="display:flex;gap:12px;margin-top:10px">
+            <a class="btn" href="/index.html" title="Open the app (Enter)">Launch App</a>
+            <a class="btn secondary" href="/invoice.html" title="Create a new invoice">Create Invoice</a>
+          </div>
+          <div class="grid" aria-label="Key features">
+            <div class="card"><b>Offline</b><br><span class="muted">Service Worker + Manifest</span></div>
+            <div class="card"><b>Multi-currency</b><br><span class="muted">Intl.NumberFormat</span></div>
+            <div class="card"><b>Export PDF</b><br><span class="muted">Native print / PDF</span></div>
+          </div>
         </div>
-        <div class="grid">
-          <div class="card"><b>Offline</b><br><span class="muted">Service Worker + Manifest</span></div>
-          <div class="card"><b>Multi-currency</b><br><span class="muted">Intl.NumberFormat</span></div>
-          <div class="card"><b>Export PDF</b><br><span class="muted">Native print / PDF</span></div>
+        <div class="card">
+          <img src="/assets/preview-invoice.png" alt="Invoice preview" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,.08)"/>
         </div>
-      </div>
-      <div class="card">
-        <img src="/assets/preview-invoice.png" alt="Preview" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,.08)"/>
-      </div>
-    </section>
+      </section>
 
-    <footer>
-      <span>© <span id="y"></span> FreelanceKit</span>
-      <a class="btn secondary" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro</a>
-    </footer>
+      <footer role="contentinfo">
+        <span>© <span id="y"></span> FreelanceKit</span>
+        <a class="btn secondary" href="https://ko-fi.com/loongtm" target="_blank" rel="noopener">Unlock Pro</a>
+      </footer>
+    </main>
   </div>
   <script>
     document.getElementById('y').textContent=new Date().getFullYear();
