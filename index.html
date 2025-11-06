@@ -1,94 +1,63 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FreelanceKit Dashboard</title>
-  <meta name="description" content="All-in-one dashboard for invoices, AI quotes and client tools." />
-
-  <!-- SEO -->
-  <script defer src="/assets/js/seo.js"></script>
-
-  <!-- 先行：未激活拦截（就算还没改 app.js 也能生效） -->
-  <script>
-    (function () {
-      const path = location.pathname;
-      const isProPage = path.includes('/pages/pro.html');
-      const proActive = localStorage.getItem('pro_active') === 'true';
-      if (!isProPage && !proActive) {
-        location.href = '/pages/pro.html';
-      }
-    })();
-  </script>
-
-  <!-- 样式 -->
-  <link rel="stylesheet" href="/assets/css/dashboard.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>FreelanceKit — App</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0ea5e9"/>
+  <link rel="icon" href="/assets/icon-192.png"/>
   <style>
-    :root{--bg:#0a0a0a;--panel:#111;--gold:#facc15;--text:#f8fafc;--muted:#a1a1aa}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-    .navbar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
-    .navbar h1{color:var(--gold);margin:0;font-size:1.15rem;display:flex;align-items:center;gap:10px}
-    .actions{display:flex;align-items:center;gap:10px}
-    .btn{display:inline-block;padding:10px 16px;border-radius:12px;border:1px solid var(--gold);color:var(--gold);text-decoration:none}
-    .grid{max-width:1080px;margin:28px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-    .card{background:#111;border:1px solid rgba(250,204,21,.25);border-radius:16px;padding:18px}
-    .card h3{color:var(--gold);margin:0 0 6px}
-    #pro-badge{display:none;background:#facc15;color:#111;padding:2px 8px;border-radius:6px;font-weight:bold}
+    :root{--bg:#0b1220;--panel:#0f172a;--muted:#94a3b8;--ink:#e5e7eb;--brand:#0ea5e9;--b:#1f2937}
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(15,23,42,.6);backdrop-filter:blur(6px);position:sticky;top:0}
+    nav a{color:var(--muted);text-decoration:none;margin-left:14px}
+    nav a:hover{color:#fff}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px}
+    .card h3{margin:0 0 8px}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.1);text-decoration:none;color:#0b1220;background:var(--brand);font-weight:700}
+    @media (max-width:900px){.cards{grid-template-columns:1fr}}
   </style>
-
-  <!-- Pro 前端脚本（负责徽章、文本状态等） -->
-  <script defer src="/assets/js/pro.js"></script>
 </head>
 <body>
-  <!-- 顶部导航 -->
-  <nav class="navbar">
-    <h1>
-      <img src="/assets/logo.svg" alt="FreelanceKit" width="28" height="28" onerror="this.style.display='none'"/>
-      FreelanceKit
-    </h1>
-    <div class="actions">
-      <span id="pro-badge">PRO</span>
-      <a class="btn" href="/pages/pro.html" data-pro>🔒 Unlock Pro</a>
-    </div>
+<header>
+  <div style="display:flex;gap:10px;align-items:center">
+    <img src="/assets/icon-192.png" width="24" height="24" alt=""/>
+    <b>FreelanceKit</b>
+  </div>
+  <nav>
+    <a href="/invoice.html">Invoice</a>
+    <a href="/templates/">Templates</a>
+    <a href="/pages/privacy.html">Privacy</a>
   </nav>
+</header>
 
-  <!-- 主功能入口 -->
-  <main class="grid">
+<main class="wrap">
+  <div class="cards">
     <div class="card">
-      <h3>🧾 Invoice Generator</h3>
-      <p style="color:var(--muted);margin:0 0 10px">Create and export invoices as PDF.</p>
-      <a class="btn" href="/invoice.html">Open</a>
+      <h3>Invoices</h3>
+      <p class="muted">Create, save locally, export JSON/PDF.</p>
+      <a class="btn" href="/invoice.html">Create Invoice</a>
     </div>
-
     <div class="card">
-      <h3>💼 AI Quote</h3>
-      <p style="color:var(--muted);margin:0 0 10px">Turn requirements into a professional quote.</p>
-      <a class="btn" href="/pages/quote.html">Open</a>
+      <h3>Quotes</h3>
+      <p class="muted">Coming soon.</p>
+      <a class="btn" href="/invoice.html#quote">Use Invoice as Quote</a>
     </div>
-
     <div class="card">
-      <h3>☁️ Cloud Sync</h3>
-      <p style="color:var(--muted);margin:0 0 10px">Auto-save drafts via KV / Supabase.</p>
-      <a class="btn" href="/index.html#sync">Details</a>
+      <h3>Contracts</h3>
+      <p class="muted">Coming soon.</p>
+      <a class="btn" href="/templates/">Browse Templates</a>
     </div>
-  </main>
+  </div>
+</main>
 
-  <!-- 页脚 -->
-  <footer style="text-align:center;color:#a1a1aa;font-size:.9rem;padding:28px;border-top:1px solid rgba(255,255,255,.06)">
-    FreelanceKit © 2025 — Built for Independent Creators ·
-    <a href="https://github.com/Loongtm/freelancekit" style="color:#facc15;text-decoration:none">GitHub</a> ·
-    <a href="/pages/terms.html" style="color:#facc15;text-decoration:none">Terms</a>
-  </footer>
-
-  <!-- 启动后根据会话显示徽章/按钮状态 -->
-  <script>
-    (function showProBadge(){
-      if (localStorage.getItem('pro_active') === 'true') {
-        document.getElementById('pro-badge').style.display = 'inline-block';
-        const unlock = document.querySelector('[data-pro]');
-        if (unlock) unlock.textContent = '✅ Pro Active';
-      }
-    })();
-  </script>
+<script src="/app.js"></script>
+<script>
+  window.FK && FK.initAppShell && FK.initAppShell();
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
+</script>
 </body>
 </html>
